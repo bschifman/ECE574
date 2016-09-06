@@ -1,0 +1,74 @@
+#-----------------------------------------------------------
+# Vivado v2016.2 (64-bit)
+# SW Build 1577090 on Thu Jun  2 16:32:40 MDT 2016
+# IP Build 1577682 on Fri Jun  3 12:00:54 MDT 2016
+# Start of session at: Tue Sep 06 13:30:12 2016
+# Process ID: 5524
+# Current directory: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/Assignments/Assignment1/Assignment1
+# Command line: vivado.exe -gui_launcher_event rodinguilauncherevent1648 C:\Users\Schifman Ben\Documents\UofA\Senior 2016-2017\Fall 2016\574 ECE\Assignments\Assignment1\Assignment1\Assignment1.xpr
+# Log file: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/Assignments/Assignment1/Assignment1/vivado.log
+# Journal file: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/Assignments/Assignment1/Assignment1\vivado.jou
+#-----------------------------------------------------------
+start_gui
+open_project {C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/Assignments/Assignment1/Assignment1/Assignment1.xpr}
+update_compile_order -fileset sources_1
+update_compile_order -fileset sources_1
+update_compile_order -fileset sim_1
+launch_runs synth_1
+wait_on_run synth_1
+reset_run synth_1
+launch_runs synth_1
+wait_on_run synth_1
+file mkdir C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/Assignments/Assignment1/Assignment1/Assignment1.srcs/sim_1/new
+file mkdir C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/Assignments/Assignment1/Assignment1/Assignment1.srcs/sim_1/new
+file mkdir C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/Assignments/Assignment1/Assignment1/Assignment1.srcs/sim_1/new
+file mkdir C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/Assignments/Assignment1/Assignment1/Assignment1.srcs/sim_1/new
+file mkdir C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/Assignments/Assignment1/Assignment1/Assignment1.srcs/sim_1/new
+set_property SOURCE_SET sources_1 [get_filesets sim_1]
+file mkdir C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/Assignments/Assignment1/Assignment1/Assignment1.srcs/sim_1/new
+file mkdir {C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/Assignments/Assignment1/Assignment1/Assignment1.srcs/sim_1/new}
+close [ open {C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/Assignments/Assignment1/Assignment1/Assignment1.srcs/sim_1/new/Assignment1.v} w ]
+add_files -fileset sim_1 {{C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/Assignments/Assignment1/Assignment1/Assignment1.srcs/sim_1/new/Assignment1.v}}
+update_compile_order -fileset sim_1
+# Disabling source management mode.  This is to allow the top design properties to be set without GUI intervention.
+set_property source_mgmt_mode None [current_project]
+set_property top Assignment1 [get_filesets sim_1]
+set_property top_lib xil_defaultlib [get_filesets sim_1]
+# Re-enabling previously disabled source management mode.
+set_property source_mgmt_mode All [current_project]
+update_compile_order -fileset sim_1
+launch_simulation
+remove_files -fileset sim_1 {{C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/Assignments/Assignment1/Assignment1/Assignment1.srcs/sim_1/new/Assignment1.v}}
+file delete -force {C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/Assignments/Assignment1/Assignment1/Assignment1.srcs/sim_1/new/Assignment1.v}
+set_property SOURCE_SET sources_1 [get_filesets sim_1]
+close [ open {C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/Assignments/Assignment1/Assignment1/Assignment1.srcs/sim_1/new/Assignment1_tb.v} w ]
+add_files -fileset sim_1 {{C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/Assignments/Assignment1/Assignment1/Assignment1.srcs/sim_1/new/Assignment1_tb.v}}
+update_compile_order -fileset sim_1
+update_compile_order -fileset sim_1
+# Disabling source management mode.  This is to allow the top design properties to be set without GUI intervention.
+set_property source_mgmt_mode None [current_project]
+set_property top Assignment1_tb [get_filesets sim_1]
+set_property top_lib xil_defaultlib [get_filesets sim_1]
+# Re-enabling previously disabled source management mode.
+set_property source_mgmt_mode All [current_project]
+update_compile_order -fileset sim_1
+launch_simulation
+launch_simulation
+source Assignment1_tb.tcl
+restart
+run 50 ns
+close_sim
+launch_simulation
+source Assignment1_tb.tcl
+restart
+run 50 ns
+close_sim
+launch_simulation
+source Assignment1_tb.tcl
+run all
+restart
+run 50 ns
+close_sim
+launch_simulation
+source Assignment1_tb.tcl
+close_sim
