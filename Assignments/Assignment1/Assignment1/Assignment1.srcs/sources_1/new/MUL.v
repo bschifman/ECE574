@@ -20,9 +20,9 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 module MUL2(a, b, prod);
-    parameter DATAWIDTH = 0;
+    parameter DATAWIDTH = 8;
     input [DATAWIDTH-1:0] a, b;
-    output reg [DATAWIDTH-1:0] prod;
+    output reg [2*DATAWIDTH-1:0] prod;
     
     always @ (a, b) begin
        prod <= a * b;

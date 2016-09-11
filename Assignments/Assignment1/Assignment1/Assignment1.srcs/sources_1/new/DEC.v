@@ -21,7 +21,7 @@
 
 
 module DEC(a, d);
-    parameter DATAWIDTH = 0;
+    parameter DATAWIDTH = 8;
     input [DATAWIDTH-1:0] a;
     output reg [DATAWIDTH-1:0] d;
     

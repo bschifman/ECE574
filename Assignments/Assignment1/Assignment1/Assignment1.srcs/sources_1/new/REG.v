@@ -21,7 +21,7 @@
 
 
 module REG (d, clk, rst, q);
-    parameter DATAWIDTH = 2;
+    parameter DATAWIDTH = 16;
     input [DATAWIDTH-1:0] d;
     input clk, rst;
     output reg [DATAWIDTH-1:0] q;

@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<Runs Version="1" Minor="0">
+	<Run Id="synth_9" LaunchDir="C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.runs/synth_9" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="synth_10" LaunchDir="C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.runs/synth_10" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="synth_11" LaunchDir="C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.runs/synth_11" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="synth_12" LaunchDir="C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.runs/synth_12" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+	<Run Id="synth_13" LaunchDir="C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.runs/synth_13" FlowId="Vivado_Synthesis" FromStepId="vivado" ToStepId="vivado"/>
+</Runs>
+

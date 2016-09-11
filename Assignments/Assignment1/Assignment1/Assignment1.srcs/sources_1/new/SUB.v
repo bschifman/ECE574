@@ -21,7 +21,7 @@
 
 
 module SUB2(a, b, diff);
-    parameter DATAWIDTH = 0;
+    parameter DATAWIDTH = 16;
     input [DATAWIDTH-1:0] a, b;
     output reg [DATAWIDTH-1:0] diff;
     

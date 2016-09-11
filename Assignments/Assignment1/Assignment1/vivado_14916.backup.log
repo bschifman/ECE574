@@ -1,0 +1,697 @@
+#-----------------------------------------------------------
+# Vivado v2016.2 (64-bit)
+# SW Build 1577090 on Thu Jun  2 16:32:40 MDT 2016
+# IP Build 1577682 on Fri Jun  3 12:00:54 MDT 2016
+# Start of session at: Sun Sep 11 14:06:51 2016
+# Process ID: 14916
+# Current directory: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1
+# Command line: vivado.exe -gui_launcher_event rodinguilauncherevent8464 C:\Users\Schifman Ben\Documents\UofA\Senior 2016-2017\Fall 2016\574 ECE\ECE574\Assignments\Assignment1\Assignment1\Assignment1.xpr
+# Log file: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/vivado.log
+# Journal file: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1\vivado.jou
+#-----------------------------------------------------------
+start_gui
+open_project {C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.xpr}
+INFO: [ProjectBase 1-489] The host OS only allows 260 characters in a normal path. The project is stored in a path with more than 80 characters. If you experience issues with IP, Block Designs, or files not being found, please consider moving the project to a location with a shorter path. Alternately consider using the OS subst command to map part of the path to a drive letter.
+Current project path is 'C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1'
+Scanning sources...
+Finished scanning sources
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1704] No user IP repositories specified
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository 'C:/Xilinx/Vivado/2016.2/data/ip'.
+open_project: Time (s): cpu = 00:00:14 ; elapsed = 00:00:07 . Memory (MB): peak = 772.512 ; gain = 143.242
+update_compile_order -fileset sources_1
+create_run synth_3 -flow {Vivado Synthesis 2016} -strategy {Vivado Synthesis Defaults}
+Run is defaulting to srcset: sources_1
+Run is defaulting to constrset: constrs_1
+Run is defaulting to part: xc7a100tcsg324-1
+current_run [get_runs synth_3]
+set_property -name {STEPS.SYNTH_DESIGN.ARGS.MORE OPTIONS} -value {-generic DATAWIDTH = 2} -objects [get_runs synth_3]
+launch_runs synth_3
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/ADD.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/ADD.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/COMP.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/COMP.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/DEC.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/DEC.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/DIV.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/DIV.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/INC.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/INC.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/MOD.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/MOD.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/MUL.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/MUL.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/MUX2x1.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/MUX2x1.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/REG.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/REG.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SHL.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SHL.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SHR.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SHR.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SUB.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SUB.v:1]
+[Sun Sep 11 14:35:26 2016] Launched synth_3...
+Run output will be captured here: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.runs/synth_3/runme.log
+create_run synth_4 -flow {Vivado Synthesis 2016}
+Run is defaulting to srcset: sources_1
+Run is defaulting to constrset: constrs_1
+Run is defaulting to part: xc7a100tcsg324-1
+create_run synth_5 -flow {Vivado Synthesis 2016} -strategy Flow_AreaOptimized_high
+Run is defaulting to srcset: sources_1
+Run is defaulting to constrset: constrs_1
+Run is defaulting to part: xc7a100tcsg324-1
+create_run synth_6 -flow {Vivado Synthesis 2016} -strategy Flow_AreaOptimized_medium
+Run is defaulting to srcset: sources_1
+Run is defaulting to constrset: constrs_1
+Run is defaulting to part: xc7a100tcsg324-1
+create_run synth_7 -flow {Vivado Synthesis 2016} -strategy Flow_AreaMultThresholdDSP
+Run is defaulting to srcset: sources_1
+Run is defaulting to constrset: constrs_1
+Run is defaulting to part: xc7a100tcsg324-1
+launch_runs synth_4 synth_5 synth_6 synth_7 -jobs 2
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/ADD.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/ADD.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/COMP.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/COMP.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/DEC.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/DEC.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/DIV.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/DIV.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/INC.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/INC.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/MOD.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/MOD.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/MUL.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/MUL.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/MUX2x1.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/MUX2x1.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/REG.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/REG.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SHL.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SHL.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SHR.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SHR.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SUB.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SUB.v:1]
+[Sun Sep 11 14:36:28 2016] Launched synth_4, synth_5, synth_6, synth_7...
+Run output will be captured here:
+synth_4: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.runs/synth_4/runme.log
+synth_5: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.runs/synth_5/runme.log
+synth_6: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.runs/synth_6/runme.log
+synth_7: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.runs/synth_7/runme.log
+delete_runs "synth_2"
+INFO: [Vivado 12-3261] Dependent run, 'impl_2', will be deleted with parent run, 'synth_2'.
+delete_runs "synth_1"
+INFO: [Vivado 12-3261] Dependent run, 'impl_1', will be deleted with parent run, 'synth_1'.
+set_property -name {STEPS.SYNTH_DESIGN.ARGS.MORE OPTIONS} -value {-generic DATAWIDTH = 2} -objects [get_runs synth_4]
+set_property {STEPS.SYNTH_DESIGN.ARGS.MORE OPTIONS} {generic DATAWIDTH = 8} [get_runs synth_5]
+set_property {STEPS.SYNTH_DESIGN.ARGS.MORE OPTIONS} {generic DATAWIDTH = 16} [get_runs synth_6]
+set_property {STEPS.SYNTH_DESIGN.ARGS.MORE OPTIONS} {generic DATAWIDTH = 32} [get_runs synth_7]
+reset_run synth_4
+reset_run synth_5
+reset_run synth_6
+reset_run synth_7
+launch_runs synth_4 synth_5 synth_6 synth_7 -jobs 2
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/ADD.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/ADD.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/COMP.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/COMP.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/DEC.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/DEC.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/DIV.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/DIV.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/INC.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/INC.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/MOD.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/MOD.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/MUL.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/MUL.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/MUX2x1.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/MUX2x1.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/REG.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/REG.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SHL.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SHL.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SHR.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SHR.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SUB.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SUB.v:1]
+[Sun Sep 11 14:40:08 2016] Launched synth_4, synth_5, synth_6, synth_7...
+Run output will be captured here:
+synth_4: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.runs/synth_4/runme.log
+synth_5: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.runs/synth_5/runme.log
+synth_6: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.runs/synth_6/runme.log
+synth_7: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.runs/synth_7/runme.log
+set_property -name {STEPS.SYNTH_DESIGN.ARGS.MORE OPTIONS} -value {-DATAWIDTH = 2} -objects [get_runs synth_4]
+reset_run synth_4
+launch_runs synth_4 -jobs 2
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/ADD.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/ADD.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/COMP.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/COMP.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/DEC.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/DEC.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/DIV.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/DIV.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/INC.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/INC.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/MOD.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/MOD.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/MUL.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/MUL.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/MUX2x1.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/MUX2x1.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/REG.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/REG.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SHL.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SHL.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SHR.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SHR.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SUB.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SUB.v:1]
+[Sun Sep 11 14:41:29 2016] Launched synth_4...
+Run output will be captured here: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.runs/synth_4/runme.log
+set_property -name {STEPS.SYNTH_DESIGN.ARGS.MORE OPTIONS} -value {-generic DATAWIDTH = 2} -objects [get_runs synth_4]
+set_property strategy {Vivado Synthesis Defaults} [get_runs synth_5]
+set_property strategy {Vivado Synthesis Defaults} [get_runs synth_6]
+set_property strategy {Vivado Synthesis Defaults} [get_runs synth_7]
+set_property -name {STEPS.SYNTH_DESIGN.ARGS.MORE OPTIONS} -value {-generic DATAWIDTH = 8} -objects [get_runs synth_5]
+set_property -name {STEPS.SYNTH_DESIGN.ARGS.MORE OPTIONS} -value {-generic DATAWIDTH=8} -objects [get_runs synth_5]
+set_property -name {STEPS.SYNTH_DESIGN.ARGS.MORE OPTIONS} -value {-generic DATAWIDTH=2} -objects [get_runs synth_4]
+set_property -name {STEPS.SYNTH_DESIGN.ARGS.MORE OPTIONS} -value {-generic DATAWIDTH=32} -objects [get_runs synth_6]
+set_property -name {STEPS.SYNTH_DESIGN.ARGS.MORE OPTIONS} -value {-generic DATAWIDTH=32} -objects [get_runs synth_7]
+set_property -name {STEPS.SYNTH_DESIGN.ARGS.MORE OPTIONS} -value {-generic DATAWIDTH=16} -objects [get_runs synth_6]
+set_property -name {STEPS.SYNTH_DESIGN.ARGS.MORE OPTIONS} -value {-generic DATAWIDTH=2} -objects [get_runs synth_3]
+reset_run synth_4
+reset_run synth_5
+reset_run synth_6
+reset_run synth_7
+launch_runs synth_4 synth_5 synth_6 synth_7 -jobs 2
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/ADD.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/ADD.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/COMP.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/COMP.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/DEC.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/DEC.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/DIV.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/DIV.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/INC.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/INC.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/MOD.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/MOD.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/MUL.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/MUL.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/MUX2x1.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/MUX2x1.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/REG.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/REG.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SHL.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SHL.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SHR.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SHR.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SUB.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SUB.v:1]
+[Sun Sep 11 14:46:03 2016] Launched synth_4, synth_5, synth_6, synth_7...
+Run output will be captured here:
+synth_4: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.runs/synth_4/runme.log
+synth_5: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.runs/synth_5/runme.log
+synth_6: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.runs/synth_6/runme.log
+synth_7: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.runs/synth_7/runme.log
+reset_run synth_3
+reset_run synth_4
+reset_run synth_5
+reset_run synth_6
+reset_run synth_7
+launch_runs synth_3 impl_3 synth_4 synth_5 synth_6 synth_7 -jobs 2
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/ADD.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/ADD.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/COMP.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/COMP.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/DEC.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/DEC.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/DIV.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/DIV.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/INC.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/INC.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/MOD.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/MOD.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/MUL.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/MUL.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/MUX2x1.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/MUX2x1.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/REG.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/REG.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SHL.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SHL.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SHR.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SHR.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SUB.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SUB.v:1]
+[Sun Sep 11 14:47:37 2016] Launched synth_3...
+Run output will be captured here: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.runs/synth_3/runme.log
+[Sun Sep 11 14:47:37 2016] Launched synth_3, impl_3, synth_4, synth_5, synth_6, synth_7...
+Run output will be captured here:
+synth_3: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.runs/synth_3/runme.log
+impl_3: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.runs/impl_3/runme.log
+synth_4: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.runs/synth_4/runme.log
+synth_5: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.runs/synth_5/runme.log
+synth_6: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.runs/synth_6/runme.log
+synth_7: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.runs/synth_7/runme.log
+launch_runs impl_3 -to_step write_bitstream -jobs 2
+[Sun Sep 11 14:49:39 2016] Launched impl_3...
+Run output will be captured here: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.runs/impl_3/runme.log
+open_run synth_3 -name synth_3
+Design is defaulting to impl run constrset: constrs_1
+Design is defaulting to synth run part: xc7a100tcsg324-1
+INFO: [Netlist 29-17] Analyzing 4 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-479] Netlist was created with Vivado 2016.2
+INFO: [Device 21-403] Loading part xc7a100tcsg324-1
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+open_run: Time (s): cpu = 00:00:15 ; elapsed = 00:00:12 . Memory (MB): peak = 1267.609 ; gain = 259.270
+report_timing_summary -delay_type min_max -report_unconstrained -check_timing_verbose -max_paths 10 -input_pins -name timing_1
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: min_max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 2 CPUs
+report_timing_summary: Time (s): cpu = 00:00:13 ; elapsed = 00:00:10 . Memory (MB): peak = 1671.777 ; gain = 393.242
+open_run synth_4 -constrset constrs_1 -name synth_4
+Design is defaulting to synth run part: xc7a100tcsg324-1
+INFO: [Netlist 29-17] Analyzing 4 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-479] Netlist was created with Vivado 2016.2
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+report_timing_summary -delay_type min_max -report_unconstrained -check_timing_verbose -max_paths 10 -input_pins -name timing_1
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: min_max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 2 CPUs
+open_run synth_5 -constrset constrs_1 -name synth_5
+Design is defaulting to synth run part: xc7a100tcsg324-1
+INFO: [Netlist 29-17] Analyzing 18 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-479] Netlist was created with Vivado 2016.2
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+report_timing_summary -delay_type min_max -report_unconstrained -check_timing_verbose -max_paths 10 -input_pins -name timing_1
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: min_max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 2 CPUs
+open_run synth_7 -constrset constrs_1 -name synth_7
+Design is defaulting to synth run part: xc7a100tcsg324-1
+INFO: [Netlist 29-17] Analyzing 72 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-479] Netlist was created with Vivado 2016.2
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+report_timing_summary -delay_type min_max -report_unconstrained -check_timing_verbose -max_paths 10 -input_pins -name timing_1
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: min_max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 2 CPUs
+create_run synth_8 -flow {Vivado Synthesis 2016}
+Run is defaulting to srcset: sources_1
+Run is defaulting to constrset: constrs_1
+Run is defaulting to part: xc7a100tcsg324-1
+launch_runs synth_8 -jobs 2
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/ADD.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/ADD.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/COMP.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/COMP.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/DEC.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/DEC.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/DIV.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/DIV.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/INC.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/INC.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/MOD.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/MOD.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/MUL.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/MUL.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/MUX2x1.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/MUX2x1.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/REG.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/REG.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SHL.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SHL.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SHR.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SHR.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SUB.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SUB.v:1]
+[Sun Sep 11 14:59:52 2016] Launched synth_8...
+Run output will be captured here: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.runs/synth_8/runme.log
+set_property -name {STEPS.SYNTH_DESIGN.ARGS.MORE OPTIONS} -value {-generic DATAWIDTH=64} -objects [get_runs synth_8]
+reset_run synth_8
+launch_runs synth_8 -jobs 2
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/ADD.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/ADD.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/COMP.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/COMP.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/DEC.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/DEC.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/DIV.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/DIV.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/INC.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/INC.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/MOD.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/MOD.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/MUL.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/MUL.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/MUX2x1.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/MUX2x1.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/REG.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/REG.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SHL.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SHL.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SHR.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SHR.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SUB.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SUB.v:1]
+[Sun Sep 11 15:00:29 2016] Launched synth_8...
+Run output will be captured here: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.runs/synth_8/runme.log
+open_run synth_8 -constrset constrs_1 -name synth_8
+Design is defaulting to synth run part: xc7a100tcsg324-1
+INFO: [Netlist 29-17] Analyzing 144 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-479] Netlist was created with Vivado 2016.2
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+report_timing_summary -delay_type min_max -report_unconstrained -check_timing_verbose -max_paths 10 -input_pins -name timing_1
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: min_max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 2 CPUs
+open_run synth_4 -constrset constrs_1 -name synth_4_1
+Design is defaulting to synth run part: xc7a100tcsg324-1
+INFO: [Netlist 29-17] Analyzing 4 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-479] Netlist was created with Vivado 2016.2
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+report_timing_summary -delay_type min_max -report_unconstrained -check_timing_verbose -max_paths 10 -input_pins -name timing_1
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: min_max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 2 CPUs
+current_design synth_3
+close_design
+current_design synth_4
+close_design
+current_design synth_5
+close_design
+close_design
+close_design
+close_design
+set_property top COMP2 [get_filesets sim_1]
+set_property top_lib xil_defaultlib [get_filesets sim_1]
+set_property top COMP2 [current_fileset]
+update_compile_order -fileset sources_1
+reset_run synth_3
+launch_runs synth_3 -jobs 2
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/ADD.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/ADD.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/COMP.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/COMP.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/DEC.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/DEC.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/DIV.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/DIV.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/INC.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/INC.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/MOD.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/MOD.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/MUL.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/MUL.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/MUX2x1.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/MUX2x1.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/REG.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/REG.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SHL.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SHL.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SHR.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SHR.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SUB.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SUB.v:1]
+[Sun Sep 11 15:06:03 2016] Launched synth_3...
+Run output will be captured here: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.runs/synth_3/runme.log
+reset_run synth_3
+create_run synth_9 -flow {Vivado Synthesis 2016} -strategy twobits
+Run is defaulting to srcset: sources_1
+Run is defaulting to constrset: constrs_1
+Run is defaulting to part: xc7a100tcsg324-1
+create_run synth_10 -flow {Vivado Synthesis 2016} -strategy eightbits
+Run is defaulting to srcset: sources_1
+Run is defaulting to constrset: constrs_1
+Run is defaulting to part: xc7a100tcsg324-1
+create_run synth_11 -flow {Vivado Synthesis 2016} -strategy sixteenbits
+Run is defaulting to srcset: sources_1
+Run is defaulting to constrset: constrs_1
+Run is defaulting to part: xc7a100tcsg324-1
+create_run synth_12 -flow {Vivado Synthesis 2016} -strategy thirtytwobits
+Run is defaulting to srcset: sources_1
+Run is defaulting to constrset: constrs_1
+Run is defaulting to part: xc7a100tcsg324-1
+create_run synth_13 -flow {Vivado Synthesis 2016} -strategy sixtyfourbits
+Run is defaulting to srcset: sources_1
+Run is defaulting to constrset: constrs_1
+Run is defaulting to part: xc7a100tcsg324-1
+launch_runs synth_9 synth_10 synth_11 synth_12 synth_13 -jobs 2
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/ADD.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/ADD.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/COMP.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/COMP.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/DEC.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/DEC.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/DIV.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/DIV.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/INC.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/INC.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/MOD.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/MOD.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/MUL.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/MUL.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/MUX2x1.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/MUX2x1.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/REG.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/REG.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SHL.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SHL.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SHR.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SHR.v:1]
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SUB.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SUB.v:1]
+[Sun Sep 11 15:07:30 2016] Launched synth_9, synth_10, synth_11, synth_12, synth_13...
+Run output will be captured here:
+synth_9: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.runs/synth_9/runme.log
+synth_10: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.runs/synth_10/runme.log
+synth_11: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.runs/synth_11/runme.log
+synth_12: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.runs/synth_12/runme.log
+synth_13: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.runs/synth_13/runme.log
+open_run synth_9 -constrset constrs_1 -name synth_9
+Design is defaulting to synth run part: xc7a100tcsg324-1
+INFO: [Netlist 29-17] Analyzing 4 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-479] Netlist was created with Vivado 2016.2
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+report_timing_summary -delay_type min_max -report_unconstrained -check_timing_verbose -max_paths 10 -input_pins -name timing_1
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: min_max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 2 CPUs
+delete_runs "synth_9 synth_10 synth_11 synth_12 synth_13"
+set_property top DEC [current_fileset]
+update_compile_order -fileset sources_1
+set_property top DEC [get_filesets sim_1]
+set_property top_lib xil_defaultlib [get_filesets sim_1]
+reset_run synth_4
+reset_run synth_5
+reset_run synth_6
+reset_run synth_7
+reset_run synth_8
+launch_runs synth_4 synth_5 synth_6 synth_7 synth_8 -jobs 2
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/DEC.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/DEC.v:1]
+[Sun Sep 11 15:11:19 2016] Launched synth_4, synth_5, synth_6, synth_7, synth_8...
+Run output will be captured here:
+synth_4: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.runs/synth_4/runme.log
+synth_5: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.runs/synth_5/runme.log
+synth_6: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.runs/synth_6/runme.log
+synth_7: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.runs/synth_7/runme.log
+synth_8: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.runs/synth_8/runme.log
+open_run synth_4 -constrset constrs_1 -name synth_4
+Design is defaulting to synth run part: xc7a100tcsg324-1
+INFO: [Netlist 29-17] Analyzing 2 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-479] Netlist was created with Vivado 2016.2
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+report_timing_summary -delay_type min_max -report_unconstrained -check_timing_verbose -max_paths 10 -input_pins -name timing_1
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: min_max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 2 CPUs
+open_run synth_5 -constrset constrs_1 -name synth_5
+Design is defaulting to synth run part: xc7a100tcsg324-1
+INFO: [Netlist 29-17] Analyzing 8 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-479] Netlist was created with Vivado 2016.2
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+report_timing_summary -delay_type min_max -report_unconstrained -check_timing_verbose -max_paths 10 -input_pins -name timing_1
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: min_max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 2 CPUs
+open_run synth_6 -constrset constrs_1 -name synth_6
+Design is defaulting to synth run part: xc7a100tcsg324-1
+INFO: [Netlist 29-17] Analyzing 20 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-479] Netlist was created with Vivado 2016.2
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+report_timing_summary -delay_type min_max -report_unconstrained -check_timing_verbose -max_paths 10 -input_pins -name timing_1
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: min_max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 2 CPUs
+open_run synth_7 -constrset constrs_1 -name synth_7
+Design is defaulting to synth run part: xc7a100tcsg324-1
+INFO: [Netlist 29-17] Analyzing 40 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-479] Netlist was created with Vivado 2016.2
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+report_timing_summary -delay_type min_max -report_unconstrained -check_timing_verbose -max_paths 10 -input_pins -name timing_1
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: min_max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 2 CPUs
+open_run synth_8 -constrset constrs_1 -name synth_8
+Design is defaulting to synth run part: xc7a100tcsg324-1
+INFO: [Netlist 29-17] Analyzing 80 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-479] Netlist was created with Vivado 2016.2
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+report_timing_summary -delay_type min_max -report_unconstrained -check_timing_verbose -max_paths 10 -input_pins -name timing_1
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: min_max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 2 CPUs
+set_property top INC [current_fileset]
+update_compile_order -fileset sources_1
+set_property top INC [get_filesets sim_1]
+set_property top_lib xil_defaultlib [get_filesets sim_1]
+reset_run synth_4
+reset_run synth_5
+reset_run synth_6
+reset_run synth_7
+reset_run synth_8
+launch_runs synth_4 synth_5 synth_6 synth_7 synth_8 -jobs 2
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/DEC.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/DEC.v:1]
+[Sun Sep 11 15:15:54 2016] Launched synth_4, synth_5, synth_6, synth_7, synth_8...
+Run output will be captured here:
+synth_4: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.runs/synth_4/runme.log
+synth_5: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.runs/synth_5/runme.log
+synth_6: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.runs/synth_6/runme.log
+synth_7: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.runs/synth_7/runme.log
+synth_8: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.runs/synth_8/runme.log
+open_run synth_4 -constrset constrs_1 -name synth_4_1
+Design is defaulting to synth run part: xc7a100tcsg324-1
+INFO: [Netlist 29-17] Analyzing 2 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-479] Netlist was created with Vivado 2016.2
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+report_timing_summary -delay_type min_max -report_unconstrained -check_timing_verbose -max_paths 10 -input_pins -name timing_1
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: min_max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 2 CPUs
+open_run synth_5 -constrset constrs_1 -name synth_5_1
+Design is defaulting to synth run part: xc7a100tcsg324-1
+INFO: [Netlist 29-17] Analyzing 8 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-479] Netlist was created with Vivado 2016.2
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+report_timing_summary -delay_type min_max -report_unconstrained -check_timing_verbose -max_paths 10 -input_pins -name timing_1
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: min_max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 2 CPUs
+open_run synth_6 -constrset constrs_1 -name synth_6_1
+Design is defaulting to synth run part: xc7a100tcsg324-1
+INFO: [Netlist 29-17] Analyzing 20 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-479] Netlist was created with Vivado 2016.2
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+report_timing_summary -delay_type min_max -report_unconstrained -check_timing_verbose -max_paths 10 -input_pins -name timing_1
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: min_max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 2 CPUs
+open_run synth_7 -constrset constrs_1 -name synth_7_1
+Design is defaulting to synth run part: xc7a100tcsg324-1
+INFO: [Netlist 29-17] Analyzing 40 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-479] Netlist was created with Vivado 2016.2
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+report_timing_summary -delay_type min_max -report_unconstrained -check_timing_verbose -max_paths 10 -input_pins -name timing_1
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: min_max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 2 CPUs
+open_run synth_8 -constrset constrs_1 -name synth_8_1
+Design is defaulting to synth run part: xc7a100tcsg324-1
+INFO: [Netlist 29-17] Analyzing 80 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-479] Netlist was created with Vivado 2016.2
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+report_timing_summary -delay_type min_max -report_unconstrained -check_timing_verbose -max_paths 10 -input_pins -name timing_1
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: min_max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 2 CPUs
+set_property top MOD [current_fileset]
+update_compile_order -fileset sources_1
+set_property top MOD [get_filesets sim_1]
+set_property top_lib xil_defaultlib [get_filesets sim_1]
+reset_run synth_4
+reset_run synth_5
+reset_run synth_6
+reset_run synth_7
+reset_run synth_8
+launch_runs synth_4 synth_5 synth_6 synth_7 synth_8 -jobs 2
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/DEC.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/DEC.v:1]
+[Sun Sep 11 15:21:15 2016] Launched synth_4, synth_5, synth_6, synth_7, synth_8...
+Run output will be captured here:
+synth_4: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.runs/synth_4/runme.log
+synth_5: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.runs/synth_5/runme.log
+synth_6: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.runs/synth_6/runme.log
+synth_7: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.runs/synth_7/runme.log
+synth_8: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.runs/synth_8/runme.log
+open_run synth_4 -constrset constrs_1 -name synth_4_2
+Design is defaulting to synth run part: xc7a100tcsg324-1
+INFO: [Netlist 29-17] Analyzing 4 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-479] Netlist was created with Vivado 2016.2
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+open_run synth_4 -constrset constrs_1 -name synth_4_3
+Design is defaulting to synth run part: xc7a100tcsg324-1
+INFO: [Netlist 29-17] Analyzing 4 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-479] Netlist was created with Vivado 2016.2
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+report_timing_summary -delay_type min_max -report_unconstrained -check_timing_verbose -max_paths 10 -input_pins -name timing_1
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: min_max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 2 CPUs
+open_run synth_5 -constrset constrs_1 -name synth_5_2
+Design is defaulting to synth run part: xc7a100tcsg324-1
+INFO: [Netlist 29-17] Analyzing 37 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-479] Netlist was created with Vivado 2016.2
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+report_timing_summary -delay_type min_max -report_unconstrained -check_timing_verbose -max_paths 10 -input_pins -name timing_1
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: min_max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 2 CPUs
+open_run synth_6 -constrset constrs_1 -name synth_6_2
+Design is defaulting to synth run part: xc7a100tcsg324-1
+INFO: [Netlist 29-17] Analyzing 112 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-479] Netlist was created with Vivado 2016.2
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+report_timing_summary -delay_type min_max -report_unconstrained -check_timing_verbose -max_paths 10 -input_pins -name timing_1
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: min_max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 2 CPUs
+open_run synth_7 -constrset constrs_1 -name synth_7_2
+Design is defaulting to synth run part: xc7a100tcsg324-1
+INFO: [Netlist 29-17] Analyzing 352 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+WARNING: [Netlist 29-101] Netlist 'MOD' is not ideal for floorplanning, since the cellview 'MOD' contains a large number of primitives.  Please consider enabling hierarchy in synthesis if you want to do floorplanning.
+INFO: [Project 1-479] Netlist was created with Vivado 2016.2
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+open_run: Time (s): cpu = 00:00:08 ; elapsed = 00:00:05 . Memory (MB): peak = 4476.465 ; gain = 128.117
+report_timing_summary -delay_type min_max -report_unconstrained -check_timing_verbose -max_paths 10 -input_pins -name timing_1
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: min_max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 2 CPUs
+open_run synth_8 -constrset constrs_1 -name synth_8_2
+Design is defaulting to synth run part: xc7a100tcsg324-1
+INFO: [Netlist 29-17] Analyzing 1216 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+WARNING: [Netlist 29-101] Netlist 'MOD' is not ideal for floorplanning, since the cellview 'MOD' contains a large number of primitives.  Please consider enabling hierarchy in synthesis if you want to do floorplanning.
+INFO: [Project 1-479] Netlist was created with Vivado 2016.2
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+open_run: Time (s): cpu = 00:00:07 ; elapsed = 00:00:05 . Memory (MB): peak = 4704.328 ; gain = 133.047
+report_timing_summary -delay_type min_max -report_unconstrained -check_timing_verbose -max_paths 10 -input_pins -name timing_1
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: min_max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 2 CPUs
+report_timing_summary: Time (s): cpu = 00:00:19 ; elapsed = 00:00:17 . Memory (MB): peak = 4802.398 ; gain = 98.070
+set_property top SHR [get_filesets sim_1]
+set_property top_lib xil_defaultlib [get_filesets sim_1]
+set_property top SHR [current_fileset]
+update_compile_order -fileset sources_1
+reset_run synth_4
+reset_run synth_5
+reset_run synth_6
+reset_run synth_7
+reset_run synth_8
+launch_runs synth_4 synth_5 synth_6 synth_7 synth_8 -jobs 2
+INFO: [HDL 9-2216] Analyzing Verilog file "C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/DEC.v" into library work [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/DEC.v:1]
+[Sun Sep 11 15:35:39 2016] Launched synth_4, synth_5, synth_6, synth_7, synth_8...
+Run output will be captured here:
+synth_4: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.runs/synth_4/runme.log
+synth_5: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.runs/synth_5/runme.log
+synth_6: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.runs/synth_6/runme.log
+synth_7: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.runs/synth_7/runme.log
+synth_8: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.runs/synth_8/runme.log
