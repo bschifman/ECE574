@@ -21,7 +21,7 @@
 
 
 module ADD2(a, b, sum);
-    parameter DATAWIDTH = 0;
+    parameter DATAWIDTH = 8;
     input [DATAWIDTH-1:0] a, b;
     output reg [DATAWIDTH-1:0] sum;
      

@@ -21,7 +21,7 @@
 
 
 module COMP2(a, b, gt, lt, eq);
-    parameter DATAWIDTH = 0;
+    parameter DATAWIDTH = 8;
     input [DATAWIDTH-1:0] a, b;
     output reg gt, lt, eq;
     

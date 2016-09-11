@@ -20,16 +20,16 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module REG(d, clk, rst, q);
-    parameter DATAWIDTH = 0;
+module REG (d, clk, rst, q);
+    parameter DATAWIDTH = 2;
     input [DATAWIDTH-1:0] d;
     input clk, rst;
     output reg [DATAWIDTH-1:0] q;
     
-    always @(posedge clk or posedge rst) begin
+    always @(posedge clk) begin
         if(rst)
-            q = 0;
+            q <= 0;
         else 
-            q = d;
+            q <= d;
     end
 endmodule

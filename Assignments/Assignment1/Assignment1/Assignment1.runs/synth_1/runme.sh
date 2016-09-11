@@ -24,7 +24,7 @@ else
 fi
 export LD_LIBRARY_PATH
 
-HD_PWD='C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/Assignments/Assignment1/Assignment1/Assignment1.runs/synth_1'
+HD_PWD='C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.runs/synth_1'
 cd "$HD_PWD"
 
 HD_LOG=runme.log
@@ -40,4 +40,4 @@ EAStep()
      fi
 }
 
-EAStep vivado -log ADD2.vds -m64 -mode batch -messageDb vivado.pb -notrace -source ADD2.tcl
+EAStep vivado -log REG.vds -m64 -mode batch -messageDb vivado.pb -notrace -source REG.tcl
