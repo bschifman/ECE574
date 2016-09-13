@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <GenRun Id="synth_4" LaunchPart="xc7a100tcsg324-1" LaunchTime="1473633978">
-  <File Type="RDS-PROPCONSTRS" Name="MUL2_drc_synth.rpt"/>
   <File Type="PA-TCL" Name="MUL2.tcl"/>
+  <File Type="RDS-PROPCONSTRS" Name="MUL2_drc_synth.rpt"/>
   <File Type="RDS-RDS" Name="MUL2.vds"/>
   <File Type="RDS-UTIL" Name="MUL2_utilization_synth.rpt"/>
   <File Type="RDS-UTIL-PB" Name="MUL2_utilization_synth.pb"/>
