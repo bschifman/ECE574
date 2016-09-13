@@ -5,7 +5,7 @@
 // 
 // Create Date: 09/03/2016 01:09:44 PM
 // Design Name: 
-// Module Name: ADD2
+// Module Name: ADD
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
@@ -20,7 +20,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module ADD2(a, b, sum);
+module ADD(a, b, sum);
     parameter DATAWIDTH = 8;
     input [DATAWIDTH-1:0] a, b;
     output reg [DATAWIDTH-1:0] sum;     

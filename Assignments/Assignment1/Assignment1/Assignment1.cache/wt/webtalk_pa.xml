@@ -3,7 +3,7 @@
 <!--The data in this file is primarily intended for consumption by Xilinx tools.
 The structure and the elements are likely to change over the next few releases.
 This means code written to parse this file will need to be revisited each subsequent release.-->
-<application name="pa" timeStamp="Sun Sep 11 16:56:13 2016">
+<application name="pa" timeStamp="Tue Sep 13 15:48:06 2016">
 <section name="Project Information" visible="false">
 <property name="ProjectID" value="597c41ee9c3949b4a393528df7ce8f68" type="ProjectID"/>
 <property name="ProjectIteration" value="3" type="ProjectIteration"/>
@@ -17,54 +17,84 @@ This means code written to parse this file will need to be revisited each subseq
 <property name="ImplStrategy" value="Vivado Implementation Defaults" type="ImplStrategy"/>
 </item>
 <item name="Java Command Handlers">
-<property name="AddSources" value="10" type="JavaHandler"/>
+<property name="AddSources" value="15" type="JavaHandler"/>
 <property name="EditConstraintSets" value="1" type="JavaHandler"/>
-<property name="EditDelete" value="8" type="JavaHandler"/>
+<property name="EditDelete" value="9" type="JavaHandler"/>
 <property name="EditProperties" value="26" type="JavaHandler"/>
 <property name="EditSimulationSets" value="2" type="JavaHandler"/>
 <property name="NewProject" value="1" type="JavaHandler"/>
 <property name="ProjectSettingsCmdHandler" value="10" type="JavaHandler"/>
 <property name="ProjectSummary" value="1" type="JavaHandler"/>
-<property name="ReportTimingSummary" value="37" type="JavaHandler"/>
+<property name="ReportTimingSummary" value="38" type="JavaHandler"/>
 <property name="RunBitgen" value="1" type="JavaHandler"/>
 <property name="RunDesignAhead" value="13" type="JavaHandler"/>
 <property name="RunImplementation" value="1" type="JavaHandler"/>
-<property name="RunSchematic" value="8" type="JavaHandler"/>
-<property name="RunSynthesis" value="20" type="JavaHandler"/>
+<property name="RunSchematic" value="9" type="JavaHandler"/>
+<property name="RunSynthesis" value="21" type="JavaHandler"/>
 <property name="SaveFileProxyHandler" value="14" type="JavaHandler"/>
 <property name="SetTopNode" value="20" type="JavaHandler"/>
 <property name="ShowSource" value="4" type="JavaHandler"/>
-<property name="ShowView" value="12" type="JavaHandler"/>
+<property name="ShowView" value="19" type="JavaHandler"/>
 <property name="SimulationClose" value="8" type="JavaHandler"/>
 <property name="SimulationRestart" value="3" type="JavaHandler"/>
 <property name="SimulationRun" value="15" type="JavaHandler"/>
 <property name="SimulationRunAll" value="1" type="JavaHandler"/>
 <property name="SimulationRunForTime" value="3" type="JavaHandler"/>
 <property name="ViewTaskProjectManager" value="1" type="JavaHandler"/>
-<property name="ViewTaskSynthesis" value="16" type="JavaHandler"/>
+<property name="ViewTaskSynthesis" value="17" type="JavaHandler"/>
 <property name="WaveformSaveConfiguration" value="1" type="JavaHandler"/>
 <property name="ui.views.b.h.f" value="1" type="JavaHandler"/>
 </item>
 <item name="Gui Resources Info">
-<property name="Netlist1.v, 250, 90" value="1" type="GuiResourceData"/>
-<property name="PAResourceCommand.PACommandNames_SCHEMATIC, Schematic" value="1" type="GuiResourceData"/>
-<property name="PAResourceEtoH.FlowNavigatorTreePanel_FLOW_NAVIGATOR_TREE, [, Synthesis, Synthesized Design, Schematic], 26, false" value="1" type="GuiResourceData"/>
-<property name="PAResourceItoN.NavigableTimingReportTab_TIMING_REPORT_NAVIGATION_TREE, [Root, Unconstrained Paths, NONE to NONE, Hold], 11, false" value="1" type="GuiResourceData"/>
-<property name="PAResourceItoN.NavigableTimingReportTab_TIMING_REPORT_NAVIGATION_TREE, [Root, Unconstrained Paths, NONE to NONE, Setup], 10, false" value="2" type="GuiResourceData"/>
-<property name="PAResourceItoN.NavigableTimingReportTab_TIMING_REPORT_NAVIGATION_TREE, [Root, Unconstrained Paths, NONE to NONE], 9, true" value="1" type="GuiResourceData"/>
-<property name="PAResourceItoN.NavigableTimingReportTab_TIMING_REPORT_NAVIGATION_TREE, [Root, Unconstrained Paths], 8, true" value="1" type="GuiResourceData"/>
-<property name="PAResourceQtoS.SelectMenu_HIGHLIGHT, Highlight" value="1" type="GuiResourceData"/>
-<property name="PAResourceQtoS.SelectMenu_MARK, Mark" value="1" type="GuiResourceData"/>
-<property name="PAResourceTtoZ.TimingGettingStartedPanel_REPORT_TIMING_SUMMARY, Report Timing Summary" value="1" type="GuiResourceData"/>
-<property name="PAResourceTtoZ.TimingItemFlatTablePanel_TABLE, Path 1 ; Infinity ; 10 ; 17 ; c[3] ; REG_0/q_reg[15]/D ; 7.440339 ; 4.0863395 ; 3.3539999 ; Infinity ; input port clock ;  ; , 0, Path 1, 0" value="2" type="GuiResourceData"/>
-<property name="PAResourceTtoZ.TimingItemFlatTablePanel_TABLE, Path 1 ; Infinity ; 10 ; 17 ; c[3] ; REG_0/q_reg[15]/D ; 7.440339 ; 4.0863395 ; 3.3539999 ; Infinity ; input port clock ;  ; , 0, Path 1, 0, false, false, false, false, true" value="1" type="GuiResourceData"/>
-<property name="PAResourceTtoZ.TimingItemFlatTablePanel_TABLE, Path 1 ; Infinity ; 10 ; 17 ; c[3] ; REG_0/q_reg[15]/D ; 7.440339 ; 4.0863395 ; 3.3539999 ; Infinity ; input port clock ;  ; , 0, Path 1, 0, false, false, false, true, false" value="1" type="GuiResourceData"/>
-<property name="RDIResource.BaseDialog_OK, OK" value="2" type="GuiResourceData"/>
+<property name="FINISH, Finish" value="1" type="GuiResourceData"/>
+<property name="NEXT, Next " value="1" type="GuiResourceData"/>
+<property name="Netlist2.v, 215, 180" value="1" type="GuiResourceData"/>
+<property name="Netlist2.v, 242, 60" value="1" type="GuiResourceData"/>
+<property name="Netlist2.v, 54, 113" value="1" type="GuiResourceData"/>
+<property name="Netlist2.v, 56, 146" value="1" type="GuiResourceData"/>
+<property name="Netlist2.v, 58, 131" value="1" type="GuiResourceData"/>
+<property name="Netlist2.v, 58, 177" value="1" type="GuiResourceData"/>
+<property name="Netlist2.v, 59, 162" value="1" type="GuiResourceData"/>
+<property name="Netlist2.v, 59, 179" value="1" type="GuiResourceData"/>
+<property name="Netlist2.v, 62, 177" value="1" type="GuiResourceData"/>
+<property name="Netlist2.v, 63, 143" value="1" type="GuiResourceData"/>
+<property name="Netlist2.v, 64, 60" value="1" type="GuiResourceData"/>
+<property name="Netlist2.v, 66, 161" value="1" type="GuiResourceData"/>
+<property name="Netlist2.v, 71, 201" value="1" type="GuiResourceData"/>
+<property name="Netlist2.v, 76, 214" value="1" type="GuiResourceData"/>
+<property name="Netlist2.v, 77, 112" value="1" type="GuiResourceData"/>
+<property name="Netlist4.v, 130, 58" value="1" type="GuiResourceData"/>
+<property name="Netlist4.v, 184, 126" value="1" type="GuiResourceData"/>
+<property name="Netlist4.v, 57, 110" value="1" type="GuiResourceData"/>
+<property name="Netlist4.v, 63, 97" value="1" type="GuiResourceData"/>
+<property name="Netlist5.v, 110, 59" value="1" type="GuiResourceData"/>
+<property name="Netlist5.v, 205, 118" value="1" type="GuiResourceData"/>
+<property name="Netlist6.v, 55, 27" value="1" type="GuiResourceData"/>
+<property name="Netlist8.v, 184, 168" value="1" type="GuiResourceData"/>
+<property name="Netlist8.v, 203, 115" value="1" type="GuiResourceData"/>
+<property name="Netlist8.v, 209, 115" value="1" type="GuiResourceData"/>
+<property name="Netlist8.v, 212, 118" value="1" type="GuiResourceData"/>
+<property name="Netlist8.v, 261, 165" value="1" type="GuiResourceData"/>
+<property name="Netlist8.v, 64, 166" value="1" type="GuiResourceData"/>
+<property name="PAResourceCommand.PACommandNames_ADD_SOURCES, Add Sources..." value="1" type="GuiResourceData"/>
+<property name="PAResourceCommand.PACommandNames_AUTO_UPDATE_HIER, Hierarchy Update" value="2" type="GuiResourceData"/>
+<property name="PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, [root, Design Sources, Netlist1 (Netlist1.v" value="6" type="GuiResourceData"/>
+<property name="PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, [root, Design Sources, Netlist2 (Netlist2.v" value="4" type="GuiResourceData"/>
+<property name="PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, [root, Design Sources, Netlist3 (Netlist3.v" value="4" type="GuiResourceData"/>
+<property name="PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, [root, Design Sources, Netlist4 (Netlist4.v" value="7" type="GuiResourceData"/>
+<property name="PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, [root, Design Sources, Netlist5 (Netlist5.v" value="3" type="GuiResourceData"/>
+<property name="PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, [root, Design Sources, Netlist6 (Netlist6.v" value="2" type="GuiResourceData"/>
+<property name="PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, [root, Design Sources, Netlist8 (Netlist8.v" value="2" type="GuiResourceData"/>
+<property name="PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, [root, Design Sources], 0, true, false, false, false, true, false" value="1" type="GuiResourceData"/>
+<property name="PAResourceOtoP.Project_AUTOMATIC_UPDATE_AND_COMPILE_ORDER, Automatic Update and Compile Order" value="1" type="GuiResourceData"/>
+<property name="PAResourceQtoS.SrcChooserPanel_ADD_HDL_AND_NETLIST_FILES_TO_YOUR_PROJECT, Add Files" value="1" type="GuiResourceData"/>
+<property name="PAResourceQtoS.SrcMenu_IP_HIERARCHY, IP Hierarchy" value="1" type="GuiResourceData"/>
+<property name="RDIResource.HCodeEditor_SEARCH_TEXT_COMBO_BOX, ADD2" value="1" type="GuiResourceData"/>
 </item>
 <item name="Other">
-<property name="GuiMode" value="16" type="GuiMode"/>
+<property name="GuiMode" value="18" type="GuiMode"/>
 <property name="BatchMode" value="0" type="BatchMode"/>
-<property name="TclMode" value="12" type="TclMode"/>
+<property name="TclMode" value="14" type="TclMode"/>
 </item>
 </section>
 </application>

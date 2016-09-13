@@ -20,7 +20,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module REG (d, clk, rst, q);
+module REG(d, clk, rst, q);
     parameter DATAWIDTH = 16;
     input [DATAWIDTH-1:0] d;
     input clk, rst;

@@ -28,15 +28,14 @@ module Netlist1(a, b, c, clk, rst, z, x);
     output [15:0] x;
 
     wire [7:0] d, e;
-    wire [15:0] f;
-    wire [15:0] xwire;
-    wire g, garbage;
+    wire [15:0] f, xwire;
+    wire g;
     
-    ADD2 #(.DATAWIDTH = 8)  ADD2_0(a, b, d);
-    ADD2 #(.DATAWIDTH = 8) ADD2_1(a, c, e);
-    COMP2 #(.DATAWIDTH = 8) COMP2_0(d, e, garbage, g, garbage);
-    MUX2x1 #(.DATAWIDTH = 8) MUX2x1_0(d, e, g, z);
-    MUL2 #(.DATAWIDTH = 8) MUL2_0(a, c, f);
-    SUB2 #(.DATAWIDTH = 16) SUB2_0(f, d, xwire);
-    REG #(.DATAWIDTH = 16) REG_0(xwire, clk, rst, x);
+    ADD     #(.DATAWIDTH(8))    ADD_0(a, b, d);
+    ADD     #(.DATAWIDTH(8))    ADD_1(a, c, e);
+    COMP    #(.DATAWIDTH(8))    COMP_0(.a(d), .b(e), .gt(g));
+    MUX2x1  #(.DATAWIDTH(8))    MUX2x1_0(d, e, g, z);
+    MUL     #(.DATAWIDTH (8))   MUL_0(a, c, f);
+    SUB     #(.DATAWIDTH(16))   SUB_0(f, d, xwire);
+    REG     #(.DATAWIDTH(16))   REG_0(xwire, clk, rst, x);
 endmodule

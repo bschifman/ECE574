@@ -19,7 +19,7 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
-module MUL2(a, b, prod);
+module MUL(a, b, prod);
     parameter DATAWIDTH = 8;
     input [DATAWIDTH-1:0] a, b;
     output reg [2*DATAWIDTH-1:0] prod;
