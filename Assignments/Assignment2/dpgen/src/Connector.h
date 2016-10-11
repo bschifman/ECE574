@@ -11,21 +11,21 @@ File: Connector.h
 
 class Connector
 {
-	public:
+public:
 		//Setters
-		void set_type(std::string type) { this->type = type; }
-		void set_name(std::string name) { this->name = name; }
-		void set_size(int size) { this->size = size; } 
-		void set_sign(bool sign) { this->sign = sign; }
-		void set_delay(float delay) { this->delay = delay; }
+		void SetType(std::string type) { this->type = type; }
+		void SetName(std::string name) { this->name = name; }
+		void SetSize(int size) { this->size = size; } 
+		void SetSign(bool sign) { this->sign = sign; }
+		void SetDelay(float delay) { this->delay = delay; }
 		//Getters
-		std::string get_type() { return this->type; }
-		std::string get_name() { return this->name; }
-		int get_size() { return this->size; }
-		bool get_sign() { return this->sign; }
-		float get_delay() { return this->delay; }
+		std::string GetType() { return this->type; }
+		std::string GetName() { return this->name; }
+		int GetSize() { return this->size; }
+		bool GetSign() { return this->sign; }
+		float GetDelay() { return this->delay; }
 
-	private:
+private:
 		std::string type;	//type of connector (input, output, wire, register)
 		std::string name;
 		int size;

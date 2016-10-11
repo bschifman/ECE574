@@ -16,26 +16,27 @@ using namespace std;
 /*This object is the various*/
 class Logic
 {
-	public:
-		
-		void SetType(std::string inputType) { this->type = type; }
-		std::string GetType() { return this->type; }
-		void SetName(std::string inputName) { this->name = inputName; }
+public:
+		//Setters
+		void SetType(std::string type) { this->type = type; }
+		void SetName(std::string name) { this->name = name; }
+		void SetL_inputs(std::string l_inputs) { this->l_inputs = l_inputs; }
+		void SetOutType(std::string outType) { this->outType = outType; }
+		void SetL_outputs(std::string l_inputs) { this->l_outputs = l_outputs; }
+		void SetDw(int dw) { this->dw = dw; }
+		void SetSign(bool sign) { this->sign = sign; }
+		void SetDelay(float delay) { this->delay = delay; }
+		//Getters
 		std::string GetName() { return this->name; }
-		void Setl_inputs(std::string inputl_inputs) { this->outType = inputl_inputs; }
+		std::string GetType() { return this->type; }
 		std::string Getl_inputs() { return this->l_inputs; }
-		void Setl_outputs(std::string inputl_outputs) { this->outType = inputl_outputs; }
 		std::string Getl_outputs() { return this->l_outputs; }
-		void SetOutType(std::string inputOutType) { this->outType = inputOutType; }
 		std::string GetOutType() { return this->outType; }
-		void Setdw(int inputdw) { this->dw = inputdw; }
 		int Getdw() { return this->dw; }
-		void SetSign(bool inputsign) { this->sign = inputsign; }
-		bool GetSign() { return this->sign; }
-		void SetDelay(float inputDelay) { this->delay; }
 		float GetDelay() { return this->delay; }
-
-	private:
+		bool GetSign() { return this->sign; }
+		
+private:
 		std::string type;
 		std::string name;
 		std::string l_inputs;
@@ -44,9 +45,6 @@ class Logic
 		int dw;
 		bool sign;
 		float delay;
-
-
-
 
 };
 

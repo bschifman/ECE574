@@ -15,7 +15,7 @@ File: ReadWrite.h
 
 class ReadWrite
 {
-	public:
+public:
 
 
 

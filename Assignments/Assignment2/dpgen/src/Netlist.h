@@ -14,15 +14,13 @@ File: Netlist.h
 
 class Netlist
 {
-	public:
+public:
 	
 		//Getters
-		std::vector<Connector> get_inputs() {
-			return this->get_inputs;
-		}
+		std::vector<Connector*> GetInputs() { return this->inputs; }
 
 
-	private:
+private:
 		std::vector<Connector*> inputs;
 		std::vector<Connector*> outputs;
 		std::vector<Connector*> wires;
