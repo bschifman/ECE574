@@ -1,0 +1,17 @@
+#-----------------------------------------------------------
+# Vivado v2016.2 (64-bit)
+# SW Build 1577090 on Thu Jun  2 16:32:40 MDT 2016
+# IP Build 1577682 on Fri Jun  3 12:00:54 MDT 2016
+# Start of session at: Tue Sep 13 15:40:48 2016
+# Process ID: 11980
+# Current directory: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1
+# Command line: vivado.exe -gui_launcher_event rodinguilauncherevent2844 C:\Users\Schifman Ben\Documents\UofA\Senior 2016-2017\Fall 2016\574 ECE\ECE574\Assignments\Assignment1\Assignment1\Assignment1.xpr
+# Log file: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/vivado.log
+# Journal file: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1\vivado.jou
+#-----------------------------------------------------------
+start_gui
+open_project {C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.xpr}
+update_compile_order -fileset sources_1
+add_files -norecurse {{C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/Netlist2.v} {C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/Netlist3.v} {C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/Netlist1.v} {C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/Netlist8.v} {C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/Netlist6.v} {C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/Netlist7.v} {C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/Netlist4.v} {C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/Netlist5.v}}
+update_compile_order -fileset sources_1
+set_property source_mgmt_mode All [current_project]

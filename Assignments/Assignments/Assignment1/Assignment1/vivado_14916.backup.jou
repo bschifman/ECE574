@@ -1,0 +1,262 @@
+#-----------------------------------------------------------
+# Vivado v2016.2 (64-bit)
+# SW Build 1577090 on Thu Jun  2 16:32:40 MDT 2016
+# IP Build 1577682 on Fri Jun  3 12:00:54 MDT 2016
+# Start of session at: Sun Sep 11 14:06:51 2016
+# Process ID: 14916
+# Current directory: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1
+# Command line: vivado.exe -gui_launcher_event rodinguilauncherevent8464 C:\Users\Schifman Ben\Documents\UofA\Senior 2016-2017\Fall 2016\574 ECE\ECE574\Assignments\Assignment1\Assignment1\Assignment1.xpr
+# Log file: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/vivado.log
+# Journal file: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1\vivado.jou
+#-----------------------------------------------------------
+start_gui
+open_project {C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.xpr}
+update_compile_order -fileset sources_1
+create_run synth_3 -flow {Vivado Synthesis 2016} -strategy {Vivado Synthesis Defaults}
+current_run [get_runs synth_3]
+set_property -name {STEPS.SYNTH_DESIGN.ARGS.MORE OPTIONS} -value {-generic DATAWIDTH = 2} -objects [get_runs synth_3]
+launch_runs synth_3
+wait_on_run synth_3
+create_run synth_4 -flow {Vivado Synthesis 2016}
+create_run synth_5 -flow {Vivado Synthesis 2016} -strategy Flow_AreaOptimized_high
+create_run synth_6 -flow {Vivado Synthesis 2016} -strategy Flow_AreaOptimized_medium
+create_run synth_7 -flow {Vivado Synthesis 2016} -strategy Flow_AreaMultThresholdDSP
+launch_runs synth_4 synth_5 synth_6 synth_7 -jobs 2
+wait_on_run synth_4
+wait_on_run synth_5
+wait_on_run synth_6
+wait_on_run synth_7
+delete_runs "synth_2"
+delete_runs "synth_1"
+set_property -name {STEPS.SYNTH_DESIGN.ARGS.MORE OPTIONS} -value {-generic DATAWIDTH = 2} -objects [get_runs synth_4]
+set_property {STEPS.SYNTH_DESIGN.ARGS.MORE OPTIONS} {generic DATAWIDTH = 8} [get_runs synth_5]
+set_property {STEPS.SYNTH_DESIGN.ARGS.MORE OPTIONS} {generic DATAWIDTH = 16} [get_runs synth_6]
+set_property {STEPS.SYNTH_DESIGN.ARGS.MORE OPTIONS} {generic DATAWIDTH = 32} [get_runs synth_7]
+reset_run synth_4
+reset_run synth_5
+reset_run synth_6
+reset_run synth_7
+launch_runs synth_4 synth_5 synth_6 synth_7 -jobs 2
+wait_on_run synth_4
+wait_on_run synth_5
+wait_on_run synth_6
+wait_on_run synth_7
+set_property -name {STEPS.SYNTH_DESIGN.ARGS.MORE OPTIONS} -value {-DATAWIDTH = 2} -objects [get_runs synth_4]
+reset_run synth_4
+launch_runs synth_4 -jobs 2
+wait_on_run synth_4
+set_property -name {STEPS.SYNTH_DESIGN.ARGS.MORE OPTIONS} -value {-generic DATAWIDTH = 2} -objects [get_runs synth_4]
+set_property strategy {Vivado Synthesis Defaults} [get_runs synth_5]
+set_property strategy {Vivado Synthesis Defaults} [get_runs synth_6]
+set_property strategy {Vivado Synthesis Defaults} [get_runs synth_7]
+set_property -name {STEPS.SYNTH_DESIGN.ARGS.MORE OPTIONS} -value {-generic DATAWIDTH = 8} -objects [get_runs synth_5]
+set_property -name {STEPS.SYNTH_DESIGN.ARGS.MORE OPTIONS} -value {-generic DATAWIDTH=8} -objects [get_runs synth_5]
+set_property -name {STEPS.SYNTH_DESIGN.ARGS.MORE OPTIONS} -value {-generic DATAWIDTH=2} -objects [get_runs synth_4]
+set_property -name {STEPS.SYNTH_DESIGN.ARGS.MORE OPTIONS} -value {-generic DATAWIDTH=32} -objects [get_runs synth_6]
+set_property -name {STEPS.SYNTH_DESIGN.ARGS.MORE OPTIONS} -value {-generic DATAWIDTH=32} -objects [get_runs synth_7]
+set_property -name {STEPS.SYNTH_DESIGN.ARGS.MORE OPTIONS} -value {-generic DATAWIDTH=16} -objects [get_runs synth_6]
+set_property -name {STEPS.SYNTH_DESIGN.ARGS.MORE OPTIONS} -value {-generic DATAWIDTH=2} -objects [get_runs synth_3]
+reset_run synth_4
+reset_run synth_5
+reset_run synth_6
+reset_run synth_7
+launch_runs synth_4 synth_5 synth_6 synth_7 -jobs 2
+wait_on_run synth_4
+wait_on_run synth_5
+wait_on_run synth_6
+wait_on_run synth_7
+reset_run synth_3
+reset_run synth_4
+reset_run synth_5
+reset_run synth_6
+reset_run synth_7
+launch_runs synth_3 impl_3 synth_4 synth_5 synth_6 synth_7 -jobs 2
+wait_on_run synth_3
+wait_on_run impl_3
+wait_on_run synth_4
+wait_on_run synth_5
+wait_on_run synth_6
+wait_on_run synth_7
+launch_runs impl_3 -to_step write_bitstream -jobs 2
+wait_on_run impl_3
+open_run synth_3 -name synth_3
+report_timing_summary -delay_type min_max -report_unconstrained -check_timing_verbose -max_paths 10 -input_pins -name timing_1
+open_run synth_4 -constrset constrs_1 -name synth_4
+report_timing_summary -delay_type min_max -report_unconstrained -check_timing_verbose -max_paths 10 -input_pins -name timing_1
+open_run synth_5 -constrset constrs_1 -name synth_5
+report_timing_summary -delay_type min_max -report_unconstrained -check_timing_verbose -max_paths 10 -input_pins -name timing_1
+open_run synth_7 -constrset constrs_1 -name synth_7
+report_timing_summary -delay_type min_max -report_unconstrained -check_timing_verbose -max_paths 10 -input_pins -name timing_1
+create_run synth_8 -flow {Vivado Synthesis 2016}
+launch_runs synth_8 -jobs 2
+wait_on_run synth_8
+set_property -name {STEPS.SYNTH_DESIGN.ARGS.MORE OPTIONS} -value {-generic DATAWIDTH=64} -objects [get_runs synth_8]
+reset_run synth_8
+launch_runs synth_8 -jobs 2
+wait_on_run synth_8
+open_run synth_8 -constrset constrs_1 -name synth_8
+report_timing_summary -delay_type min_max -report_unconstrained -check_timing_verbose -max_paths 10 -input_pins -name timing_1
+open_run synth_4 -constrset constrs_1 -name synth_4_1
+report_timing_summary -delay_type min_max -report_unconstrained -check_timing_verbose -max_paths 10 -input_pins -name timing_1
+current_design synth_3
+close_design
+current_design synth_4
+close_design
+current_design synth_5
+close_design
+close_design
+close_design
+close_design
+# Disabling source management mode.  This is to allow the top design properties to be set without GUI intervention.
+set_property source_mgmt_mode None [current_project]
+set_property top COMP2 [get_filesets sim_1]
+set_property top_lib xil_defaultlib [get_filesets sim_1]
+# Re-enabling previously disabled source management mode.
+set_property source_mgmt_mode All [current_project]
+# Disabling source management mode.  This is to allow the top design properties to be set without GUI intervention.
+set_property source_mgmt_mode None [current_project]
+set_property top COMP2 [current_fileset]
+# Re-enabling previously disabled source management mode.
+set_property source_mgmt_mode All [current_project]
+update_compile_order -fileset sources_1
+reset_run synth_3
+launch_runs synth_3 -jobs 2
+wait_on_run synth_3
+reset_run synth_3
+create_run synth_9 -flow {Vivado Synthesis 2016} -strategy twobits
+create_run synth_10 -flow {Vivado Synthesis 2016} -strategy eightbits
+create_run synth_11 -flow {Vivado Synthesis 2016} -strategy sixteenbits
+create_run synth_12 -flow {Vivado Synthesis 2016} -strategy thirtytwobits
+create_run synth_13 -flow {Vivado Synthesis 2016} -strategy sixtyfourbits
+launch_runs synth_9 synth_10 synth_11 synth_12 synth_13 -jobs 2
+wait_on_run synth_9
+wait_on_run synth_10
+wait_on_run synth_11
+wait_on_run synth_12
+wait_on_run synth_13
+open_run synth_9 -constrset constrs_1 -name synth_9
+report_timing_summary -delay_type min_max -report_unconstrained -check_timing_verbose -max_paths 10 -input_pins -name timing_1
+delete_runs "synth_9 synth_10 synth_11 synth_12 synth_13"
+# Disabling source management mode.  This is to allow the top design properties to be set without GUI intervention.
+set_property source_mgmt_mode None [current_project]
+set_property top DEC [current_fileset]
+# Re-enabling previously disabled source management mode.
+set_property source_mgmt_mode All [current_project]
+update_compile_order -fileset sources_1
+# Disabling source management mode.  This is to allow the top design properties to be set without GUI intervention.
+set_property source_mgmt_mode None [current_project]
+set_property top DEC [get_filesets sim_1]
+set_property top_lib xil_defaultlib [get_filesets sim_1]
+# Re-enabling previously disabled source management mode.
+set_property source_mgmt_mode All [current_project]
+reset_run synth_4
+reset_run synth_5
+reset_run synth_6
+reset_run synth_7
+reset_run synth_8
+launch_runs synth_4 synth_5 synth_6 synth_7 synth_8 -jobs 2
+wait_on_run synth_4
+wait_on_run synth_5
+wait_on_run synth_6
+wait_on_run synth_7
+wait_on_run synth_8
+open_run synth_4 -constrset constrs_1 -name synth_4
+report_timing_summary -delay_type min_max -report_unconstrained -check_timing_verbose -max_paths 10 -input_pins -name timing_1
+open_run synth_5 -constrset constrs_1 -name synth_5
+report_timing_summary -delay_type min_max -report_unconstrained -check_timing_verbose -max_paths 10 -input_pins -name timing_1
+open_run synth_6 -constrset constrs_1 -name synth_6
+report_timing_summary -delay_type min_max -report_unconstrained -check_timing_verbose -max_paths 10 -input_pins -name timing_1
+open_run synth_7 -constrset constrs_1 -name synth_7
+report_timing_summary -delay_type min_max -report_unconstrained -check_timing_verbose -max_paths 10 -input_pins -name timing_1
+open_run synth_8 -constrset constrs_1 -name synth_8
+report_timing_summary -delay_type min_max -report_unconstrained -check_timing_verbose -max_paths 10 -input_pins -name timing_1
+# Disabling source management mode.  This is to allow the top design properties to be set without GUI intervention.
+set_property source_mgmt_mode None [current_project]
+set_property top INC [current_fileset]
+# Re-enabling previously disabled source management mode.
+set_property source_mgmt_mode All [current_project]
+update_compile_order -fileset sources_1
+# Disabling source management mode.  This is to allow the top design properties to be set without GUI intervention.
+set_property source_mgmt_mode None [current_project]
+set_property top INC [get_filesets sim_1]
+set_property top_lib xil_defaultlib [get_filesets sim_1]
+# Re-enabling previously disabled source management mode.
+set_property source_mgmt_mode All [current_project]
+reset_run synth_4
+reset_run synth_5
+reset_run synth_6
+reset_run synth_7
+reset_run synth_8
+launch_runs synth_4 synth_5 synth_6 synth_7 synth_8 -jobs 2
+wait_on_run synth_4
+wait_on_run synth_5
+wait_on_run synth_6
+wait_on_run synth_7
+wait_on_run synth_8
+open_run synth_4 -constrset constrs_1 -name synth_4_1
+report_timing_summary -delay_type min_max -report_unconstrained -check_timing_verbose -max_paths 10 -input_pins -name timing_1
+open_run synth_5 -constrset constrs_1 -name synth_5_1
+report_timing_summary -delay_type min_max -report_unconstrained -check_timing_verbose -max_paths 10 -input_pins -name timing_1
+open_run synth_6 -constrset constrs_1 -name synth_6_1
+report_timing_summary -delay_type min_max -report_unconstrained -check_timing_verbose -max_paths 10 -input_pins -name timing_1
+open_run synth_7 -constrset constrs_1 -name synth_7_1
+report_timing_summary -delay_type min_max -report_unconstrained -check_timing_verbose -max_paths 10 -input_pins -name timing_1
+open_run synth_8 -constrset constrs_1 -name synth_8_1
+report_timing_summary -delay_type min_max -report_unconstrained -check_timing_verbose -max_paths 10 -input_pins -name timing_1
+# Disabling source management mode.  This is to allow the top design properties to be set without GUI intervention.
+set_property source_mgmt_mode None [current_project]
+set_property top MOD [current_fileset]
+# Re-enabling previously disabled source management mode.
+set_property source_mgmt_mode All [current_project]
+update_compile_order -fileset sources_1
+# Disabling source management mode.  This is to allow the top design properties to be set without GUI intervention.
+set_property source_mgmt_mode None [current_project]
+set_property top MOD [get_filesets sim_1]
+set_property top_lib xil_defaultlib [get_filesets sim_1]
+# Re-enabling previously disabled source management mode.
+set_property source_mgmt_mode All [current_project]
+reset_run synth_4
+reset_run synth_5
+reset_run synth_6
+reset_run synth_7
+reset_run synth_8
+launch_runs synth_4 synth_5 synth_6 synth_7 synth_8 -jobs 2
+wait_on_run synth_4
+wait_on_run synth_5
+wait_on_run synth_6
+wait_on_run synth_7
+wait_on_run synth_8
+open_run synth_4 -constrset constrs_1 -name synth_4_2
+open_run synth_4 -constrset constrs_1 -name synth_4_3
+report_timing_summary -delay_type min_max -report_unconstrained -check_timing_verbose -max_paths 10 -input_pins -name timing_1
+open_run synth_5 -constrset constrs_1 -name synth_5_2
+report_timing_summary -delay_type min_max -report_unconstrained -check_timing_verbose -max_paths 10 -input_pins -name timing_1
+open_run synth_6 -constrset constrs_1 -name synth_6_2
+report_timing_summary -delay_type min_max -report_unconstrained -check_timing_verbose -max_paths 10 -input_pins -name timing_1
+open_run synth_7 -constrset constrs_1 -name synth_7_2
+report_timing_summary -delay_type min_max -report_unconstrained -check_timing_verbose -max_paths 10 -input_pins -name timing_1
+open_run synth_8 -constrset constrs_1 -name synth_8_2
+report_timing_summary -delay_type min_max -report_unconstrained -check_timing_verbose -max_paths 10 -input_pins -name timing_1
+# Disabling source management mode.  This is to allow the top design properties to be set without GUI intervention.
+set_property source_mgmt_mode None [current_project]
+set_property top SHR [get_filesets sim_1]
+set_property top_lib xil_defaultlib [get_filesets sim_1]
+# Re-enabling previously disabled source management mode.
+set_property source_mgmt_mode All [current_project]
+# Disabling source management mode.  This is to allow the top design properties to be set without GUI intervention.
+set_property source_mgmt_mode None [current_project]
+set_property top SHR [current_fileset]
+# Re-enabling previously disabled source management mode.
+set_property source_mgmt_mode All [current_project]
+update_compile_order -fileset sources_1
+reset_run synth_4
+reset_run synth_5
+reset_run synth_6
+reset_run synth_7
+reset_run synth_8
+launch_runs synth_4 synth_5 synth_6 synth_7 synth_8 -jobs 2
+wait_on_run synth_4
+wait_on_run synth_5
+wait_on_run synth_6
+wait_on_run synth_7
+wait_on_run synth_8

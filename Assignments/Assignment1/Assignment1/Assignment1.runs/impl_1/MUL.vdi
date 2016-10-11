@@ -1,0 +1,21 @@
+#-----------------------------------------------------------
+# Vivado v2016.2 (64-bit)
+# SW Build 1577090 on Thu Jun  2 16:32:40 MDT 2016
+# IP Build 1577682 on Fri Jun  3 12:00:54 MDT 2016
+# Start of session at: Sat Sep 17 17:09:01 2016
+# Process ID: 9812
+# Current directory: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.runs/impl_1
+# Command line: vivado.exe -log MUL.vdi -applog -messageDb vivado.pb -mode batch -source MUL.tcl -notrace
+# Log file: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.runs/impl_1/MUL.vdi
+# Journal file: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.runs/impl_1\vivado.jou
+#-----------------------------------------------------------
+source MUL.tcl -notrace
+
+*** Halting run - EA reset detected ***
+
+
+
+    while executing
+"start_step init_design"
+    (file "MUL.tcl" line 50)
+INFO: [Common 17-206] Exiting Vivado at Sat Sep 17 17:09:05 2016...

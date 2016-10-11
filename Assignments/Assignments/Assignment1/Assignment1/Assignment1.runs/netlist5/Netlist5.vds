@@ -1,0 +1,405 @@
+#-----------------------------------------------------------
+# Vivado v2016.2 (64-bit)
+# SW Build 1577090 on Thu Jun  2 16:32:40 MDT 2016
+# IP Build 1577682 on Fri Jun  3 12:00:54 MDT 2016
+# Start of session at: Sun Sep 18 19:30:07 2016
+# Process ID: 15052
+# Current directory: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.runs/netlist5
+# Command line: vivado.exe -log Netlist5.vds -mode batch -messageDb vivado.pb -notrace -source Netlist5.tcl
+# Log file: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.runs/netlist5/Netlist5.vds
+# Journal file: C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.runs/netlist5\vivado.jou
+#-----------------------------------------------------------
+source Netlist5.tcl -notrace
+Command: synth_design -top Netlist5 -part xc7a100tfgg676-1
+Starting synth_design
+Attempting to get a license for feature 'Synthesis' and/or device 'xc7a100t'
+INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xc7a100t'
+INFO: Launching helper process for spawning children vivado processes
+INFO: Helper process launched with PID 15176 
+---------------------------------------------------------------------------------
+Starting Synthesize : Time (s): cpu = 00:00:05 ; elapsed = 00:00:06 . Memory (MB): peak = 272.551 ; gain = 65.781
+---------------------------------------------------------------------------------
+INFO: [Synth 8-638] synthesizing module 'Netlist5' [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/Netlist5.v:23]
+INFO: [Synth 8-638] synthesizing module 'ADD' [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/ADD.v:23]
+	Parameter DATAWIDTH bound to: 64 - type: integer 
+INFO: [Synth 8-256] done synthesizing module 'ADD' (1#1) [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/ADD.v:23]
+WARNING: [Synth 8-689] width (64) of port connection 'sum' does not match port width (65) of module 'ADD' [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/Netlist5.v:36]
+WARNING: [Synth 8-689] width (64) of port connection 'sum' does not match port width (65) of module 'ADD' [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/Netlist5.v:37]
+INFO: [Synth 8-638] synthesizing module 'SUB' [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SUB.v:23]
+	Parameter DATAWIDTH bound to: 64 - type: integer 
+INFO: [Synth 8-256] done synthesizing module 'SUB' (2#1) [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SUB.v:23]
+INFO: [Synth 8-638] synthesizing module 'COMP' [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/COMP.v:23]
+	Parameter DATAWIDTH bound to: 64 - type: integer 
+INFO: [Synth 8-256] done synthesizing module 'COMP' (3#1) [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/COMP.v:23]
+WARNING: [Synth 8-350] instance 'COMP_0' of module 'COMP' requires 5 connections, but only 3 given [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/Netlist5.v:39]
+WARNING: [Synth 8-350] instance 'COMP_1' of module 'COMP' requires 5 connections, but only 3 given [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/Netlist5.v:40]
+INFO: [Synth 8-638] synthesizing module 'MUX2x1' [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/MUX2x1.v:23]
+	Parameter DATAWIDTH bound to: 64 - type: integer 
+WARNING: [Synth 8-567] referenced signal 'a' should be on the sensitivity list [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/MUX2x1.v:29]
+WARNING: [Synth 8-567] referenced signal 'b' should be on the sensitivity list [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/MUX2x1.v:29]
+INFO: [Synth 8-256] done synthesizing module 'MUX2x1' (4#1) [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/MUX2x1.v:23]
+INFO: [Synth 8-638] synthesizing module 'REG' [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/REG.v:23]
+	Parameter DATAWIDTH bound to: 64 - type: integer 
+INFO: [Synth 8-256] done synthesizing module 'REG' (5#1) [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/REG.v:23]
+INFO: [Synth 8-638] synthesizing module 'SHL' [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SHL.v:23]
+	Parameter DATAWIDTH bound to: 64 - type: integer 
+INFO: [Synth 8-256] done synthesizing module 'SHL' (6#1) [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SHL.v:23]
+WARNING: [Synth 8-689] width (1) of port connection 'sh_amt' does not match port width (64) of module 'SHL' [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/Netlist5.v:45]
+INFO: [Synth 8-638] synthesizing module 'SHR' [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SHR.v:23]
+	Parameter DATAWIDTH bound to: 64 - type: integer 
+INFO: [Synth 8-256] done synthesizing module 'SHR' (7#1) [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/SHR.v:23]
+WARNING: [Synth 8-689] width (1) of port connection 'sh_amt' does not match port width (64) of module 'SHR' [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/Netlist5.v:46]
+WARNING: [Synth 8-689] width (32) of port connection 'q' does not match port width (64) of module 'REG' [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/Netlist5.v:47]
+WARNING: [Synth 8-689] width (32) of port connection 'q' does not match port width (64) of module 'REG' [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/Netlist5.v:48]
+INFO: [Synth 8-256] done synthesizing module 'Netlist5' (8#1) [C:/Users/Schifman Ben/Documents/UofA/Senior 2016-2017/Fall 2016/574 ECE/ECE574/Assignments/Assignment1/Assignment1/Assignment1.srcs/sources_1/new/Netlist5.v:23]
+---------------------------------------------------------------------------------
+Finished Synthesize : Time (s): cpu = 00:00:06 ; elapsed = 00:00:07 . Memory (MB): peak = 309.063 ; gain = 102.293
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Constraint Validation : Time (s): cpu = 00:00:06 ; elapsed = 00:00:07 . Memory (MB): peak = 309.063 ; gain = 102.293
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Loading Part and Timing Information
+---------------------------------------------------------------------------------
+Loading part: xc7a100tfgg676-1
+---------------------------------------------------------------------------------
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:06 ; elapsed = 00:00:07 . Memory (MB): peak = 309.063 ; gain = 102.293
+---------------------------------------------------------------------------------
+INFO: [Device 21-403] Loading part xc7a100tfgg676-1
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:06 ; elapsed = 00:00:07 . Memory (MB): peak = 316.250 ; gain = 109.480
+---------------------------------------------------------------------------------
+INFO: [Synth 8-223] decloning instance 'COMP_0' (COMP) to 'COMP_1'
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+No constraint files found.
+---------------------------------------------------------------------------------
+Start RTL Component Statistics 
+---------------------------------------------------------------------------------
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input     65 Bit       Adders := 2     
+	   3 Input     64 Bit       Adders := 1     
++---Registers : 
+	               64 Bit    Registers := 4     
++---Muxes : 
+	   2 Input     64 Bit        Muxes := 2     
+---------------------------------------------------------------------------------
+Finished RTL Component Statistics 
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start RTL Hierarchical Component Statistics 
+---------------------------------------------------------------------------------
+Hierarchical RTL Component report 
+Module ADD 
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input     65 Bit       Adders := 1     
+Module SUB 
+Detailed RTL Component Info : 
++---Adders : 
+	   3 Input     64 Bit       Adders := 1     
+Module MUX2x1 
+Detailed RTL Component Info : 
++---Muxes : 
+	   2 Input     64 Bit        Muxes := 1     
+Module REG 
+Detailed RTL Component Info : 
++---Registers : 
+	               64 Bit    Registers := 1     
+---------------------------------------------------------------------------------
+Finished RTL Hierarchical Component Statistics
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Part Resource Summary
+---------------------------------------------------------------------------------
+Part Resources:
+DSPs: 240 (col length:80)
+BRAMs: 270 (col length: RAMB18 80 RAMB36 40)
+---------------------------------------------------------------------------------
+Finished Part Resource Summary
+---------------------------------------------------------------------------------
+Start Parallel Synthesis Optimization  : Time (s): cpu = 00:00:09 ; elapsed = 00:00:10 . Memory (MB): peak = 436.578 ; gain = 229.809
+---------------------------------------------------------------------------------
+Start Cross Boundary Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Cross Boundary Optimization : Time (s): cpu = 00:00:09 ; elapsed = 00:00:10 . Memory (MB): peak = 436.598 ; gain = 229.828
+---------------------------------------------------------------------------------
+Finished Parallel Reinference  : Time (s): cpu = 00:00:09 ; elapsed = 00:00:10 . Memory (MB): peak = 436.598 ; gain = 229.828
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+No constraint files found.
+---------------------------------------------------------------------------------
+Start Area Optimization
+---------------------------------------------------------------------------------
+WARNING: [Synth 8-3332] Sequential element (REG_0/q_reg[63]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_0/q_reg[62]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_0/q_reg[61]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_0/q_reg[60]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_0/q_reg[59]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_0/q_reg[58]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_0/q_reg[57]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_0/q_reg[56]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_0/q_reg[55]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_0/q_reg[54]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_0/q_reg[53]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_0/q_reg[52]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_0/q_reg[51]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_0/q_reg[50]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_0/q_reg[49]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_0/q_reg[48]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_0/q_reg[47]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_0/q_reg[46]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_0/q_reg[45]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_0/q_reg[44]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_0/q_reg[43]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_0/q_reg[42]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_0/q_reg[41]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_0/q_reg[40]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_0/q_reg[39]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_0/q_reg[38]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_0/q_reg[37]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_0/q_reg[36]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_0/q_reg[35]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_0/q_reg[34]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_0/q_reg[33]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_1/q_reg[63]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_1/q_reg[62]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_1/q_reg[61]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_1/q_reg[60]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_1/q_reg[59]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_1/q_reg[58]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_1/q_reg[57]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_1/q_reg[56]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_1/q_reg[55]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_1/q_reg[54]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_1/q_reg[53]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_1/q_reg[52]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_1/q_reg[51]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_1/q_reg[50]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_1/q_reg[49]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_1/q_reg[48]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_1/q_reg[47]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_1/q_reg[46]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_1/q_reg[45]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_1/q_reg[44]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_1/q_reg[43]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_1/q_reg[42]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_1/q_reg[41]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_1/q_reg[40]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_1/q_reg[39]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_1/q_reg[38]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_1/q_reg[37]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_1/q_reg[36]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_1/q_reg[35]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_1/q_reg[34]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_1/q_reg[33]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_1/q_reg[32]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_2/q_reg[63]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_2/q_reg[62]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_2/q_reg[61]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_2/q_reg[60]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_2/q_reg[59]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_2/q_reg[58]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_2/q_reg[57]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_2/q_reg[56]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_2/q_reg[55]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_2/q_reg[54]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_2/q_reg[53]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_2/q_reg[52]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_2/q_reg[51]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_2/q_reg[50]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_2/q_reg[49]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_2/q_reg[48]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_2/q_reg[47]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_2/q_reg[46]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_2/q_reg[45]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_2/q_reg[44]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_2/q_reg[43]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_2/q_reg[42]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_2/q_reg[41]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_2/q_reg[40]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_2/q_reg[39]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_2/q_reg[38]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_2/q_reg[37]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_2/q_reg[36]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_2/q_reg[35]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_2/q_reg[34]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_2/q_reg[33]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_2/q_reg[32]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_3/q_reg[63]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_3/q_reg[62]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_3/q_reg[61]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_3/q_reg[60]) is unused and will be removed from module Netlist5.
+WARNING: [Synth 8-3332] Sequential element (REG_3/q_reg[59]) is unused and will be removed from module Netlist5.
+INFO: [Common 17-14] Message 'Synth 8-3332' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
+---------------------------------------------------------------------------------
+Finished Area Optimization : Time (s): cpu = 00:00:10 ; elapsed = 00:00:11 . Memory (MB): peak = 447.398 ; gain = 240.629
+---------------------------------------------------------------------------------
+Finished Parallel Area Optimization  : Time (s): cpu = 00:00:10 ; elapsed = 00:00:11 . Memory (MB): peak = 447.398 ; gain = 240.629
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+---------------------------------------------------------------------------------
+Start Timing Optimization
+---------------------------------------------------------------------------------
+No constraint files found.
+---------------------------------------------------------------------------------
+Finished Timing Optimization : Time (s): cpu = 00:00:10 ; elapsed = 00:00:11 . Memory (MB): peak = 447.398 ; gain = 240.629
+---------------------------------------------------------------------------------
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+---------------------------------------------------------------------------------
+Start Technology Mapping
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Technology Mapping : Time (s): cpu = 00:00:10 ; elapsed = 00:00:11 . Memory (MB): peak = 457.559 ; gain = 250.789
+---------------------------------------------------------------------------------
+Finished Parallel Technology Mapping Optimization  : Time (s): cpu = 00:00:10 ; elapsed = 00:00:11 . Memory (MB): peak = 457.559 ; gain = 250.789
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+Finished Parallel Synthesis Optimization  : Time (s): cpu = 00:00:10 ; elapsed = 00:00:11 . Memory (MB): peak = 457.559 ; gain = 250.789
+---------------------------------------------------------------------------------
+Start IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished IO Insertion : Time (s): cpu = 00:00:11 ; elapsed = 00:00:12 . Memory (MB): peak = 457.559 ; gain = 250.789
+---------------------------------------------------------------------------------
+
+Report Check Netlist: 
++------+------------------+-------+---------+-------+------------------+
+|      |Item              |Errors |Warnings |Status |Description       |
++------+------------------+-------+---------+-------+------------------+
+|1     |multi_driven_nets |      0|        0|Passed |Multi driven nets |
++------+------------------+-------+---------+-------+------------------+
+---------------------------------------------------------------------------------
+Start Renaming Generated Instances
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Instances : Time (s): cpu = 00:00:11 ; elapsed = 00:00:12 . Memory (MB): peak = 457.559 ; gain = 250.789
+---------------------------------------------------------------------------------
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+---------------------------------------------------------------------------------
+Start Rebuilding User Hierarchy
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:11 ; elapsed = 00:00:12 . Memory (MB): peak = 457.559 ; gain = 250.789
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Ports
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Ports : Time (s): cpu = 00:00:11 ; elapsed = 00:00:12 . Memory (MB): peak = 457.559 ; gain = 250.789
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:11 ; elapsed = 00:00:12 . Memory (MB): peak = 457.559 ; gain = 250.789
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Nets
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Nets : Time (s): cpu = 00:00:11 ; elapsed = 00:00:12 . Memory (MB): peak = 457.559 ; gain = 250.789
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Writing Synthesis Report
+---------------------------------------------------------------------------------
+
+Report BlackBoxes: 
++-+--------------+----------+
+| |BlackBox name |Instances |
++-+--------------+----------+
++-+--------------+----------+
+
+Report Cell Usage: 
++------+-------+------+
+|      |Cell   |Count |
++------+-------+------+
+|1     |BUFG   |     1|
+|2     |CARRY4 |    56|
+|3     |LUT2   |   160|
+|4     |LUT3   |     1|
+|5     |LUT4   |   224|
+|6     |LUT5   |    32|
+|7     |FDRE   |   129|
+|8     |IBUF   |   194|
+|9     |OBUF   |    64|
++------+-------+------+
+
+Report Instance Areas: 
++------+-----------+---------+------+
+|      |Instance   |Module   |Cells |
++------+-----------+---------+------+
+|1     |top        |         |   861|
+|2     |  ADD_0    |ADD      |   112|
+|3     |  ADD_1    |ADD_0    |   112|
+|4     |  COMP_0   |COMP     |    16|
+|5     |  MUX2x1_0 |MUX2x1   |    33|
+|6     |  MUX2x1_1 |MUX2x1_1 |    32|
+|7     |  REG_0    |REG      |    97|
+|8     |  REG_1    |REG_2    |    65|
+|9     |  REG_2    |REG_3    |    32|
+|10    |  REG_3    |REG_4    |    32|
+|11    |  SHL_0    |SHL      |    31|
+|12    |  SHR_0    |SHR      |    32|
+|13    |  SUB_0    |SUB      |     8|
++------+-----------+---------+------+
+---------------------------------------------------------------------------------
+Finished Writing Synthesis Report : Time (s): cpu = 00:00:11 ; elapsed = 00:00:12 . Memory (MB): peak = 457.559 ; gain = 250.789
+---------------------------------------------------------------------------------
+Synthesis finished with 0 errors, 0 critical warnings and 137 warnings.
+Synthesis Optimization Runtime : Time (s): cpu = 00:00:10 ; elapsed = 00:00:10 . Memory (MB): peak = 457.559 ; gain = 250.789
+Synthesis Optimization Complete : Time (s): cpu = 00:00:11 ; elapsed = 00:00:12 . Memory (MB): peak = 457.559 ; gain = 250.789
+INFO: [Project 1-571] Translating synthesized netlist
+INFO: [Netlist 29-17] Analyzing 250 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+INFO: [Common 17-83] Releasing license: Synthesis
+27 Infos, 110 Warnings, 0 Critical Warnings and 0 Errors encountered.
+synth_design completed successfully
+synth_design: Time (s): cpu = 00:00:13 ; elapsed = 00:00:13 . Memory (MB): peak = 524.285 ; gain = 317.516
+report_utilization: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.029 . Memory (MB): peak = 524.285 ; gain = 0.000
+INFO: [Common 17-206] Exiting Vivado at Sun Sep 18 19:30:23 2016...

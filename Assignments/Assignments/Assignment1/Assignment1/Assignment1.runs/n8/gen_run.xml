@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenRun Id="n8" LaunchPart="xc7a100tfgg676-1" LaunchTime="1474250357">
+  <File Type="OPT-DCP" Name="Netlist8_opt.dcp"/>
+  <File Type="ROUTE-STATUS-PB" Name="Netlist8_route_status.pb"/>
+  <File Type="PA-TCL" Name="Netlist8.tcl"/>
+  <File Type="RDI-RDI" Name="Netlist8.vdi"/>
+  <File Type="PWROPT-DRC" Name="Netlist8_drc_pwropted.rpt"/>
+  <File Type="OPT-METHODOLOGY-DRC" Name="Netlist8_methodology_drc_opted.rpt"/>
+  <File Type="INIT-TIMING" Name="Netlist8_timing_summary_init.rpt"/>
+  <File Type="OPT-DRC" Name="Netlist8_drc_opted.rpt"/>
+  <File Type="PWROPT-DCP" Name="Netlist8_pwropt.dcp"/>
+  <File Type="OPT-HWDEF" Name="Netlist8.hwdef"/>
+  <File Type="OPT-TIMING" Name="Netlist8_timing_summary_opted.rpt"/>
+  <File Type="PWROPT-TIMING" Name="Netlist8_timing_summary_pwropted.rpt"/>
+  <File Type="PLACE-DCP" Name="Netlist8_placed.dcp"/>
+  <File Type="PLACE-IO" Name="Netlist8_io_placed.rpt"/>
+  <File Type="PLACE-CLK" Name="Netlist8_clock_utilization_placed.rpt"/>
+  <File Type="PLACE-UTIL" Name="Netlist8_utilization_placed.rpt"/>
+  <File Type="PLACE-UTIL-PB" Name="Netlist8_utilization_placed.pb"/>
+  <File Type="PLACE-CTRL" Name="Netlist8_control_sets_placed.rpt"/>
+  <File Type="PLACE-SIMILARITY" Name="Netlist8_incremental_reuse_placed.rpt"/>
+  <File Type="PLACE-PRE-SIMILARITY" Name="Netlist8_incremental_reuse_pre_placed.rpt"/>
+  <File Type="PLACE-TIMING" Name="Netlist8_timing_summary_placed.rpt"/>
+  <File Type="POSTPLACE-PWROPT-DCP" Name="Netlist8_postplace_pwropt.dcp"/>
+  <File Type="POSTPLACE-PWROPT-TIMING" Name="Netlist8_timing_summary_postplace_pwropted.rpt"/>
+  <File Type="PHYSOPT-DCP" Name="Netlist8_physopt.dcp"/>
+  <File Type="PHYSOPT-DRC" Name="Netlist8_drc_physopted.rpt"/>
+  <File Type="PHYSOPT-TIMING" Name="Netlist8_timing_summary_physopted.rpt"/>
+  <File Type="ROUTE-DCP" Name="Netlist8_routed.dcp"/>
+  <File Type="ROUTE-BLACKBOX-DCP" Name="Netlist8_routed_bb.dcp"/>
+  <File Type="ROUTE-DRC" Name="Netlist8_drc_routed.rpt"/>
+  <File Type="ROUTE-DRC-PB" Name="Netlist8_drc_routed.pb"/>
+  <File Type="ROUTE-METHODOLOGY-DRC" Name="Netlist8_methodology_drc_routed.rpt"/>
+  <File Type="BG-BIT" Name="Netlist8.bit"/>
+  <File Type="ROUTE-METHODOLOGY-DRC-PB" Name="Netlist8_methodology_drc_routed.pb"/>
+  <File Type="ROUTE-PWR" Name="Netlist8_power_routed.rpt"/>
+  <File Type="ROUTE-PWR-SUM" Name="Netlist8_power_summary_routed.pb"/>
+  <File Type="ROUTE-PWR-RPX" Name="Netlist8_power_routed.rpx"/>
+  <File Type="ROUTE-STATUS" Name="Netlist8_route_status.rpt"/>
+  <File Type="ROUTE-TIMINGSUMMARY" Name="Netlist8_timing_summary_routed.rpt"/>
+  <File Type="ROUTE-TIMING-PB" Name="Netlist8_timing_summary_routed.pb"/>
+  <File Type="ROUTE-TIMING-RPX" Name="Netlist8_timing_summary_routed.rpx"/>
+  <File Type="ROUTE-SIMILARITY" Name="Netlist8_incremental_reuse_routed.rpt"/>
+  <File Type="ROUTE-CLK" Name="Netlist8_clock_utilization_routed.rpt"/>
+  <File Type="POSTROUTE-PHYSOPT-DCP" Name="Netlist8_postroute_physopt.dcp"/>
+  <File Type="POSTROUTE-PHYSOPT-BLACKBOX-DCP" Name="Netlist8_postroute_physopt_bb.dcp"/>
+  <File Type="POSTROUTE-PHYSOPT-TIMING" Name="Netlist8_timing_summary_postroute_physopted.rpt"/>
+  <File Type="POSTROUTE-PHYSOPT-TIMING-PB" Name="Netlist8_timing_summary_postroute_physopted.pb"/>
+  <File Type="POSTROUTE-PHYSOPT-TIMING-RPX" Name="Netlist8_timing_summary_postroute_physopted.rpx"/>
+  <File Type="BG-BIN" Name="Netlist8.bin"/>
+  <File Type="BITSTR-MSK" Name="Netlist8.msk"/>
+  <File Type="BITSTR-RBT" Name="Netlist8.rbt"/>
+  <File Type="BITSTR-NKY" Name="Netlist8.nky"/>
+  <File Type="BITSTR-BMM" Name="Netlist8_bd.bmm"/>
+  <File Type="BITSTR-MMI" Name="Netlist8.mmi"/>
+  <File Type="BITSTR-SYSDEF" Name="Netlist8.sysdef"/>
+  <File Type="BG-BGN" Name="Netlist8.bgn"/>
+  <File Type="BG-DRC" Name="Netlist8.drc"/>
+  <File Type="WBT-USG" Name="usage_statistics_webtalk.html"/>
+  <FileSet Name="sources" Type="DesignSrcs" RelSrcDir="$PSRCDIR/sources_1">
+    <Filter Type="Srcs"/>
+    <File Path="$PSRCDIR/sources_1/new/MUX2x1.v">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PSRCDIR/sources_1/new/MOD.v">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PSRCDIR/sources_1/new/INC.v">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PSRCDIR/sources_1/new/DEC.v">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PSRCDIR/sources_1/new/COMP.v">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PSRCDIR/sources_1/new/REG.v">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PSRCDIR/sources_1/new/Netlist8.v">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PSRCDIR/sources_1/new/ADD.v">
+      <FileInfo>
+        <Attr Name="AutoDisabled" Val="1"/>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PSRCDIR/sources_1/new/Netlist4.v">
+      <FileInfo>
+        <Attr Name="AutoDisabled" Val="1"/>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PSRCDIR/sources_1/new/DIV.v">
+      <FileInfo>
+        <Attr Name="AutoDisabled" Val="1"/>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PSRCDIR/sources_1/new/Netlist6.v">
+      <FileInfo>
+        <Attr Name="AutoDisabled" Val="1"/>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PSRCDIR/sources_1/new/SUB.v">
+      <FileInfo>
+        <Attr Name="AutoDisabled" Val="1"/>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PSRCDIR/sources_1/new/SHR.v">
+      <FileInfo>
+        <Attr Name="AutoDisabled" Val="1"/>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PSRCDIR/sources_1/new/SHL.v">
+      <FileInfo>
+        <Attr Name="AutoDisabled" Val="1"/>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PSRCDIR/sources_1/new/Netlist2.v">
+      <FileInfo>
+        <Attr Name="AutoDisabled" Val="1"/>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PSRCDIR/sources_1/new/MUL.v">
+      <FileInfo>
+        <Attr Name="AutoDisabled" Val="1"/>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PSRCDIR/sources_1/new/Netlist1.v">
+      <FileInfo>
+        <Attr Name="AutoDisabled" Val="1"/>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PSRCDIR/sources_1/new/Netlist3.v">
+      <FileInfo>
+        <Attr Name="AutoDisabled" Val="1"/>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PSRCDIR/sources_1/new/Netlist5.v">
+      <FileInfo>
+        <Attr Name="AutoDisabled" Val="1"/>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PSRCDIR/sources_1/new/Netlist7.v">
+      <FileInfo>
+        <Attr Name="AutoDisabled" Val="1"/>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <Config>
+      <Option Name="DesignMode" Val="RTL"/>
+      <Option Name="TopModule" Val="Netlist8"/>
+    </Config>
+  </FileSet>
+  <FileSet Name="constrs_in" Type="Constrs" RelSrcDir="$PSRCDIR/constrs_1">
+    <Filter Type="Constrs"/>
+    <Config>
+      <Option Name="ConstrsType" Val="XDC"/>
+    </Config>
+  </FileSet>
+  <Strategy Version="1" Minor="2">
+    <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2016">
+      <Desc>Default settings for Implementation.</Desc>
+    </StratHandle>
+    <Step Id="init_design"/>
+    <Step Id="opt_design"/>
+    <Step Id="power_opt_design"/>
+    <Step Id="place_design"/>
+    <Step Id="post_place_power_opt_design"/>
+    <Step Id="phys_opt_design"/>
+    <Step Id="route_design"/>
+    <Step Id="post_route_phys_opt_design"/>
+    <Step Id="write_bitstream"/>
+  </Strategy>
+</GenRun>
