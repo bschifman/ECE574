@@ -17,9 +17,7 @@ using namespace std;
 class Logic
 {
 	public:
-
-		void set_type(std::string type) { this->type = type; }
-
+		
 		void SetType(std::string inputType) { this->type = type; }
 		std::string GetType() { return this->type; }
 		void SetName(std::string inputName) { this->name = inputName; }
