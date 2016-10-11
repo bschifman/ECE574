@@ -12,23 +12,30 @@ using namespace std;
 #ifndef LOGIC_H
 #define LOGIC
 
+
+/*This object is the various*/
 class Logic
 {
 	public:
-		void SetType(std::string inputType);
-		std::string GetType();
-		void SetName(std::string inputName);
-		std::string GetName();
 
+		void set_type(std::string type) { this->type = type; }
 
-		void SetOutType(std::string inputOutType);
-		std::string GetOutType();
-		void Setdw(int inputdw);
-		int Getdw();
-		void SetSign(bool inputsign);
-		bool GetSign();
-		void SetDelay(float inputDelay);
-		float GetDelay();
+		void SetType(std::string inputType) { this->type = type; }
+		std::string GetType() { return this->type; }
+		void SetName(std::string inputName) { this->name = inputName; }
+		std::string GetName() { return this->name; }
+		void Setl_inputs(std::string inputl_inputs) { this->outType = inputl_inputs; }
+		std::string Getl_inputs() { return this->l_inputs; }
+		void Setl_outputs(std::string inputl_outputs) { this->outType = inputl_outputs; }
+		std::string Getl_outputs() { return this->l_outputs; }
+		void SetOutType(std::string inputOutType) { this->outType = inputOutType; }
+		std::string GetOutType() { return this->outType; }
+		void Setdw(int inputdw) { this->dw = inputdw; }
+		int Getdw() { return this->dw; }
+		void SetSign(bool inputsign) { this->sign = inputsign; }
+		bool GetSign() { return this->sign; }
+		void SetDelay(float inputDelay) { this->delay; }
+		float GetDelay() { return this->delay; }
 
 	private:
 		std::string type;
@@ -44,62 +51,6 @@ class Logic
 
 
 };
-
-// Logic:: member function assignment of "type"
-void Logic::SetType(std::string inputType) {
-	type = inputType;  // type refers to data member
-	return;
-}
-std::string Logic::GetType() { return type; } // type refers to data member
-
-
-
-// Logic:: member function assignment of "Name"
-void Logic::SetName(std::string inputName) {
-	name = inputName;  // name refers to data member
-	return;
-}
-std::string Logic::GetName() { return name; } // name refers to data member
-
-
-
-/*  l_inputs functions*/
-
-/*  l_outputs functions*/
-
-
-// Logic:: member function assignment of "outType"
-void Logic::SetOutType(std::string inputOutType) {
-	outType = inputOutType;  // outType refers to data member
-	return;
-}
-// Logic:: member function return of "outType"
-std::string Logic::GetOutType() { return outType; } // outType refers to data member
-
-													
-// Logic:: member function assignment of "dw"
-void Logic::Setdw(int inputdw) {
-	dw = inputdw;  // dw refers to data member
-	return;
-}
-// Logic:: member function return of "dw"
-int Logic::Getdw() { return dw; } // dw refers to data member
-
-
-// Logic:: member function assignment of "sign"
-void Logic::SetSign(bool inputsign) {
-	sign = inputsign;
-	return;
-}
-bool Logic::GetSign() { return sign; }
-
-
-// Logic:: member function assignment of "delay"
-void Logic::SetDelay(float inputDelay) {
-	delay = inputDelay;
-	return;
-}
-float Logic::GetDelay() { return delay; }
 
 #endif
 
