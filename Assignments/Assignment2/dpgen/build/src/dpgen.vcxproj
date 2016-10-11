@@ -317,20 +317,14 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="C:\Users\Schifman Ben\Documents\UofA\Senior 2016-2017\Fall 2016\574 ECE\ECE574\Assignments\Assignment2\dpgen\src\Input.h" />
+    <ClInclude Include="C:\Users\Schifman Ben\Documents\UofA\Senior 2016-2017\Fall 2016\574 ECE\ECE574\Assignments\Assignment2\dpgen\src\Connector.h" />
     <ClInclude Include="C:\Users\Schifman Ben\Documents\UofA\Senior 2016-2017\Fall 2016\574 ECE\ECE574\Assignments\Assignment2\dpgen\src\Logic.h" />
     <ClInclude Include="C:\Users\Schifman Ben\Documents\UofA\Senior 2016-2017\Fall 2016\574 ECE\ECE574\Assignments\Assignment2\dpgen\src\Netlist.h" />
-    <ClInclude Include="C:\Users\Schifman Ben\Documents\UofA\Senior 2016-2017\Fall 2016\574 ECE\ECE574\Assignments\Assignment2\dpgen\src\Output.h" />
     <ClInclude Include="C:\Users\Schifman Ben\Documents\UofA\Senior 2016-2017\Fall 2016\574 ECE\ECE574\Assignments\Assignment2\dpgen\src\ReadWrite.h" />
-    <ClInclude Include="C:\Users\Schifman Ben\Documents\UofA\Senior 2016-2017\Fall 2016\574 ECE\ECE574\Assignments\Assignment2\dpgen\src\Register.h" />
-    <ClInclude Include="C:\Users\Schifman Ben\Documents\UofA\Senior 2016-2017\Fall 2016\574 ECE\ECE574\Assignments\Assignment2\dpgen\src\Wire.h" />
-    <ClCompile Include="C:\Users\Schifman Ben\Documents\UofA\Senior 2016-2017\Fall 2016\574 ECE\ECE574\Assignments\Assignment2\dpgen\src\Input.cpp"  />
+    <ClCompile Include="C:\Users\Schifman Ben\Documents\UofA\Senior 2016-2017\Fall 2016\574 ECE\ECE574\Assignments\Assignment2\dpgen\src\Connector.cpp"  />
     <ClCompile Include="C:\Users\Schifman Ben\Documents\UofA\Senior 2016-2017\Fall 2016\574 ECE\ECE574\Assignments\Assignment2\dpgen\src\Logic.cpp"  />
     <ClCompile Include="C:\Users\Schifman Ben\Documents\UofA\Senior 2016-2017\Fall 2016\574 ECE\ECE574\Assignments\Assignment2\dpgen\src\Netlist.cpp"  />
-    <ClCompile Include="C:\Users\Schifman Ben\Documents\UofA\Senior 2016-2017\Fall 2016\574 ECE\ECE574\Assignments\Assignment2\dpgen\src\Output.cpp"  />
     <ClCompile Include="C:\Users\Schifman Ben\Documents\UofA\Senior 2016-2017\Fall 2016\574 ECE\ECE574\Assignments\Assignment2\dpgen\src\ReadWrite.cpp"  />
-    <ClCompile Include="C:\Users\Schifman Ben\Documents\UofA\Senior 2016-2017\Fall 2016\574 ECE\ECE574\Assignments\Assignment2\dpgen\src\Register.cpp"  />
-    <ClCompile Include="C:\Users\Schifman Ben\Documents\UofA\Senior 2016-2017\Fall 2016\574 ECE\ECE574\Assignments\Assignment2\dpgen\src\Wire.cpp"  />
     <ClCompile Include="C:\Users\Schifman Ben\Documents\UofA\Senior 2016-2017\Fall 2016\574 ECE\ECE574\Assignments\Assignment2\dpgen\src\main.cpp"  />
   </ItemGroup>
   <ItemGroup>
