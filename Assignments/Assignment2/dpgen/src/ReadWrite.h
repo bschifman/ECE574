@@ -16,8 +16,9 @@ File: ReadWrite.h
 class ReadWrite
 {
 public:
+	bool parseFile(string filename);
 
-
+private:
 
 };
 
