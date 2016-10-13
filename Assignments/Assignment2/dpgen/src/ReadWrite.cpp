@@ -25,7 +25,7 @@ bool ReadWrite::parseFile(string filename) {
 	bool CorrectFormat = false;
 	string log;
 	Logic *logicPtr = NULL;
-	vector<Logic*> array;
+	vector<Logic*> array;	//list of logic items
 	fstream inFile;     // Input file stream
 
 	inFile.open(filename.c_str());//opens file

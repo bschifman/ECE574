@@ -7,6 +7,7 @@ File: Logic.h
 #include <iostream>
 #include <vector>
 #include <string>
+#include "Connector.h"
 using namespace std;
 
 #ifndef LOGIC_H
@@ -15,7 +16,7 @@ using namespace std;
 
 
 /*This object is the various*/
-class Logic
+class Logic		//nodes
 {
 public:
 		Logic() {};				//constructor
@@ -43,7 +44,9 @@ public:
 private:
 		int type;
 		std::string name;
-		std::string l_inputs;
+//		vector<Connector*> logicInputs;	//inputs for Logic object, might not need since graph is directional, would just know since this Logic would be on the edge list of connections
+		Connector logicOutput;	//Outputs for logic object(ie comparator might have gt, ln, eq)	//could get away without making a vector if you just made a comparator for each logic line, wouldn't change delay at all
+		std::string l_inputs;	//I think these should be deleted, use Connector objects instead
 		std::string l_outputs;
 		std::string outType;	//specifically for the comparator module
 		int dataWidth;
@@ -64,8 +67,8 @@ void Logic::SetType(std::string inputType) {
 	else if (!inputType.compare("SHL")) { this->type = 8; }
 	else if (!inputType.compare("DIV")) { this->type = 9; }
 	else if (!inputType.compare("MOD")) { this->type = 10; }
-	else if (!inputType.compare("INC")) { this->type = 9; }
-	else if (!inputType.compare("DEC")) { this->type = 10; }
+	else if (!inputType.compare("INC")) { this->type = 11; }
+	else if (!inputType.compare("DEC")) { this->type = 12; }
 	else { this->type = 0; }
 
 	return;
@@ -93,7 +96,7 @@ void Logic::SetDataWidth(int inputDataWidth) {
 	else if (inputDataWidth == 2) { this->dataWidth = 2; }
 	else if (inputDataWidth == 4) { this->dataWidth = 3; }
 	else if (inputDataWidth == 8) { this->dataWidth = 4; }
-	else if (inputDataWidth == 6) { this->dataWidth = 5; }
+	else if (inputDataWidth == 16) { this->dataWidth = 5; }
 	else if (inputDataWidth == 32) { this->dataWidth = 6; }
 	else { this->dataWidth = 0; }
 
@@ -114,7 +117,7 @@ int Logic::GetDataWidth() {
 
 void Logic::SetDelay() {
 
-		//					1-bit	2-bit	4-bit	8-bit	16-bit	32-bit
+		//					0	1-bit	2-bit	4-bit	8-bit	16-bit	32-bit
 	float regArray[7] = {	0,	2.616,	2.644,	2.879,	3.061,	3.602,	3.966 };	//REG
 	float addArray[7] = {	0,	2.704,	3.713,	4.924,	5.638,	7.270,	9.566 };	//Add
 	float subArray[7] = {	0,	3.024,	3.412,	4.890,	5.569,	7.253,	9.566 };	//SUB
