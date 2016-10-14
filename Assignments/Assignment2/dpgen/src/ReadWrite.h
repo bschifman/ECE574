@@ -9,6 +9,7 @@ File: ReadWrite.h
 #include <vector>
 #include <stdio.h>
 #include <stdlib.h>
+using namespace std;
 
 #ifndef READWRITE_H
 #define READWRITE
@@ -16,7 +17,9 @@ File: ReadWrite.h
 class ReadWrite
 {
 public:
-	bool parseFile(string filename);
+	bool parseFile(string filename); 
+	bool parseEdge(vector<Connector*> connectorVector, string inputLine);
+	bool parseNode(vector<Logic*> logicVector, vector<Connector*> connectorVector, string inputLine);
 
 private:
 

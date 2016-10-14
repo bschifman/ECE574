@@ -6,8 +6,10 @@ File: Netlist.h
 *************************************/
 #include <vector>
 
+
 #include "Connector.h"
 #include "Logic.h"
+using namespace std;
 
 #ifndef NETLIST_H
 #define NETLIST
