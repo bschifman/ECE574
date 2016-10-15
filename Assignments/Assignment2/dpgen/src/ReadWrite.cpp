@@ -67,7 +67,7 @@ bool ReadWrite::parseFile(std::string filename) {
 bool ReadWrite::parseEdge(vector<Connector*> connectorVector, std::string inputLine) {
 	inputLine.erase(std::remove(inputLine.begin(), inputLine.end(), ','), inputLine.end());	//removes comma's from the string
 	istringstream inSS(inputLine);       // Input string stream
-//	Connector *connectorPtr = NULL;	//dont think i need this actually, good ol mutators
+//	Connector *connectorPtr = NULL;	//dont think i need this actually, good ol overloading constructors
 	std::string currentWord;
 	std::string type;
 	std::string dataWidthString;
@@ -97,20 +97,62 @@ bool ReadWrite::parseEdge(vector<Connector*> connectorVector, std::string inputL
 bool ReadWrite::parseNode(vector<Logic*> logicVector, vector<Connector*> connectorVector, std::string inputLine) {
 	istringstream inSS(inputLine);       // Input string stream
 	Connector *connectorPtr = NULL;
+	Logic *logicPtr = NULL;
 	std::string currentWord;
 	std::string outputEdge;
 	std::string type;
+	std::string variable1 = NULL;
+	std::string variable2 = NULL;
+	std::string variable3 = NULL;
+//	vector <Connector>::iterator It;
+	int i = 0;
 
 
 	inSS >> outputEdge;	//records output of this Node/Logic
-	//search through 'connectorVector' for name 'outputEdge' and save to *connectorPtr
-
-
-	logicVector.push_back(new Logic(type, connectorPtr, connectorPtr->GetSize()));	//create new logic/node and add to vector
 	
+	for (i = 0; i < connectorVector.size();++i) {//search through 'connectorVector' for name 'outputEdge' and save to *connectorPtr, ie find the edge this logic line is referencing and pass it's address on
+		if (connectorVector.at(i)->GetName().find(outputEdge) != string::npos) {
+			connectorPtr = connectorVector.at(i);
+		}
+	}
+	
+	inSS >> currentWord;	//records the '=' to get rid of it
+	inSS >> variable1;	//records the first input variable
+	if (logicPtr->GetConnector()->GetType().find("REG") != string::npos) {	//check if the data type is a register, this will make the logic a REG since there is no +-/* symbol for reg in logic lines
 
+	}
+	else {
+		inSS >> currentWord;	//records the symbol of logic type
+		inSS >> variable2;	//records the second input variable
+		if (currentWord.find("?") != string::npos) {	//Logic is a MUX 
+			type = "MUX";//deal with MUX here, has 3 input thingys
+		}
+		else if (!currentWord.compare("+")) { 
+			if (!variable2.compare("1")) {
+				type = "INC";//is an incrementor not an adder
+			}
+			else {
+				type = "ADD";//is an adder
+			}
+		}
+		else if (!currentWord.compare("-")) { 
+			if (!variable2.compare("1")) {
+				type = "DEC";//is an decrementor not an adder
+			}
+			else {
+				type = "SUB";//is an subtractor
+			}
+		}
+		else if (!currentWord.compare("*")) { type = "MUL"; }
+		else if (!currentWord.compare("==")) { type = "COMP"; }
+		else if (!currentWord.compare(">>")) { type = "SHR"; }
+		else if (!currentWord.compare("<<")) { type = "SHL"; }
+		else if (!currentWord.compare("/")) { type = "DIV"; }
+		else if (!currentWord.compare("%")) { type = "MOD"; }
+	}
+	
+	logicPtr = new Logic(type, connectorPtr, connectorPtr->GetSize());	//create the new logic element with its output edge, type and datawidth 
+	logicVector.push_back(logicPtr);	//create new logic/node and add to vector
 
 	return true;	//haven't checked for many error problems yet
-
-	return true;
 }

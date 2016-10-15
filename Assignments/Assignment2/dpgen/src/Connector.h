@@ -15,6 +15,7 @@ using namespace std;
 class Connector	//edges
 {
 public:
+	Connector();
 	Connector(string name, string type, int dataWidth) { this->size = dataWidth;	this->delay = 0; this->name = name; };				//constructor
 	~Connector() {};			//destructor
 	//Setters
@@ -42,6 +43,21 @@ private:
 	vector <Logic*> logicDown;	//list of all node input connections this connector/edge is pointing to
 
 };
+
+Connector::Connector() {
+
+}
+
+Connector::Connector(string name, string type, int dataWidth) { 
+	this->size = dataWidth;	
+	this->delay = 0; 
+	this->name = name; 
+	return;
+}
+
+Connector::~Connector() {
+
+}
 
 
 #endif

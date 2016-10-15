@@ -20,7 +20,7 @@ class Logic		//nodes, will probably need their imputs as well to create the veri
 {
 public:
 	Logic();//default constructor
-	Logic(std::string type, Connector *logicOutput, int dataWidth) ;				//constructor
+	Logic(std::string type, Connector* logicOutput, int dataWidth) ;				//constructor
 	~Logic();			//destructor
 	//Setters
 	void SetType(std::string inputType);
@@ -36,6 +36,7 @@ public:
 	std::string GetName() { return this->name; }
 	int GetType() { return this->type; }
 	std::string GetTypeString();
+	Connector* GetConnector() { return this->logicOutput; }
 	std::string Getl_inputs() { return this->l_inputs; }
 	std::string Getl_outputs() { return this->l_outputs; }
 	std::string GetOutType() { return this->outType; }
@@ -47,7 +48,7 @@ private:
 	int type;
 	std::string name;
 //		vector<Connector*> logicInputs;	//inputs for Logic object, might not need since graph is directional, would just know since this Logic would be on the edge list of connections
-	Connector *logicOutput;	//Outputs for logic object(ie comparator might have gt, ln, eq)	//could get away without making a vector if you just made a comparator for each logic line, wouldn't change delay at all
+	Connector* logicOutput;	//Outputs for logic object(ie comparator might have gt, ln, eq)	//could get away without making a vector if you just made a comparator for each logic line, wouldn't change delay at all
 	std::string l_inputs;	//I think these should be deleted, use Connector objects instead
 	std::string l_outputs;
 	std::string outType;	//specifically for the comparator module
@@ -63,7 +64,7 @@ Logic::Logic() {
 
 Logic::Logic(std::string type, Connector *logicOutput, int dataWidth) { 
 	this->SetType(type);
-	SetDataWidth(dataWidth);
+	this->SetDataWidth(dataWidth);
 	this->SetConnector(logicOutput);
 	SetDelay();
 };
