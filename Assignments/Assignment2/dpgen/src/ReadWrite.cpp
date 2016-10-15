@@ -118,30 +118,25 @@ bool ReadWrite::parseNode(vector<Logic*> logicVector, vector<Connector*> connect
 	
 	inSS >> currentWord;	//records the '=' to get rid of it
 	inSS >> variable1;	//records the first input variable
-	if (logicPtr->GetConnector()->GetType().find("REG") != string::npos) {	//check if the data type is a register, this will make the logic a REG since there is no +-/* symbol for reg in logic lines
-
+	if (logicPtr->GetConnector()->GetType().find("register") != string::npos) {	//check if the data type is a register, this will make the logic a REG since there is no +-/* symbol for reg in logic lines
+		type = "REG";
+		//make register stuff
 	}
 	else {
 		inSS >> currentWord;	//records the symbol of logic type
 		inSS >> variable2;	//records the second input variable
 		if (currentWord.find("?") != string::npos) {	//Logic is a MUX 
 			type = "MUX";//deal with MUX here, has 3 input thingys
+			inSS >> currentWord;	//records the ':' to get rid of it
+			inSS >> variable3;	//records the second input variable
 		}
 		else if (!currentWord.compare("+")) { 
-			if (!variable2.compare("1")) {
-				type = "INC";//is an incrementor not an adder
-			}
-			else {
-				type = "ADD";//is an adder
-			}
+			if (!variable2.compare("1")) { type = "INC"; }	//is an incrementor not an adder
+			else { type = "ADD"; }//is an adder
 		}
 		else if (!currentWord.compare("-")) { 
-			if (!variable2.compare("1")) {
-				type = "DEC";//is an decrementor not an adder
-			}
-			else {
-				type = "SUB";//is an subtractor
-			}
+			if (!variable2.compare("1")) { type = "DEC"; }//is an decrementor not an adder
+			else { type = "SUB"; }//is an subtractor
 		}
 		else if (!currentWord.compare("*")) { type = "MUL"; }
 		else if (!currentWord.compare("==")) { type = "COMP"; }
