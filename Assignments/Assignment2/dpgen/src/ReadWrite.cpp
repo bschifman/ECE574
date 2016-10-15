@@ -21,11 +21,11 @@ using namespace std;
 
 
 
-bool ReadWrite::parseFile(string filename) {
+bool ReadWrite::parseFile(std::string filename) {
 
 
 	bool CorrectFormat = false;
-	string log;
+	std::string log;
 	Logic *logicPtr = NULL;
 	vector<Logic*> logicVector;	//list of logic items
 	vector<Connector*> connectorVector;	//list of logic items
@@ -43,7 +43,7 @@ bool ReadWrite::parseFile(string filename) {
 
 		while (!inFile.eof()) {// then while the file does not end, keep going through the loop
 			getline(inFile, log);// grabs the entire line of the input file
-			if (log.size() > 3) {//if there is enough data in the line, ie not an endline, continue
+			if (log.size() >= 3) {//if there is enough data in the line, ie not an endline, continue to parse
 
 				if ((log.find("input") != string::npos)|| (log.find("output") != string::npos)|| (log.find("register") != string::npos)|| (log.find("wire") != string::npos)) {
 					if (!parseEdge(connectorVector, log)) { inFile.close(); return false; }//parse edges/connectors here
@@ -64,13 +64,13 @@ bool ReadWrite::parseFile(string filename) {
 }
 
 
-bool ReadWrite::parseEdge(vector<Connector*> connectorVector, string inputLine) {
+bool ReadWrite::parseEdge(vector<Connector*> connectorVector, std::string inputLine) {
 	inputLine.erase(std::remove(inputLine.begin(), inputLine.end(), ','), inputLine.end());	//removes comma's from the string
 	istringstream inSS(inputLine);       // Input string stream
 //	Connector *connectorPtr = NULL;	//dont think i need this actually, good ol mutators
-	string currentWord;
-	string type;
-	string dataWidthString;
+	std::string currentWord;
+	std::string type;
+	std::string dataWidthString;
 	int dataWidthInt = 0;
 
 
@@ -91,11 +91,14 @@ bool ReadWrite::parseEdge(vector<Connector*> connectorVector, string inputLine) 
 
 	return true;	//haven't checked for many error problems yet
 }
-bool ReadWrite::parseNode(vector<Logic*> logicVector, vector<Connector*> connectorVector, string inputLine) {
+
+
+
+bool ReadWrite::parseNode(vector<Logic*> logicVector, vector<Connector*> connectorVector, std::string inputLine) {
 	istringstream inSS(inputLine);       // Input string stream
 	Connector *connectorPtr = NULL;
-	string currentWord;
-	string outputEdge;
+	std::string currentWord;
+	std::string outputEdge;
 	std::string type;
 
 
@@ -103,7 +106,7 @@ bool ReadWrite::parseNode(vector<Logic*> logicVector, vector<Connector*> connect
 	//search through 'connectorVector' for name 'outputEdge' and save to *connectorPtr
 
 
-	logicVector.push_back(new Logic(type, *connectorPtr, connectorPtr->GetSize()));	//create new logic/node and add to vector
+	logicVector.push_back(new Logic(type, connectorPtr, connectorPtr->GetSize()));	//create new logic/node and add to vector
 	
 
 
