@@ -48,7 +48,7 @@ Connector::Connector() {
 
 }
 
-Connector::Connector(string name, string type, int dataWidth) { 
+Connector::Connector(string name, string type, int dataWidth) {		//overload constructor for name, type, and dw
 	this->size = dataWidth;	
 	this->delay = 0; 
 	this->name = name; 

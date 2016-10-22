@@ -21,11 +21,11 @@ using namespace std;
 
 
 
-bool ReadWrite::parseFile(std::string filename) {
+bool ReadWrite::parseFile(string filename) {
 
 
 	bool CorrectFormat = false;
-	std::string log;
+	string log;
 	Logic *logicPtr = NULL;
 	vector<Logic*> logicVector;	//list of logic items
 	vector<Connector*> connectorVector;	//list of logic items
@@ -64,13 +64,13 @@ bool ReadWrite::parseFile(std::string filename) {
 }
 
 
-bool ReadWrite::parseEdge(vector<Connector*> connectorVector, std::string inputLine) {
-	inputLine.erase(std::remove(inputLine.begin(), inputLine.end(), ','), inputLine.end());	//removes comma's from the string
+bool ReadWrite::parseEdge(vector<Connector*> connectorVector, string inputLine) {
+	inputLine.erase(remove(inputLine.begin(), inputLine.end(), ','), inputLine.end());	//removes comma's from the string
 	istringstream inSS(inputLine);       // Input string stream
 //	Connector *connectorPtr = NULL;	//dont think i need this actually, good ol overloading constructors
-	std::string currentWord;
-	std::string type;
-	std::string dataWidthString;
+	string currentWord;
+	string type;
+	string dataWidthString;
 	int dataWidthInt = 0;
 
 
@@ -94,16 +94,16 @@ bool ReadWrite::parseEdge(vector<Connector*> connectorVector, std::string inputL
 
 
 
-bool ReadWrite::parseNode(vector<Logic*> logicVector, vector<Connector*> connectorVector, std::string inputLine) {
+bool ReadWrite::parseNode(vector<Logic*> logicVector, vector<Connector*> connectorVector, string inputLine) {
 	istringstream inSS(inputLine);       // Input string stream
 	Connector *connectorPtr = NULL;
 	Logic *logicPtr = NULL;
-	std::string currentWord;
-	std::string outputEdge;
-	std::string type;
-	std::string variable1 = NULL;
-	std::string variable2 = NULL;
-	std::string variable3 = NULL;
+	string currentWord;
+	string outputEdge;
+	string type;
+	string variable1 = NULL;
+	string variable2 = NULL;
+	string variable3 = NULL;
 //	vector <Connector>::iterator It;
 	int i = 0;
 

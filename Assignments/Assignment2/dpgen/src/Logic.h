@@ -16,42 +16,42 @@ using namespace std;
 
 
 /*This object is the various*/
-class Logic		//nodes, will probably need their imputs as well to create the verilog code
+class Logic		//nodes, will probably need their inputs as well to create the verilog code
 {
 public:
 	Logic();//default constructor
-	Logic(std::string type, Connector* logicOutput, int dataWidth) ;				//constructor
-	~Logic();			//destructor
+	Logic(string type, Connector* logicOutput, int dataWidth) ;		//overload constructor
+	~Logic();													    //destructor
 	//Setters
-	void SetType(std::string inputType);
-	void SetName(std::string name) { this->name = name; }
+	void SetType(string inputType);
+	void SetName(string name) { this->name = name; }
 	void SetConnector(Connector *recievedConnector) { this->logicOutput = recievedConnector; }
-	void SetL_inputs(std::string l_inputs) { this->l_inputs = l_inputs; }
-	void SetOutType(std::string outType) { this->outType = outType; }
-	void SetL_outputs(std::string l_inputs) { this->l_outputs = l_outputs; }
+	void SetL_inputs(string l_inputs) { this->l_inputs = l_inputs; }
+	void SetOutType(string outType) { this->outType = outType; }
+	void SetL_outputs(string l_inputs) { this->l_outputs = l_outputs; }
 	void SetDataWidth(int inputDataWidth);
 	void SetSign(bool sign) { this->sign = sign; }
 	void SetDelay(); 
 	//Getters
-	std::string GetName() { return this->name; }
+	string GetName() { return this->name; }
 	int GetType() { return this->type; }
-	std::string GetTypeString();
+	string GetTypeString();
 	Connector* GetConnector() { return this->logicOutput; }
-	std::string Getl_inputs() { return this->l_inputs; }
-	std::string Getl_outputs() { return this->l_outputs; }
-	std::string GetOutType() { return this->outType; }
+	string Getl_inputs() { return this->l_inputs; }
+	string Getl_outputs() { return this->l_outputs; }
+	string GetOutType() { return this->outType; }
 	int GetDataWidth();
 	float GetDelay() { return this->delay; }
 	bool GetSign() { return this->sign; }
 		
 private:
 	int type;
-	std::string name;
+	string name;
 //		vector<Connector*> logicInputs;	//inputs for Logic object, might not need since graph is directional, would just know since this Logic would be on the edge list of connections
 	Connector* logicOutput;	//Outputs for logic object(ie comparator might have gt, ln, eq)	//could get away without making a vector if you just made a comparator for each logic line, wouldn't change delay at all
-	std::string l_inputs;	//I think these should be deleted, use Connector objects instead
-	std::string l_outputs;
-	std::string outType;	//specifically for the comparator module
+	string l_inputs;	//I think these should be deleted, use Connector objects instead
+	string l_outputs;
+	string outType;	//specifically for the comparator module
 	int dataWidth;
 	bool sign;
 	float delay;			//the delay of this logic item
@@ -62,7 +62,7 @@ Logic::Logic() {
 
 }
 
-Logic::Logic(std::string type, Connector *logicOutput, int dataWidth) { 
+Logic::Logic(string type, Connector *logicOutput, int dataWidth) { 
 	this->SetType(type);
 	this->SetDataWidth(dataWidth);
 	this->SetConnector(logicOutput);
@@ -74,7 +74,7 @@ Logic::~Logic(){
 }
 
 //Logic mutator, will set recieved "type" into a integer class variable. Allowing use of switch statements
-void Logic::SetType(std::string inputType) { 
+void Logic::SetType(string inputType) { 
 	if (!inputType.compare("REG")) { this->type = 1; }
 	else if (!inputType.compare("ADD")) { this->type = 2; }
 	else if (!inputType.compare("SUB")) { this->type = 3; }
@@ -93,7 +93,7 @@ void Logic::SetType(std::string inputType) {
 }
 
 //Get string "type" of variable, this converts the integer value to a name for outputting
-std::string Logic::GetTypeString() {
+string Logic::GetTypeString() {
 	if (this->type == 1) { return "REG"; }
 	else if (this->type == 2) { return "REG"; }
 	else if (this->type == 3) { return "SUB"; }

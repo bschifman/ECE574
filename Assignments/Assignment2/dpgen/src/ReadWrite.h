@@ -18,7 +18,7 @@ class ReadWrite
 {
 public:
 	bool parseFile(std::string filename);
-	bool parseEdge(vector<Connector*> connectorVector, std::string inputLine);
+	bool parseEdge(vector<Connector*> connectorVector, std::string inputLine);	//Parse string
 	bool parseNode(vector<Logic*> logicVector, vector<Connector*> connectorVector, std::string inputLine);
 
 private:
