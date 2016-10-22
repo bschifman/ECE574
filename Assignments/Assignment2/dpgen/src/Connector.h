@@ -10,6 +10,7 @@ File: Connector.h
 #define CONNECTOR
 
 #include <string>
+#include "Logic.h"
 using namespace std;
 
 class Connector	//edges
