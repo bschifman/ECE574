@@ -4,6 +4,7 @@ NetId: kevincurtis, bschifman
 Assignment #: 2
 File: main.cpp
 *************************************/
+//Connector Vector is empty for when we get to the logic parsing
 #include <iostream>
 
 #include "Netlist.h"
@@ -13,6 +14,11 @@ File: main.cpp
 int main(int argc, char **argv) {
 	if (argc == 2) {					//check for correct argument number
 		Netlist n1;
+		ReadWrite fileIn;
+		if (!fileIn.parseFile(argv[1])) {
+			cerr << "Ya done fed up" << endl;
+			return -1;
+		}
 
 
 

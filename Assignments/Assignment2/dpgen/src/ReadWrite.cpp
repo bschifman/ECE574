@@ -37,11 +37,12 @@ bool ReadWrite::parseFile(string filename) {
 
 	else if (inFile.is_open()) {//if file is opens
 
-		while (!inFile.eof()) {// then while the file does not end, keep going through the loop
-			getline(inFile, log);// grabs the entire line of the input file
-			if (log.size() >= 3) {//if there is enough data in the line, ie not an endline, continue to parse
+		while (!inFile.eof()) {			// then while the file does not end, keep going through the loop
+			getline(inFile, log);		// grabs the entire line of the input file
+			if (!log.empty()) {			// checks for empty line
 
-				if ((log.find("input") != string::npos)|| (log.find("output") != string::npos)|| (log.find("register") != string::npos)|| (log.find("wire") != string::npos)) {
+				if ((log.find("input") != string::npos) || (log.find("output") != string::npos) || (log.find("register") != string::npos) || (log.find("wire") != string::npos)) {
+
 					if (!parseEdge(connectorVector, log)) { inFile.close(); return false; }//parse edges/connectors here
 				}
 				else {
@@ -64,14 +65,18 @@ bool ReadWrite::parseEdge(vector<Connector*> connectorVector, string inputLine) 
 	inputLine.erase(remove(inputLine.begin(), inputLine.end(), ','), inputLine.end());	//removes comma's from the string
 	istringstream inSS(inputLine);       // Input string stream
 //	Connector *connectorPtr = NULL;	//dont think i need this actually, good ol overloading constructors
-	string currentWord;
-	string type;
-	string dataWidthString;
+	string currentWord = "";
+	string type = "";
+	string dataWidthString = "";
+	bool tempSign = false;	
 	int dataWidthInt = 0;
 
 
-	inSS >> type;	//records type of edge
-	inSS >> dataWidthString;		//records the datawidth
+	inSS >> type;					
+	inSS >> dataWidthString;		
+	if (dataWidthString.find("U") != string::npos) { tempSign = true; }
+	else { tempSign = false; }
+
 	if (dataWidthString.find("32") != string::npos) {	dataWidthInt = 32;	}	//sets the datawidths
 	else if (dataWidthString.find("16") != string::npos) { dataWidthInt = 16; }
 	else if (dataWidthString.find("8") != string::npos) { dataWidthInt = 8; }
@@ -81,11 +86,11 @@ bool ReadWrite::parseEdge(vector<Connector*> connectorVector, string inputLine) 
 	else { return false; }	//second word in line wasn't a data width, error, tis screwed
 
 	while (inSS >> currentWord) {
-		connectorVector.push_back(new Connector(currentWord, type, dataWidthInt));	//create new connector and add to vector
+		connectorVector.push_back(new Connector(currentWord, type, dataWidthInt, tempSign));	//create new connector and add to vector
 	}
 
 
-	return true;	//haven't checked for many error problems yet
+	return true;	
 }
 
 
@@ -97,16 +102,16 @@ bool ReadWrite::parseNode(vector<Logic*> logicVector, vector<Connector*> connect
 	string currentWord;
 	string outputEdge;
 	string type;
-	string variable1 = NULL;
-	string variable2 = NULL;
-	string variable3 = NULL;
+	string variable1 = "";
+	string variable2 = "";
+	string variable3 = "";
 //	vector <Connector>::iterator It;
 	int i = 0;
 
 
 	inSS >> outputEdge;	//records output of this Node/Logic
 	
-	for (i = 0; i < connectorVector.size();++i) {//search through 'connectorVector' for name 'outputEdge' and save to *connectorPtr, ie find the edge this logic line is referencing and pass it's address on
+	for (i = 0; i < connectorVector.size(); ++i) {//search through 'connectorVector' for name 'outputEdge' and save to *connectorPtr, ie find the edge this logic line is referencing and pass it's address on
 		if (connectorVector.at(i)->GetName().find(outputEdge) != string::npos) {
 			connectorPtr = connectorVector.at(i);
 		}

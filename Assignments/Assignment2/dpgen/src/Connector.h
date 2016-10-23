@@ -20,8 +20,8 @@ class Connector	//edges
 {
 public:
 	Connector(void);
-	Connector(string name, string type, int dataWidth);	//constructor
-	~Connector(void);									//destructor
+	Connector(string name, string type, int dataWidth, bool sign);	//overload constructor
+	~Connector(void);												//destructor
 
 	//Setters
 	void SetType(string type) { this->type = type; }
@@ -44,7 +44,7 @@ private:
 	string type;				//type of connector (input, output, wire, register)
 	string name;				//name of the variable
 	int size;					//data width
-	bool sign;					//signed or unsigned
+	bool sign;					//signed(1) or unsigned(0) 
 	bool visited;				//check whether this edge has been visited or not when scanning through the list
 	float delay;				//delay to this point
 };
