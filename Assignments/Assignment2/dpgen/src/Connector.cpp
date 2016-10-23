@@ -9,7 +9,7 @@ File: Connector.cpp
 #include "Connector.h"
 using namespace std;
 
-Connector::Connector() {
+Connector::Connector(void) {
 
 }
 
@@ -20,6 +20,6 @@ Connector::Connector(string name, string type, int dataWidth) {		//overload cons
 	return;
 }
 
-Connector::~Connector() {
+Connector::~Connector(void) {
 
 }

@@ -13,16 +13,12 @@ File: ReadWrite.cpp
 #include <string>
 #include <sstream>
 #include <algorithm>
+
 #include "ReadWrite.h"
-#include "Logic.h"
-#include "Connector.h"
+
 using namespace std;
 
-
-
-
 bool ReadWrite::parseFile(string filename) {
-
 
 	bool CorrectFormat = false;
 	string log;

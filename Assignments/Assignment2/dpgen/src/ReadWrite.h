@@ -16,7 +16,6 @@ File: ReadWrite.h
 #include <stdlib.h>
 
 #include "Connector.h"
-#include "Logic.h"
 
 using namespace std;
 

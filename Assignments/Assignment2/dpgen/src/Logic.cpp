@@ -83,9 +83,9 @@ int Logic::GetDataWidth() {
 	else if (this->dataWidth == 4) { return 8; }
 	else if (this->dataWidth == 5) { return 16; }
 	else if (this->dataWidth == 6) { return 32; }
-	else { return 0; }
+	else { return false; }
 
-	return;
+	return true;
 }
 
 void Logic::SetDelay() {

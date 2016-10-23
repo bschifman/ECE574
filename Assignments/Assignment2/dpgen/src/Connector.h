@@ -17,9 +17,9 @@ using namespace std;
 class Connector	//edges
 {
 public:
-	Connector();
-	Connector(string name, string type, int dataWidth) { this->size = dataWidth;	this->delay = 0; this->name = name; };	//constructor
-	~Connector() {};																										//destructor
+	Connector(void);
+	Connector(string name, string type, int dataWidth);	//constructor
+	~Connector(void);									//destructor
 
 	//Setters
 	void SetType(std::string type) { this->type = type; }

@@ -5,9 +5,10 @@ Assignment #: 2
 File: main.cpp
 *************************************/
 #include <iostream>
+#include "Netlist.h"
 
 int main(int argc, char **argv) {
-	if (argc == 2) {//check for correct argument number
+	if (argc == 2) {					//check for correct argument number
 
 	}
 

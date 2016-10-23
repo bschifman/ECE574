@@ -4,24 +4,19 @@ NetId: kevincurtis, bschifman
 Assignment #: 2
 File: Logic.h
 *************************************/
-//#pragma once
 
 #include <iostream>
 #include <vector>
 #include <string>
 
+using namespace std;
+
 #ifndef LOGIC_H
 #define LOGIC
 
+class Connector;		//forward declaration
 
-//#include "Connector.h"
-
-class Connector;
-using namespace std;
-
-
-/*This object is the various*/
-class Logic		//nodes, will probably need their inputs as well to create the verilog code
+class Logic				//nodes, will probably need their inputs as well to create the verilog code
 {
 public:
 	Logic(void);//default constructor
