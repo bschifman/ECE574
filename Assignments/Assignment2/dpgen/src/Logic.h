@@ -4,6 +4,8 @@ NetId: kevincurtis, bschifman
 Assignment #: 2
 File: Logic.h
 *************************************/
+#ifndef LOGIC_H
+#define LOGIC_H
 
 #include <iostream>
 #include <vector>
@@ -11,17 +13,16 @@ File: Logic.h
 
 using namespace std;
 
-#ifndef LOGIC_H
-#define LOGIC
+
 
 class Connector;		//forward declaration
 
 class Logic				//nodes, will probably need their inputs as well to create the verilog code
 {
 public:
-	Logic(void);//default constructor
+	Logic(void);													//default constructor
 	Logic(string type, Connector* logicOutput, int dataWidth) ;		//overload constructor
-	~Logic(void);													    //destructor
+	~Logic(void);													//destructor
 
 	//Setters
 	void SetType(string inputType);
@@ -35,13 +36,13 @@ public:
 	void SetDelay(); 
 
 	//Getters
-	string GetName() { return this->name; }
-	int GetType() { return this->type; }
-	string GetTypeString();
 	Connector* GetConnector() { return this->logicOutput; }
+	string GetName() { return this->name; }	
+	string GetTypeString();	
 	string Getl_inputs() { return this->l_inputs; }
 	string Getl_outputs() { return this->l_outputs; }
 	string GetOutType() { return this->outType; }
+	int GetType() { return this->type; }
 	int GetDataWidth();
 	float GetDelay() { return this->delay; }
 	bool GetSign() { return this->sign; }

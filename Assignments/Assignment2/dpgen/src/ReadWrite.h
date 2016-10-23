@@ -4,11 +4,8 @@ NetId: kevincurtis, bschifman
 Assignment #: 2
 File: ReadWrite.h
 *************************************/
-
-
-
 #ifndef READWRITE_H
-#define READWRITE
+#define READWRITE_H
 
 #include <string>
 #include <vector>
@@ -22,9 +19,9 @@ using namespace std;
 class ReadWrite
 {
 public:
-	bool parseFile(std::string filename);
-	bool parseEdge(vector<Connector*> connectorVector, std::string inputLine);	//Parse string
-	bool parseNode(vector<Logic*> logicVector, vector<Connector*> connectorVector, std::string inputLine);
+	bool parseFile(string filename);
+	bool parseEdge(vector<Connector*> connectorVector, string inputLine);	//Parse string
+	bool parseNode(vector<Logic*> logicVector, vector<Connector*> connectorVector, string inputLine);
 
 private:
 

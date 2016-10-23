@@ -7,6 +7,7 @@ File: Connector.cpp
 #include <string>
 
 #include "Connector.h"
+
 using namespace std;
 
 Connector::Connector(void) {

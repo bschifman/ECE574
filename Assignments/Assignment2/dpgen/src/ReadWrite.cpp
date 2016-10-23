@@ -23,13 +23,13 @@ bool ReadWrite::parseFile(string filename) {
 	bool CorrectFormat = false;
 	string log;
 	Logic *logicPtr = NULL;
-	vector<Logic*> logicVector;	//list of logic items
+	vector<Logic*> logicVector;			//list of logic items
 	vector<Connector*> connectorVector;	//list of logic items
-	fstream inFile;     // Input file stream
+	fstream inFile;					    // Input file stream
 
-	inFile.open(filename.c_str());//opens file
+	inFile.open(filename.c_str());		//opens file
 
-	if (!inFile.is_open()) { //check if it does not build
+	if (!inFile.is_open()) {			//check if it does not build
 		cout << "Could not open text file." << endl;
 		inFile.close();//close the input file
 		return false;

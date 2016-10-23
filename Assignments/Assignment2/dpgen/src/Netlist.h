@@ -4,31 +4,28 @@ NetId: kevincurtis, bschifman
 Assignment #: 2
 File: Netlist.h
 *************************************/
+#ifndef NETLIST_H
+#define NETLIST_H
+
 #include <vector>
 
 #include "Logic.h"
-using namespace std;
 
-#ifndef NETLIST_H
-#define NETLIST
+using namespace std;
 
 class Netlist
 {
 public:
-	
-		//Getters
-		std::vector<Connector*> GetInputs() { return this->inputs; }
+	Netlist(void);
+	~Netlist(void);
+
+	//Getters
+	vector<Connector*> GetInputs() { return this->edges; }
 
 
 private:
-		std::vector<Connector*> inputs;
-		std::vector<Connector*> outputs;
-		std::vector<Connector*> wires;
-		std::vector<Connector*> registers;
-		std::vector<Logic*> logics;
-
-
-
+	vector<Connector*> edges;
+	vector<Logic*> nodes;
 };
 
 #endif
