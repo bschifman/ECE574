@@ -8,7 +8,7 @@ File: Netlist.h
 #define NETLIST_H
 
 #include <vector>
-
+#include "Connector.h"
 #include "Logic.h"
 
 using namespace std;
@@ -19,8 +19,13 @@ public:
 	Netlist(void);
 	~Netlist(void);
 
+	bool parseFile(string filename);
+	bool parseEdge(string inputLine);	//Parse string
+	bool parseNode(string inputLine);
+
 	//Getters
-	vector<Connector*> GetInputs() { return this->edges; }
+	vector<Connector*> GetEdges() { return this->edges; }
+	vector<Logic*> GetNodes() { return this->nodes; }
 
 
 private:

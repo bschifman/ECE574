@@ -8,15 +8,12 @@ File: main.cpp
 #include <iostream>
 
 #include "Netlist.h"
-#include "ReadWrite.h"
-
 
 int main(int argc, char **argv) {
 	if (argc == 2) {					//check for correct argument number
 		Netlist n1;
-		ReadWrite fileIn;
-		if (!fileIn.parseFile(argv[1])) {
-			cerr << "Ya done fed up" << endl;
+		if (!n1.parseFile(argv[1])){
+			cerr << "Ya done f-ed up" << endl;
 			return -1;
 		}
 
