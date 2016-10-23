@@ -128,7 +128,7 @@ bool ReadWrite::parseNode(vector<Logic*> logicVector, vector<Connector*> connect
 		if (currentWord.find("?") != string::npos) {	//Logic is a MUX 
 			type = "MUX";//deal with MUX here, has 3 input thingys
 			inSS >> currentWord;	//records the ':' to get rid of it
-			inSS >> variable3;	//records the second input variable
+			inSS >> variable3;	//records the third input variable
 		}
 		else if (!currentWord.compare("+")) { 
 			if (!variable2.compare("1")) { type = "INC"; }	//is an incrementor not an adder

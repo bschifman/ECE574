@@ -14,6 +14,13 @@ using namespace std;
 #ifndef NETLIST_H
 #define NETLIST
 
+#include <vector>
+
+
+#include "Connector.h"
+#include "Logic.h"
+using namespace std;
+
 class Netlist
 {
 public:

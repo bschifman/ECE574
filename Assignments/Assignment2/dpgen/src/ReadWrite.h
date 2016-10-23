@@ -5,14 +5,20 @@ Assignment #: 2
 File: ReadWrite.h
 *************************************/
 
+
+
+#ifndef READWRITE_H
+#define READWRITE
+
 #include <string>
 #include <vector>
 #include <stdio.h>
 #include <stdlib.h>
-using namespace std;
 
-#ifndef READWRITE_H
-#define READWRITE
+#include "Connector.h"
+#include "Logic.h"
+
+using namespace std;
 
 class ReadWrite
 {
