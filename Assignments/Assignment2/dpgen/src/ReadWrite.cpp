@@ -63,32 +63,25 @@ bool ReadWrite::parseFile(string filename) {
 
 bool ReadWrite::parseEdge(vector<Connector*> connectorVector, string inputLine) {
 	inputLine.erase(remove(inputLine.begin(), inputLine.end(), ','), inputLine.end());	//removes comma's from the string
-	istringstream inSS(inputLine);       // Input string stream
-//	Connector *connectorPtr = NULL;	//dont think i need this actually, good ol overloading constructors
+	istringstream inSS(inputLine);														// Input string stream
 	string currentWord = "";
 	string type = "";
 	string dataWidthString = "";
+	string dataWidthString2 = "";
 	bool tempSign = false;	
 	int dataWidthInt = 0;
 
-
 	inSS >> type;					
-	inSS >> dataWidthString;		
-	if (dataWidthString.find("U") != string::npos) { tempSign = true; }
-	else { tempSign = false; }
-
-	if (dataWidthString.find("32") != string::npos) {	dataWidthInt = 32;	}	//sets the datawidths
-	else if (dataWidthString.find("16") != string::npos) { dataWidthInt = 16; }
-	else if (dataWidthString.find("8") != string::npos) { dataWidthInt = 8; }
-	else if (dataWidthString.find("4") != string::npos) { dataWidthInt = 4; }
-	else if (dataWidthString.find("2") != string::npos) { dataWidthInt = 2; }
-	else if (dataWidthString.find("1") != string::npos) { dataWidthInt = 1; }
-	else { return false; }	//second word in line wasn't a data width, error, tis screwed
+	inSS >> dataWidthString;
+	
+	if (dataWidthString.find("U") != string::npos) { tempSign = true; dataWidthString2 = dataWidthString.substr(4); }
+	else { tempSign = false; dataWidthString2 = dataWidthString.substr(3); }
+	dataWidthInt = stoi(dataWidthString2);
+	//still may need to check for no value int width
 
 	while (inSS >> currentWord) {
 		connectorVector.push_back(new Connector(currentWord, type, dataWidthInt, tempSign));	//create new connector and add to vector
 	}
-
 
 	return true;	
 }
