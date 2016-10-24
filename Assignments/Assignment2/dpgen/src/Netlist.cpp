@@ -109,7 +109,7 @@ bool Netlist::parseNode(string inputLine) {
 
 	inSS >> currentWord;															//records the '=' to get rid of it
 	inSS >> variable1;																//records the first input variable
-	if (tempConnector->GetType().find("register") != string::npos) {	//check if the data type is a register, this will make the logic a REG since there is no +-/* symbol for reg in logic lines
+	if (tempConnector->GetType().find("register") != string::npos) {				//check if the data type is a register, this will make the logic a REG since there is no +-/* symbol for reg in logic lines
 		type = "REG";
 		//make register stuff
 	}
