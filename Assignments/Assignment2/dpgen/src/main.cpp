@@ -13,7 +13,7 @@ int main(int argc, char **argv) {
 	if (argc == 2) {					//check for correct argument number
 		Netlist n1;
 		if (!n1.parseFile(argv[1])){
-			cerr << "Ya done f-ed up" << endl;
+			cerr << "Unable to parse file." << endl;
 			return -1;
 		}
 

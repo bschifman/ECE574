@@ -22,6 +22,7 @@ public:
 	bool parseFile(string filename);
 	bool parseEdge(string inputLine);	//Parse string
 	bool parseNode(string inputLine);
+	Connector* findEdge(string edgeName);
 
 	//Getters
 	vector<Connector*> GetEdges() { return this->edges; }

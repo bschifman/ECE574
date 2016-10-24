@@ -74,13 +74,16 @@ bool Netlist::parseEdge(string inputLine) {
 	inSS >> type;
 	inSS >> dataWidthString;
 
-	if (dataWidthString.find("U") != string::npos) { tempSign = true; dataWidthString2 = dataWidthString.substr(4); }
-	else { tempSign = false; dataWidthString2 = dataWidthString.substr(3); }
-	dataWidthInt = stoi(dataWidthString2);
-	//still may need to check for no value int width
+	if (dataWidthString.find("Int") != string::npos) {
+		if (dataWidthString.find("U") != string::npos) { tempSign = true; dataWidthString2 = dataWidthString.substr(4); }
+		else { tempSign = false; dataWidthString2 = dataWidthString.substr(3); }
+		dataWidthInt = stoi(dataWidthString2);
+		//still may need to check for no value int width
+	}
+	else { return false; }		//if no int width described, return an error
 
 	while (inSS >> currentWord) {
-		edges.push_back(new Connector(currentWord, type, dataWidthInt, tempSign));	//create new connector and add to vector
+		this->edges.push_back(new Connector(currentWord, type, dataWidthInt, tempSign));	//create new connector and add to vector
 	}
 
 	return true;
@@ -92,37 +95,36 @@ bool Netlist::parseNode(string inputLine) {
 	istringstream inSS(inputLine);       // Input string stream
 	Connector *tempConnector = NULL;
 	Logic *tempLogic = NULL;
-	string currentWord;
-	string outputEdge;
-	string type;
+	string currentWord = "";
+	string outputEdge = "";
+	string type = "";
 	string variable1 = "";
 	string variable2 = "";
 	string variable3 = "";
-	//	vector <Connector>::iterator It;
 	int i = 0;
 
 
 	inSS >> outputEdge;	//records output of this Node/Logic
-
-	for (i = 0; i < edges.size(); ++i) {//search through 'connectorVector' for name 'outputEdge' and save to *connectorPtr, ie find the edge this logic line is referencing and pass it's address on
-		if (edges.at(i)->GetName().find(outputEdge) != string::npos) {
-			tempConnector = edges.at(i);
-		}
-	}
+	tempConnector = this->findEdge(outputEdge);
 
 	inSS >> currentWord;															//records the '=' to get rid of it
 	inSS >> variable1;																//records the first input variable
-	if (tempLogic->GetConnector()->GetType().find("register") != string::npos) {	//check if the data type is a register, this will make the logic a REG since there is no +-/* symbol for reg in logic lines
+	if (tempConnector->GetType().find("register") != string::npos) {	//check if the data type is a register, this will make the logic a REG since there is no +-/* symbol for reg in logic lines
 		type = "REG";
 		//make register stuff
 	}
 	else {
 		inSS >> currentWord;								//records the symbol of logic type
 		inSS >> variable2;									//records the second input variable
+		if (currentWord.empty()) { cerr << "Error: missing datapath component type(+,-,*,==,>>,<<,/,%)" << endl; return false; }		//improper input, report error
+		if (variable2.empty()) { cerr << "Error: missing input variable for datapath component " << endl; return false; }		//improper input, report error
+
 		if (currentWord.find("?") != string::npos) {		//Logic is a MUX 
 			type = "MUX";									//deal with MUX here, has 3 input thingys
 			inSS >> currentWord;							//records the ':' to get rid of it
+			if (!currentWord.compare(":")) { cerr << "Error: missing ':' for compator component " << endl; return false; }		//improper operator, should be a ':' report error
 			inSS >> variable3;								//records the third input variable
+			if (variable3.empty()) { cerr << "Error: missing input variable for datapath component " << endl; return false; }		//improper operator, report error
 		}
 		else if (!currentWord.compare("+")) {
 			if (!variable2.compare("1")) { type = "INC"; }	//is an incrementor not an adder
@@ -140,11 +142,45 @@ bool Netlist::parseNode(string inputLine) {
 		else if (!currentWord.compare("%")) { type = "MOD"; }
 	}
 
+	//change size maybe depending on inputs?  I don't think so I would imagine the output size would determine but need to examine if so.
+
 	tempLogic = new Logic(type, tempConnector, tempConnector->GetSize());	//create the new logic element with its output edge, type and datawidth 
-	nodes.push_back(tempLogic);										//create new logic/node and add to vector
+	this->nodes.push_back(tempLogic);										//create new logic/node and add to vector
+	tempConnector->SetParent(tempLogic);
+
+	tempConnector = this->findEdge(variable1);								//these "ifs" add the current node to any edge used in the logic
+	if (tempConnector != NULL) {	tempConnector->AddChild(tempLogic);	}
+	tempConnector = this->findEdge(variable2);
+	if (tempConnector != NULL) { tempConnector->AddChild(tempLogic); }
+	tempConnector = this->findEdge(variable3);
+	if (tempConnector != NULL) { tempConnector->AddChild(tempLogic); }
+
 
 	return true;
 }
 
+
+Connector * Netlist::findEdge(string edgeName) {
+	Connector *tempConnector = NULL;
+	int i = 0;
+
+	for (i = 0; i < this->edges.size(); ++i) {//search through 'edges' for name 'edgeName' and save to *tempConnector, ie find the edge this string is referencing and pass it's address on
+		if (this->edges.at(i)->GetName().find(edgeName) != string::npos) {
+			tempConnector = this->edges.at(i);
+			break;
+		}
+	}
+
+	return tempConnector;
+}
+
 Netlist::Netlist(void) {}
-Netlist::~Netlist(void) {}
+Netlist::~Netlist(void) {
+
+	while (this->edges.size() > 0) {
+		this->edges.pop_back();
+	}
+	while (this->nodes.size() > 0) {
+		this->nodes.pop_back();
+	}
+}

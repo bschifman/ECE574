@@ -30,6 +30,8 @@ public:
 	void SetSign(bool sign) { this->sign = sign; }
 	void SetVisited(bool visited) { this->visited = visited; }
 	void SetDelay(float delay) { this->delay = delay; }
+	void SetParent(Logic* parentToAdd) { this->parent = parentToAdd; }
+	void AddChild(Logic* childToAdd) { this->children.push_back(childToAdd); }
 
 	//Getters
 	string GetType() { return this->type; }
@@ -41,6 +43,7 @@ public:
 
 private:
 	Logic *parent;				//parent node of this edge
+	vector<Logic*> children;	//children nodes this edge is connected to
 	string type;				//type of connector (input, output, wire, register)
 	string name;				//name of the variable
 	int size;					//data width
