@@ -21,11 +21,12 @@ using namespace std;
 bool Netlist::parseFile(string filename) {
 
 	Logic *tempLogic = NULL;
-	//vector<Logic*> logicVector;			//list of logic items
-	//vector<Connector*> *connectorVector = new vector<Connector*>();	//list of connector items
-	bool CorrectFormat = false;
 	string line;
 	fstream inFile;					    // Input file stream
+	istringstream inSS("");
+	string edgeType = "";
+	bool atNodes = false;
+	bool CorrectFormat = false;
 
 	inFile.open(filename.c_str());		//opens file
 
@@ -40,13 +41,16 @@ bool Netlist::parseFile(string filename) {
 		while (!inFile.eof()) {			// then while the file does not end, keep going through the loop
 			getline(inFile, line);		// grabs the entire line of the input file
 			if (!line.empty()) {			// checks for empty line
-
-				if ((line.find("input") != string::npos) || (line.find("output") != string::npos) || (line.find("register") != string::npos) || (line.find("wire") != string::npos)) {
+				inSS.clear();
+				inSS.str(line);
+				inSS >> edgeType;
+				if ((atNodes == false) && ((edgeType == "wire") || (edgeType == "input") || (edgeType == "output") || (edgeType == "register"))) {
 
 					if (!parseEdge(line)) { inFile.close(); return false; }//parse edges/connectors here
 				}
 				else {
 					if (!parseNode(line)) { inFile.close(); return false; }//parse logic here
+					atNodes = true;
 				}
 			}
 		}
@@ -136,9 +140,9 @@ bool Netlist::parseNode(string inputLine) {
 			else { type = "SUB"; }						    //is an subtractor
 		}
 		else if (!logicSymbol.compare("*")) { type = "MUL"; }
-		else if (!logicSymbol.compare("==")) { type = "COMP"; }
 		else if (!logicSymbol.compare(">>")) { type = "SHR"; }
 		else if (!logicSymbol.compare("<<")) { type = "SHL"; }
+		else if ((!logicSymbol.compare("==")) || (!logicSymbol.compare("<")) || (!logicSymbol.compare(">"))) { type = "COMP"; }
 		else if (!logicSymbol.compare("/")) { type = "DIV"; }
 		else if (!logicSymbol.compare("%")) { type = "MOD"; }
 	}
@@ -178,11 +182,13 @@ Connector *Netlist::findEdge(string edgeName) {
 
 Netlist::Netlist(void) {}
 Netlist::~Netlist(void) {
-
-	while (this->edges.size() > 0) {
+	int  i = 0;
+	for (i = this->edges.size(); i = this->edges.size() > 0; i--) {
+		this->edges.at(i)->~Connector();
 		this->edges.pop_back();
 	}
-	while (this->nodes.size() > 0) {
+	for (i = this->nodes.size(); this->nodes.size() > 0;i--) {
+		this->nodes.at(i)->~Logic();
 		this->nodes.pop_back();
 	}
 }
