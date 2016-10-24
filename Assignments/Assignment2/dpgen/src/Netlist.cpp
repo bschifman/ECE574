@@ -26,7 +26,7 @@ bool Netlist::parseFile(string filename) {
 	istringstream inSS("");
 	string edgeType = "";
 	bool atNodes = false;
-	bool CorrectFormat = false;
+	bool CorrectFormat = true;
 
 	inFile.open(filename.c_str());		//opens file
 
@@ -46,10 +46,10 @@ bool Netlist::parseFile(string filename) {
 				inSS >> edgeType;
 				if ((atNodes == false) && ((edgeType == "wire") || (edgeType == "input") || (edgeType == "output") || (edgeType == "register"))) {
 
-					if (!parseEdge(line)) { inFile.close(); return false; }//parse edges/connectors here
+					if (!parseEdge(line)) { cout << "Error: Edge Parsing" << endl; CorrectFormat = false; break; }//parse edges/connectors here
 				}
 				else {
-					if (!parseNode(line)) { inFile.close(); return false; }//parse logic here
+					if (!parseNode(line)) { cout << "Error: Node Parsing" << endl; CorrectFormat = false; break; }//parse logic here
 					atNodes = true;
 				}
 			}
@@ -126,8 +126,8 @@ bool Netlist::parseNode(string inputLine) {
 
 		if (logicSymbol.find("?") != string::npos) {		//Logic is a MUX 
 			type = "MUX";									//deal with MUX here, has 3 input thingys
-			inSS >> logicSymbol;							//records the ':' to get rid of it
-			if (!logicSymbol.compare(":")) { cerr << "Error: missing ':' for compator component " << endl; return false; }		//improper operator, should be a ':' report error
+			inSS >> garbage;							//records the ':' to get rid of it
+			if (!(garbage == ":")) { cerr << "Error: missing ':' for compator component " << endl; return false; }		//improper operator, should be a ':' report error
 			inSS >> variable3;								//records the third input variable
 			if (variable3.empty()) { cerr << "Error: missing input variable for datapath component " << endl; return false; }		//improper operator, report error
 		}
