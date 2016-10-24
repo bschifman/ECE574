@@ -31,6 +31,7 @@ Logic::~Logic(void) {
 
 //Logic mutator, will set recieved "type" into a integer class variable. Allowing use of switch statements
 void Logic::SetType(string inputType) {
+	this->typeName = inputType;
 	if (!inputType.compare("REG")) { this->type = 1; }
 	else if (!inputType.compare("ADD")) { this->type = 2; }
 	else if (!inputType.compare("SUB")) { this->type = 3; }

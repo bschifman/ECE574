@@ -64,7 +64,7 @@ bool Netlist::parseFile(string filename) {
 bool Netlist::parseEdge(string inputLine) {
 	inputLine.erase(remove(inputLine.begin(), inputLine.end(), ','), inputLine.end());	//removes comma's from the string
 	istringstream inSS(inputLine);														// Input string stream
-	string currentWord = "";
+	string logicSymbol = "";
 	string type = "";
 	string dataWidthString = "";
 	string dataWidthString2 = "";
@@ -82,8 +82,8 @@ bool Netlist::parseEdge(string inputLine) {
 	}
 	else { cerr << "Error: missing proper datawidth callout " << endl; return false; }		//if no int width described, return an error
 
-	while (inSS >> currentWord) {
-		this->edges.push_back(new Connector(currentWord, type, dataWidthInt, tempSign));	//create new connector and add to vector
+	while (inSS >> logicSymbol) {
+		this->edges.push_back(new Connector(logicSymbol, type, dataWidthInt, tempSign));	//create new connector and add to vector
 	}
 
 	return true;
@@ -95,7 +95,8 @@ bool Netlist::parseNode(string inputLine) {
 	istringstream inSS(inputLine);       // Input string stream
 	Connector *tempConnector = NULL;
 	Logic *tempLogic = NULL;
-	string currentWord = "";
+	string garbage = "";
+	string logicSymbol = "";
 	string outputEdge = "";
 	string type = "";
 	string variable1 = "";
@@ -107,39 +108,39 @@ bool Netlist::parseNode(string inputLine) {
 	inSS >> outputEdge;	//records output of this Node/Logic
 	tempConnector = this->findEdge(outputEdge);
 
-	inSS >> currentWord;															//records the '=' to get rid of it
+	inSS >> garbage;					   										    //records the '=' to get rid of it
 	inSS >> variable1;																//records the first input variable
 	if (tempConnector->GetType().find("register") != string::npos) {				//check if the data type is a register, this will make the logic a REG since there is no +-/* symbol for reg in logic lines
 		type = "REG";
 		//make register stuff
 	}
 	else {
-		inSS >> currentWord;								//records the symbol of logic type
+		inSS >> logicSymbol;								//records the symbol of logic type
 		inSS >> variable2;									//records the second input variable
-		if (currentWord.empty()) { cerr << "Error: missing datapath component type(+,-,*,==,>>,<<,/,%)" << endl; return false; }		//improper input, report error
+		if (logicSymbol.empty()) { cerr << "Error: missing datapath component type(+,-,*,==,>>,<<,/,%)" << endl; return false; }		//improper input, report error
 		if (variable2.empty()) { cerr << "Error: missing input variable for datapath component " << endl; return false; }		//improper input, report error
 
-		if (currentWord.find("?") != string::npos) {		//Logic is a MUX 
+		if (logicSymbol.find("?") != string::npos) {		//Logic is a MUX 
 			type = "MUX";									//deal with MUX here, has 3 input thingys
-			inSS >> currentWord;							//records the ':' to get rid of it
-			if (!currentWord.compare(":")) { cerr << "Error: missing ':' for compator component " << endl; return false; }		//improper operator, should be a ':' report error
+			inSS >> logicSymbol;							//records the ':' to get rid of it
+			if (!logicSymbol.compare(":")) { cerr << "Error: missing ':' for compator component " << endl; return false; }		//improper operator, should be a ':' report error
 			inSS >> variable3;								//records the third input variable
 			if (variable3.empty()) { cerr << "Error: missing input variable for datapath component " << endl; return false; }		//improper operator, report error
 		}
-		else if (!currentWord.compare("+")) {
+		else if (!logicSymbol.compare("+")) {
 			if (!variable2.compare("1")) { type = "INC"; }	//is an incrementor not an adder
 			else { type = "ADD"; }							//is an adder
 		}
-		else if (!currentWord.compare("-")) {
+		else if (!logicSymbol.compare("-")) {
 			if (!variable2.compare("1")) { type = "DEC"; }  //is an decrementor not a subtractor
 			else { type = "SUB"; }						    //is an subtractor
 		}
-		else if (!currentWord.compare("*")) { type = "MUL"; }
-		else if (!currentWord.compare("==")) { type = "COMP"; }
-		else if (!currentWord.compare(">>")) { type = "SHR"; }
-		else if (!currentWord.compare("<<")) { type = "SHL"; }
-		else if (!currentWord.compare("/")) { type = "DIV"; }
-		else if (!currentWord.compare("%")) { type = "MOD"; }
+		else if (!logicSymbol.compare("*")) { type = "MUL"; }
+		else if (!logicSymbol.compare("==")) { type = "COMP"; }
+		else if (!logicSymbol.compare(">>")) { type = "SHR"; }
+		else if (!logicSymbol.compare("<<")) { type = "SHL"; }
+		else if (!logicSymbol.compare("/")) { type = "DIV"; }
+		else if (!logicSymbol.compare("%")) { type = "MOD"; }
 	}
 
 	//change size maybe depending on inputs?  I don't think so I would imagine the output size would determine but need to examine if so.
@@ -149,10 +150,10 @@ bool Netlist::parseNode(string inputLine) {
 	tempConnector->SetParent(tempLogic);
 
 	tempConnector = this->findEdge(variable1);								//these "ifs" add the current node to any edge used in the logic
-	if (tempConnector != NULL) {	tempConnector->AddChild(tempLogic);	}
+	if (tempConnector != NULL) { tempConnector->AddChild(tempLogic); }
 	tempConnector = this->findEdge(variable2);
 	if (tempConnector != NULL) { tempConnector->AddChild(tempLogic); }
-	tempConnector = this->findEdge(variable3);
+	if (!variable3.empty()) { tempConnector = this->findEdge(variable3); }
 	if (tempConnector != NULL) { tempConnector->AddChild(tempLogic); }
 
 
@@ -160,14 +161,15 @@ bool Netlist::parseNode(string inputLine) {
 }
 
 
-Connector * Netlist::findEdge(string edgeName) {
+Connector *Netlist::findEdge(string edgeName) {
 	Connector *tempConnector = NULL;
 	int i = 0;
+	//vector<Connector>::iterator it = find(this->edges.begin(), this->edges.end(), tempConnector);
 
 	for (i = 0; i < this->edges.size(); ++i) {//search through 'edges' for name 'edgeName' and save to *tempConnector, ie find the edge this string is referencing and pass it's address on
 		if (this->edges.at(i)->GetName().find(edgeName) != string::npos) {
 			tempConnector = this->edges.at(i);
-			break;
+			return tempConnector;
 		}
 	}
 

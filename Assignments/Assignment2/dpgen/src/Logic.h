@@ -38,23 +38,24 @@ public:
 	//Getters
 	Connector* GetConnector() { return this->logicOutput; }
 	string GetName() { return this->name; }	
-	string GetTypeString();	
+	string GetTypeString();
 	string Getl_inputs() { return this->l_inputs; }
 	string Getl_outputs() { return this->l_outputs; }
 	string GetOutType() { return this->outType; }
 	int GetType() { return this->type; }
 	int GetDataWidth();
-	float GetDelay() { return this->delay; }
+	float GetDelay() { return this->delay; }	
 	bool GetSign() { return this->sign; }
 		
 private:
-	int type;
-	string name;
-//		vector<Connector*> logicInputs;	//inputs for Logic object, might not need since graph is directional, would just know since this Logic would be on the edge list of connections
+
 	Connector* logicOutput;	//Outputs for logic object(ie comparator might have gt, ln, eq)	//could get away without making a vector if you just made a comparator for each logic line, wouldn't change delay at all
+	string typeName;
 	string l_inputs;		//I think these should be deleted, use Connector objects instead
+	string name;
 	string l_outputs;
 	string outType;			//specifically for the comparator module
+	int type;
 	int dataWidth;
 	bool sign;
 	float delay;			//the delay of this logic item
