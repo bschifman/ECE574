@@ -18,11 +18,11 @@ Logic::Logic(void) {
 
 }
 
-Logic::Logic(string type, Connector *logicOutput, int dataWidth) {
+Logic::Logic(string type, Connector *logicOutput, int dataWidth) {	//overload constructor
 	this->SetType(type);
 	this->SetDataWidth(dataWidth);
 	this->SetConnector(logicOutput);
-	SetDelay();
+	this->SetDelay();
 }
 
 Logic::~Logic(void) {

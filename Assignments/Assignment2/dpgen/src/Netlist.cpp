@@ -80,7 +80,7 @@ bool Netlist::parseEdge(string inputLine) {
 		dataWidthInt = stoi(dataWidthString2);
 		//still may need to check for no value int width
 	}
-	else { return false; }		//if no int width described, return an error
+	else { cerr << "Error: missing proper datawidth callout " << endl; return false; }		//if no int width described, return an error
 
 	while (inSS >> currentWord) {
 		this->edges.push_back(new Connector(currentWord, type, dataWidthInt, tempSign));	//create new connector and add to vector
