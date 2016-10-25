@@ -143,7 +143,7 @@ bool Netlist::parseNode(string inputLine) {
 		if (logicSymbol.empty()) { cerr << "Error: missing datapath component type(+,-,*,==,>>,<<,/,%)" << endl; return false; }		//improper input, report error
 		if (variable2.empty()) { cerr << "Error: missing input variable for datapath component " << endl; return false; }		//improper input, report error
 		tempChkConnector = this->findEdge(variable2);
-		if (tempChkConnector == NULL) { cerr << "Error: missing input variable for datapath component " << endl; return false; }
+		if ((tempChkConnector == NULL) && (variable2 != "1") ) { cerr << "Error: missing input variable for datapath component " << endl; return false; }
 
 		if (logicSymbol.find("?") != string::npos) {		//Logic is a MUX 
 			type = "MUX";									//deal with MUX here, has 3 input thingys
@@ -199,7 +199,7 @@ Connector *Netlist::findEdge(string edgeName) {
 	//vector<Connector>::iterator it = find(this->edges.begin(), this->edges.end(), tempConnector);
 
 	for (i = 0; i < this->edges.size(); ++i) {//search through 'edges' for name 'edgeName' and save to *tempConnector, ie find the edge this string is referencing and pass it's address on
-		if (this->edges.at(i)->GetName().find(edgeName) != string::npos) {
+		if (this->edges.at(i)->GetName() == (edgeName) ) {
 			tempConnector = this->edges.at(i);
 			return tempConnector;
 		}
