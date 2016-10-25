@@ -55,12 +55,12 @@ bool Netlist::parseFile(string filename) {
 				}
 			}
 		}
-		this->outputToReg();
 	}
 	if (CorrectFormat == false) {
 		inFile.close();//close the input file
 		return false;
 	}
+	this->outputToReg();
 
 	inFile.close();//close the input file
 	return true;
@@ -138,7 +138,6 @@ bool Netlist::parseNode(string inputLine) {
 		//make register stuff
 	}
 	else {
-		
 		
 		if (logicSymbol.empty()) { cerr << "Error: missing datapath component type(+,-,*,==,>>,<<,/,%)" << endl; return false; }		//improper input, report error
 		if (variable2.empty()) { cerr << "Error: missing input variable for datapath component " << endl; return false; }		//improper input, report error
