@@ -109,11 +109,13 @@ bool Netlist::parseNode(string inputLine) {
 	string variable1 = "";
 	string variable2 = "";
 	string variable3 = "";
+	bool sign = false;
 	int i = 0;
 
 
 	inSS >> outputEdge;	//records output of this Node/Logic
 	tempConnector = this->findEdge(outputEdge);
+	sign |= tempConnector->GetSign();
 	if (tempConnector == NULL) {
 		cerr << "Error: missing input, output or wire variable callout" << endl;
 		return false;
@@ -131,6 +133,9 @@ bool Netlist::parseNode(string inputLine) {
 			}
 		}
 	}
+	if ((!variable1.empty()) && (variable1 != "1")) { sign |= this->findEdge(variable1)->GetSign(); }
+	if ((!variable2.empty()) && (variable2 != "1")) { sign |= this->findEdge(variable2)->GetSign(); }
+	if ((!variable3.empty()) && (variable3 != "1")) { sign |= this->findEdge(variable3)->GetSign(); }
 
 
 	if ((tempConnector->GetType() == "register")||(logicSymbol.empty())) {				//check if the data type is a register, this will make the logic a REG since there is no +-/* symbol for reg in logic lines
@@ -168,9 +173,12 @@ bool Netlist::parseNode(string inputLine) {
 		else { cerr << "Error: incorrect operator " << endl; return false; }
 	}
 
+	if (sign) {
+		type  = "S" + type;
+	}
 	//change size maybe depending on inputs?  I don't think so I would imagine the output size would determine but need to examine if so.
 
-	tempLogic = new Logic(type, tempConnector, tempConnector->GetSize());	//create the new logic element with its output edge, type and datawidth 
+	tempLogic = new Logic(type, tempConnector, tempConnector->GetSize(), sign);	//create the new logic element with its output edge, type and datawidth 
 	this->nodes.push_back(tempLogic);										//create new logic/node and add to vector
 	tempConnector->SetParent(tempLogic);
 
@@ -210,8 +218,10 @@ Connector *Netlist::findEdge(string edgeName) {
 void Netlist::outputToReg() {
 	Connector *tempConnector = NULL;
 	Logic *tempLogic = NULL;
-	int i = 0;
 	string tempName = "";
+	bool sign = false;
+	int i = 0;
+
 	for (i = 0; i < this->edges.size(); i++) {
 		if (this->edges.at(i)->GetType() == "output") {
 			if (this->edges.at(i)->GetParent()->GetTypeString() != "REG") {
@@ -220,7 +230,7 @@ void Netlist::outputToReg() {
 				tempConnector = new Connector(this->edges.at(i)->GetName(), this->edges.at(i)->GetType(), this->edges.at(i)->GetSize(), this->edges.at(i)->GetSign());
 				this->edges.push_back(tempConnector);
 				this->edges.at(i)->SetName(tempName);
-				tempLogic = new Logic("REG", tempConnector, tempConnector->GetSize());
+				tempLogic = new Logic("REG", tempConnector, tempConnector->GetSize(), sign);
 				this->nodes.push_back(tempLogic);//create the new logic element with its output edge, type and datawidth
 				tempConnector->SetParent(tempLogic);
 			}

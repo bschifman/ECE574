@@ -20,9 +20,9 @@ class Connector;		//forward declaration
 class Logic				//nodes, will probably need their inputs as well to create the verilog code
 {
 public:
-	Logic(void);													//default constructor
-	Logic(string type, Connector* logicOutput, int dataWidth) ;		//overload constructor
-	~Logic(void);													//destructor
+	Logic(void);																//default constructor
+	Logic(string type, Connector* logicOutput, int dataWidth, bool sign);		//overload constructor
+	~Logic(void);																//destructor
 
 	//Setters
 	void SetType(string inputType);
