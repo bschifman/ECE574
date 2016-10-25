@@ -49,11 +49,13 @@ bool Netlist::parseFile(string filename) {
 					if (!parseEdge(line)) { cout << "Error: Edge Parsing" << endl; CorrectFormat = false; break; }//parse edges/connectors here
 				}
 				else {
+
 					if (!parseNode(line)) { cout << "Error: Node Parsing" << endl; CorrectFormat = false; break; }//parse logic here
 					atNodes = true;
 				}
 			}
 		}
+		this->outputToReg();
 	}
 	if (CorrectFormat == false) {
 		inFile.close();//close the input file
@@ -98,6 +100,7 @@ bool Netlist::parseEdge(string inputLine) {
 bool Netlist::parseNode(string inputLine) {
 	istringstream inSS(inputLine);       // Input string stream
 	Connector *tempConnector = NULL;
+	Connector *tempChkConnector = NULL;
 	Logic *tempLogic = NULL;
 	string garbage = "";
 	string logicSymbol = "";
@@ -111,25 +114,43 @@ bool Netlist::parseNode(string inputLine) {
 
 	inSS >> outputEdge;	//records output of this Node/Logic
 	tempConnector = this->findEdge(outputEdge);
+	if (tempConnector == NULL) {
+		cerr << "Error: missing input, output or wire variable callout" << endl;
+		return false;
+	}
 
 	inSS >> garbage;					   										    //records the '=' to get rid of it
 	inSS >> variable1;																//records the first input variable
-	if (tempConnector->GetType().find("register") != string::npos) {				//check if the data type is a register, this will make the logic a REG since there is no +-/* symbol for reg in logic lines
+	inSS >> logicSymbol;								//records the symbol of logic type
+	if (!logicSymbol.empty()) {
+		inSS >> variable2;									//records the second input variable
+		if (!variable2.empty()) {
+			inSS >> garbage;							//records the ':' to get rid of it
+			if (!garbage.empty()) {
+				inSS >> variable3;								//records the third input variable
+			}
+		}
+	}
+
+
+	if ((tempConnector->GetType() == "register")||(logicSymbol.empty())) {				//check if the data type is a register, this will make the logic a REG since there is no +-/* symbol for reg in logic lines
 		type = "REG";
 		//make register stuff
 	}
 	else {
-		inSS >> logicSymbol;								//records the symbol of logic type
-		inSS >> variable2;									//records the second input variable
+		
+		
 		if (logicSymbol.empty()) { cerr << "Error: missing datapath component type(+,-,*,==,>>,<<,/,%)" << endl; return false; }		//improper input, report error
 		if (variable2.empty()) { cerr << "Error: missing input variable for datapath component " << endl; return false; }		//improper input, report error
+		tempChkConnector = this->findEdge(variable2);
+		if (tempChkConnector == NULL) { cerr << "Error: missing input variable for datapath component " << endl; return false; }
 
 		if (logicSymbol.find("?") != string::npos) {		//Logic is a MUX 
 			type = "MUX";									//deal with MUX here, has 3 input thingys
-			inSS >> garbage;							//records the ':' to get rid of it
 			if (!(garbage == ":")) { cerr << "Error: missing ':' for compator component " << endl; return false; }		//improper operator, should be a ':' report error
-			inSS >> variable3;								//records the third input variable
 			if (variable3.empty()) { cerr << "Error: missing input variable for datapath component " << endl; return false; }		//improper operator, report error
+			tempChkConnector = this->findEdge(variable3);
+			if (tempChkConnector == NULL) { cerr << "Error: missing input variable for datapath component " << endl; return false; }
 		}
 		else if (!logicSymbol.compare("+")) {
 			if (!variable2.compare("1")) { type = "INC"; }	//is an incrementor not an adder
@@ -145,6 +166,7 @@ bool Netlist::parseNode(string inputLine) {
 		else if ((!logicSymbol.compare("==")) || (!logicSymbol.compare("<")) || (!logicSymbol.compare(">"))) { type = "COMP"; }
 		else if (!logicSymbol.compare("/")) { type = "DIV"; }
 		else if (!logicSymbol.compare("%")) { type = "MOD"; }
+		else { cerr << "Error: incorrect operator " << endl; return false; }
 	}
 
 	//change size maybe depending on inputs?  I don't think so I would imagine the output size would determine but need to examine if so.
@@ -153,12 +175,18 @@ bool Netlist::parseNode(string inputLine) {
 	this->nodes.push_back(tempLogic);										//create new logic/node and add to vector
 	tempConnector->SetParent(tempLogic);
 
-	tempConnector = this->findEdge(variable1);								//these "ifs" add the current node to any edge used in the logic
-	if (tempConnector != NULL) { tempConnector->AddChild(tempLogic); }
-	tempConnector = this->findEdge(variable2);
-	if (tempConnector != NULL) { tempConnector->AddChild(tempLogic); }
-	if (!variable3.empty()) { tempConnector = this->findEdge(variable3); }
-	if (tempConnector != NULL) { tempConnector->AddChild(tempLogic); }
+	if (!variable1.empty()) {
+		tempConnector = this->findEdge(variable1);								//these "ifs" add the current node to any edge used in the logic
+		if (tempConnector != NULL) { tempConnector->AddChild(tempLogic); }
+	}
+	if (!variable2.empty()) {
+		tempConnector = this->findEdge(variable2);
+		if (tempConnector != NULL) { tempConnector->AddChild(tempLogic); }
+	}
+	if (!variable3.empty()) {
+		tempConnector = this->findEdge(variable3);
+		if (tempConnector != NULL) { tempConnector->AddChild(tempLogic); }
+	}
 
 
 	return true;
@@ -180,15 +208,39 @@ Connector *Netlist::findEdge(string edgeName) {
 	return tempConnector;
 }
 
+void Netlist::outputToReg() {
+	Connector *tempConnector = NULL;
+	Logic *tempLogic = NULL;
+	int i = 0;
+	string tempName = "";
+	for (i = 0; i < this->edges.size(); i++) {
+		if (this->edges.at(i)->GetType() == "output") {
+			if (this->edges.at(i)->GetParent()->GetTypeString() != "REG") {
+				tempName = this->edges.at(i)->GetName();
+				tempName.append("wire");
+				tempConnector = new Connector(this->edges.at(i)->GetName(), this->edges.at(i)->GetType(), this->edges.at(i)->GetSize(), this->edges.at(i)->GetSign());
+				this->edges.push_back(tempConnector);
+				this->edges.at(i)->SetName(tempName);
+				tempLogic = new Logic("REG", tempConnector, tempConnector->GetSize());
+				this->nodes.push_back(tempLogic);//create the new logic element with its output edge, type and datawidth
+				tempConnector->SetParent(tempLogic);
+			}
+		}
+	}
+
+
+	return;
+}
+
 Netlist::Netlist(void) {}
 Netlist::~Netlist(void) {
 	int  i = 0;
-	for (i = this->edges.size(); i = this->edges.size() > 0; i--) {
-		this->edges.at(i)->~Connector();
+	for (i = this->edges.size(); this->edges.size() > 0; i--) {
+//		this->edges.at(i)->~Connector();
 		this->edges.pop_back();
 	}
 	for (i = this->nodes.size(); this->nodes.size() > 0;i--) {
-		this->nodes.at(i)->~Logic();
+//		this->nodes.at(i)->~Logic();
 		this->nodes.pop_back();
 	}
 }

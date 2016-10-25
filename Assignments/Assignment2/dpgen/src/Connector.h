@@ -34,12 +34,14 @@ public:
 	void AddChild(Logic* childToAdd) { this->children.push_back(childToAdd); }
 
 	//Getters
+	Logic* GetParent() { return this->parent; }
 	string GetType() { return this->type; }
 	string GetName() { return this->name; }
 	int GetSize() { return this->size; }
 	bool GetSign() { return this->sign; }
 	bool GetVisited() { return this->visited; }
 	float GetDelay() { return this->delay; }
+
 
 private:
 	Logic *parent;				//parent node of this edge

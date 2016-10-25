@@ -28,9 +28,7 @@ public:
 	void SetType(string inputType);
 	void SetName(string name) { this->name = name; }
 	void SetConnector(Connector *recievedConnector) { this->logicOutput = recievedConnector; }
-	void SetL_inputs(string l_inputs) { this->l_inputs = l_inputs; }
 	void SetOutType(string outType) { this->outType = outType; }
-	void SetL_outputs(string l_inputs) { this->l_outputs = l_outputs; }
 	void SetDataWidth(int inputDataWidth);
 	void SetSign(bool sign) { this->sign = sign; }
 	void SetDelay(); 
@@ -39,8 +37,6 @@ public:
 	Connector* GetConnector() { return this->logicOutput; }
 	string GetName() { return this->name; }	
 	string GetTypeString();
-	string Getl_inputs() { return this->l_inputs; }
-	string Getl_outputs() { return this->l_outputs; }
 	string GetOutType() { return this->outType; }
 	int GetType() { return this->type; }
 	int GetDataWidth();

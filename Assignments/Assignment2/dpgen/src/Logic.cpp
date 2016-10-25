@@ -52,7 +52,7 @@ void Logic::SetType(string inputType) {
 //Get string "type" of variable, this converts the integer value to a name for outputting
 string Logic::GetTypeString() {
 	if (this->type == 1) { return "REG"; }
-	else if (this->type == 2) { return "REG"; }
+	else if (this->type == 2) { return "ADD"; }
 	else if (this->type == 3) { return "SUB"; }
 	else if (this->type == 4) { return "MUL"; }
 	else if (this->type == 5) { return "COMP"; }
