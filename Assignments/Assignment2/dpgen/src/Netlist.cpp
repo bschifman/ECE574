@@ -31,12 +31,12 @@ bool Netlist::parseFile(string filename) {
 	inFile.open(filename.c_str());		//opens file
 
 	if (!inFile.is_open()) {			//check if it does not build
-		cout << "Could not open text file." << endl;
+		cout << "Could not open text file " << filename << "." << endl;
 		inFile.close();//close the input file
 		return false;
 	}
-
 	else if (inFile.is_open()) {//if file is opens
+		cout << "Reading from text file " << filename.substr(filename.rfind('\\') + 1) << "..." << endl;
 
 		while (!inFile.eof()) {			// then while the file does not end, keep going through the loop
 			getline(inFile, line);		// grabs the entire line of the input file
@@ -117,7 +117,7 @@ bool Netlist::parseNode(string inputLine) {
 	tempConnector = this->findEdge(outputEdge);
 	sign |= tempConnector->GetSign();
 	if (tempConnector == NULL) {
-		cerr << "Error: missing input, output or wire variable callout" << endl;
+		cerr << "Error: missing output or wire variable callout" << endl;
 		return false;
 	}
 
@@ -181,6 +181,7 @@ bool Netlist::parseNode(string inputLine) {
 	tempLogic = new Logic(type, tempConnector, tempConnector->GetSize(), sign);	//create the new logic element with its output edge, type and datawidth 
 	this->nodes.push_back(tempLogic);										//create new logic/node and add to vector
 	tempConnector->SetParent(tempLogic);
+	if (tempLogic->GetTypeString() == "COMP") { tempLogic->SetOutType(logicSymbol); }		//if the new node is a comparator, record which type it is
 
 	if (!variable1.empty()) {
 		tempConnector = this->findEdge(variable1);								//these "ifs" add the current node to any edge used in the logic
@@ -241,15 +242,140 @@ void Netlist::outputToReg() {
 	return;
 }
 
+
+bool Netlist::outputModule(string outputFilename) {			//write all current data into a verilog module
+	ofstream outFS; // Output file stream
+	string truncatedFilename = "";
+	unsigned int i = 0;
+	bool hasInputs = false;
+	bool checked = false;
+
+	outFS.open(outputFilename.c_str());	// Open file
+
+	if (!outFS.is_open()) {			//check if it does not build
+		cout << "Could not create or open file " << outputFilename << "." << endl;
+		outFS.close();//close the output file
+		return false;
+	}
+	else if (outFS.is_open()) {//if file is opens
+		cout << "Writing to file " << outputFilename << "..." << endl;
+		truncatedFilename = outputFilename.substr(0, outputFilename.find("."));		//removes everything after the . of file name to make module name
+		outFS << "`timescale 1ns / 1ps" << endl << endl;
+		outFS << "module " << truncatedFilename << "(";
+
+		for (i = 0; i < this->edges.size(); i++) {				//lists all of the imputs into the module prototype
+			if (this->edges.at(i)->GetType() == "input") {
+				outFS << this->edges.at(i)->GetName() << ", ";
+				hasInputs = true;
+			}
+		}
+		outFS << " clk, rst);" << endl;
+		outFS << "input clk, rst;" << endl;
+		for (i = 0; i < 7; i++) { outFS << this->outputEdgeLine("input", (1 << i)) ; }	//output all input variables
+		outFS << endl;
+		for (i = 0; i < 7; i++) { outFS << this->outputEdgeLine("output", (1 << i)) ; }	//output all input variables
+		outFS << endl;
+		for (i = 0; i < 7; i++) { outFS << this->outputEdgeLine("wire", (1 << i)) ; }	//output all input variables
+		outFS << endl;
+
+		for (i = 0; i < this->nodes.size(); i++) { outFS << this->outputNodeLine(i) << endl;	}		//output all nodes/logics
+		
+
+		outFS << endl << "endmodule" << endl;
+	}
+
+
+	outFS.close();		//close the output file
+	return true;
+}
+
+
+string Netlist::outputEdgeLine(string type, unsigned int datawidth) {	//formats a string of variable callouts for an output file
+	string outputLine = "";
+	ostringstream outSS;
+	unsigned int i = 0;
+	bool checked = false;
+
+	checked = false;
+	for (i = 0; i < this->edges.size(); i++) {			//lists all of the imputs into the module prototype
+		if ((this->edges.at(i)->GetType() == type) && ((unsigned int)this->edges.at(i)->GetSize() == datawidth)) {
+			if (checked == false) {
+				outSS << type << " "; 
+				if (datawidth > 1) {
+					outSS << "[" << (datawidth - 1) << ":0] ";
+				}
+			}
+			else { outSS << ", "; }
+			outSS << this->edges.at(i)->GetName();
+			checked = true;
+		}
+	}
+	if (checked == true) { outSS << ";" << endl; }
+
+	return outSS.str();
+}
+
+
+
+string Netlist::outputNodeLine(int nodeNumber) {
+	string outputLine = "";
+	ostringstream outSS;
+	unsigned int i = 0;
+	unsigned int j = 0;
+	bool checked = false;
+
+	if (this->nodes.at(nodeNumber)->GetSign() == 1) { outSS << "S"; }	//if module is signed, mark as such
+	outSS << this->nodes.at(nodeNumber)->GetTypeString() << "\t";
+	for (i = 0; i < nodeNumber; i++) { 
+		if (this->nodes.at(nodeNumber)->GetTypeString() == this->nodes.at(i)->GetTypeString()) { j++; }	//count how many of this module already exist
+	}
+	outSS << this->nodes.at(nodeNumber)->GetTypeString() << "_" << (j) << "(";
+	if(this->nodes.at(nodeNumber)->GetTypeString() == "REG"){ outSS << "d, Clk, Rst, " << this->nodes.at(nodeNumber)->GetConnector()->GetName() << ")"; }
+	else if (this->nodes.at(nodeNumber)->GetTypeString() == "ADD") { outSS << "a, b, " << this->nodes.at(nodeNumber)->GetConnector()->GetName() << ")"; }
+	else if (this->nodes.at(nodeNumber)->GetTypeString() == "SUB") { outSS << "a, b, " << this->nodes.at(nodeNumber)->GetConnector()->GetName() << ")"; }
+	else if (this->nodes.at(nodeNumber)->GetTypeString() == "MUL") { outSS << "a, b, " << this->nodes.at(nodeNumber)->GetConnector()->GetName() << ")"; }
+	else if (this->nodes.at(nodeNumber)->GetTypeString() == "COMP") { outSS << "a, b, gt, lt, " << this->nodes.at(nodeNumber)->GetConnector()->GetName() << ")"; }
+	else if (this->nodes.at(nodeNumber)->GetTypeString() == "MUX2x1") { outSS << "a, b, sel, " << this->nodes.at(nodeNumber)->GetConnector()->GetName() << ")"; }
+	else if (this->nodes.at(nodeNumber)->GetTypeString() == "SHR") { outSS << "a, sh_amt, " << this->nodes.at(nodeNumber)->GetConnector()->GetName() << ")"; }
+	else if (this->nodes.at(nodeNumber)->GetTypeString() == "SHL") { outSS << "a, sh_amt, " << this->nodes.at(nodeNumber)->GetConnector()->GetName() << ")"; }
+	else if (this->nodes.at(nodeNumber)->GetTypeString() == "DIV") { outSS << "a, b, " << this->nodes.at(nodeNumber)->GetConnector()->GetName() << ")"; }
+	else if (this->nodes.at(nodeNumber)->GetTypeString() == "MOD") { outSS << "a, b, " << this->nodes.at(nodeNumber)->GetConnector()->GetName() << ")"; }
+	else if (this->nodes.at(nodeNumber)->GetTypeString() == "INC") { outSS << "a, b, " << this->nodes.at(nodeNumber)->GetConnector()->GetName() << ")"; }
+	else if (this->nodes.at(nodeNumber)->GetTypeString() == "DEC") { outSS << "a, b, " << this->nodes.at(nodeNumber)->GetConnector()->GetName() << ")"; }
+
+	//outSS << "COMP    #(.DATAWIDTH(8))    COMP_0(.a(d), .b(e), .gt(g));";
+
+	/*
+	module REG(d, Clk, Rst, q);
+	module ADD(a, b, sum);
+	module SUB(a, b, diff);
+	module MUL(a, b, prod);
+	module COMP(a, b, gt, lt, eq);
+	module MUX2x1(a, b, sel, d);
+	module SHR(a, sh_amt, d);
+	module SHL(a, sh_amt, d);
+	module DIV(a, b, quot);
+	module MOD(a, b, rem);
+	module INC(a, d);
+	module DEC(a, d);
+	*/
+
+	return outSS.str();
+}
+
+
+
 Netlist::Netlist(void) {}
 Netlist::~Netlist(void) {
-	int  i = 0;
-	for (i = this->edges.size(); this->edges.size() > 0; i--) {
-//		this->edges.at(i)->~Connector();
+	unsigned int i = 0;
+
+	for (i = this->edges.size(); i > 0; i--) {
+		delete this->edges.at(i - 1);
 		this->edges.pop_back();
 	}
-	for (i = this->nodes.size(); this->nodes.size() > 0;i--) {
-//		this->nodes.at(i)->~Logic();
+	for (i = this->nodes.size(); i > 0; i--) {
+		delete this->nodes.at(i - 1);
 		this->nodes.pop_back();
 	}
+
 }

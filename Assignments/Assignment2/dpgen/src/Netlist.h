@@ -22,6 +22,9 @@ public:
 	bool parseFile(string filename);
 	bool parseEdge(string inputLine);	//Parse string
 	bool parseNode(string inputLine);
+	bool outputModule(string outputFilename);
+	string outputEdgeLine(string type, unsigned int datawidth);
+	string outputNodeLine(int nodeNumber);
 	void outputToReg();
 	Connector* findEdge(string edgeName);
 
