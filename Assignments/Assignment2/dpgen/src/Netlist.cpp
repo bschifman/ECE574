@@ -119,15 +119,15 @@ bool Netlist::parseNode(string inputLine) {
 		return false;
 	}
 
-	inSS >> garbage;					   										    //records the '=' to get rid of it
-	inSS >> variable1;																//records the first input variable
+	inSS >> garbage;									//records the '=' to get rid of it
+	inSS >> variable1;									//records the first input variable
 	inSS >> logicSymbol;								//records the symbol of logic type
 	if (!logicSymbol.empty()) {
-		inSS >> variable2;									//records the second input variable
+		inSS >> variable2;								//records the second input variable
 		if (!variable2.empty()) {
 			inSS >> garbage;							//records the ':' to get rid of it
 			if (!garbage.empty()) {
-				inSS >> variable3;								//records the third input variable
+				inSS >> variable3;						//records the third input variable
 			}
 		}
 	}
