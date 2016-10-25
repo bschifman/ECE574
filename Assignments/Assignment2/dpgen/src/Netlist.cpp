@@ -325,7 +325,9 @@ string Netlist::outputNodeLine(int nodeNumber) {
 	bool checked = false;
 
 	if (this->nodes.at(nodeNumber)->GetSign() == 1) { outSS << "S"; }	//if module is signed, mark as such
-	outSS << this->nodes.at(nodeNumber)->GetTypeString() << "\t";
+	outSS << this->nodes.at(nodeNumber)->GetTypeString();
+	if(this->nodes.at(nodeNumber)->GetTypeString() == "MUX"){ outSS << "2X1"; }
+	outSS <<  "\t";
 	for (i = 0; i < nodeNumber; i++) { 
 		if (this->nodes.at(nodeNumber)->GetTypeString() == this->nodes.at(i)->GetTypeString()) { j++; }	//count how many of this module already exist
 	}
@@ -335,7 +337,7 @@ string Netlist::outputNodeLine(int nodeNumber) {
 	else if (this->nodes.at(nodeNumber)->GetTypeString() == "SUB") { outSS << "a, b, " << this->nodes.at(nodeNumber)->GetConnector()->GetName() << ")"; }
 	else if (this->nodes.at(nodeNumber)->GetTypeString() == "MUL") { outSS << "a, b, " << this->nodes.at(nodeNumber)->GetConnector()->GetName() << ")"; }
 	else if (this->nodes.at(nodeNumber)->GetTypeString() == "COMP") { outSS << "a, b, gt, lt, " << this->nodes.at(nodeNumber)->GetConnector()->GetName() << ")"; }
-	else if (this->nodes.at(nodeNumber)->GetTypeString() == "MUX2x1") { outSS << "a, b, sel, " << this->nodes.at(nodeNumber)->GetConnector()->GetName() << ")"; }
+	else if (this->nodes.at(nodeNumber)->GetTypeString() == "MUX") { outSS << "a, b, sel, " << this->nodes.at(nodeNumber)->GetConnector()->GetName() << ")"; }
 	else if (this->nodes.at(nodeNumber)->GetTypeString() == "SHR") { outSS << "a, sh_amt, " << this->nodes.at(nodeNumber)->GetConnector()->GetName() << ")"; }
 	else if (this->nodes.at(nodeNumber)->GetTypeString() == "SHL") { outSS << "a, sh_amt, " << this->nodes.at(nodeNumber)->GetConnector()->GetName() << ")"; }
 	else if (this->nodes.at(nodeNumber)->GetTypeString() == "DIV") { outSS << "a, b, " << this->nodes.at(nodeNumber)->GetConnector()->GetName() << ")"; }

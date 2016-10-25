@@ -32,6 +32,7 @@ public:
 	void SetDataWidth(int inputDataWidth);
 	void SetSign(bool sign) { this->sign = sign; }
 	void SetDelay(); 
+	void AddParent(Connector* parentToAdd) { this->logicInputs.push_back(parentToAdd); }
 
 	//Getters
 	Connector* GetConnector() { return this->logicOutput; }
@@ -46,6 +47,7 @@ public:
 private:
 
 	Connector* logicOutput;	//Outputs for logic object(ie comparator might have gt, ln, eq)	//could get away without making a vector if you just made a comparator for each logic line, wouldn't change delay at all
+	vector <Connector*> logicInputs;		//edge inputs for the logic object
 	string typeName;
 	string l_inputs;		//I think these should be deleted, use Connector objects instead
 	string name;
