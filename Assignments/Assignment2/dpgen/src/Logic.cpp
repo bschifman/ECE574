@@ -57,7 +57,7 @@ string Logic::GetTypeString() {
 	else if (this->type == 3) { return "SUB"; }
 	else if (this->type == 4) { return "MUL"; }
 	else if (this->type == 5) { return "COMP"; }
-	else if (this->type == 6) { return "MUX"; }
+	else if (this->type == 6) { return "MUX2x1"; }
 	else if (this->type == 7) { return "SHR"; }
 	else if (this->type == 8) { return "SHL"; }
 	else if (this->type == 9) { return "DIV"; }

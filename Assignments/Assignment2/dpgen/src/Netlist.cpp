@@ -312,18 +312,18 @@ string Netlist::outputEdgeLine(string type, unsigned int datawidth) {	//formats 
 
 
 string Netlist::outputNodeLine(int nodeNumber) {
+	Connector *tempParent0 = this->nodes.at(nodeNumber)->GetParents().at(0);
+	Connector *tempConnector = this->nodes.at(nodeNumber)->GetConnector();
+	Connector *tempParent1 = NULL;
+	Connector *tempParent2 = NULL;
 	string outputLine = "";
 	string tempString = this->nodes.at(nodeNumber)->GetTypeString();
-	string tempParent0 = this->nodes.at(nodeNumber)->GetParents().at(0)->GetName();
-	string tempParent1 = "";
-	string tempParent2 = "";
-	string tempConnector = this->nodes.at(nodeNumber)->GetConnector()->GetName();
-	
+		
 	if (tempString != "REG") { 
-		tempParent1 = this->nodes.at(nodeNumber)->GetParents().at(1)->GetName(); 
+		tempParent1 = this->nodes.at(nodeNumber)->GetParents().at(1); 
 	}
 	if (tempString == "MUX2x1") { 
-		tempParent2 = this->nodes.at(nodeNumber)->GetParents().at(2)->GetName(); 
+		tempParent2 = this->nodes.at(nodeNumber)->GetParents().at(2); 
 	}
 	
 
@@ -348,16 +348,16 @@ string Netlist::outputNodeLine(int nodeNumber) {
 		if (tempString == this->nodes.at(i)->GetTypeString()) { j++; }	//count how many of this module already exist
 	}
 	outSS << tempString << "_" << (j) << " (";
-	if(tempString == "REG"){ outSS << tempParent0 << ", clk, rst, " << tempConnector << ")"; }
-	else if ((tempString == "ADD") || (tempString == "MUL") || (tempString == "SHR") || (tempString == "SHL") || (tempString == "DIV") || (tempString == "MOD")) {outSS << tempParent0 << ", " << tempParent1 << ", " << tempConnector << ")"; }
-	else if (tempString == "MUX2x1") { outSS << tempParent1 << ", " << tempParent2 << ", " << tempParent0 << ", " << tempConnector << ")"; }
-	else if ((tempString == "INC") || (tempString == "DEC")) { outSS << tempParent0 << ", " << tempConnector << ")"; }
+	if(tempString == "REG"){ outSS << tempParent0->GetName() << ", clk, rst, " << tempConnector->GetName() << ")"; }
+	else if ((tempString == "ADD") || (tempString == "SUB") || (tempString == "MUL") || (tempString == "SHR") || (tempString == "SHL") || (tempString == "DIV") || (tempString == "MOD")) {outSS << tempParent0->GetName() << ", " << tempParent1->GetName() << ", " << tempConnector->GetName() << ")"; }
+	else if (tempString == "MUX2x1") { outSS << tempParent1->GetName() << ", " << tempParent2->GetName() << ", " << tempParent0->GetName() << ", " << tempConnector->GetName() << ")"; }
+	else if ((tempString == "INC") || (tempString == "DEC")) { outSS << tempParent0->GetName() << ", " << tempConnector->GetName() << ")"; }
 	else if (tempString == "COMP") { //depending 
-		outSS << ".a(" << tempParent0 << "), .b(" << tempParent1 << "), ";
+		outSS << ".a(" << tempParent0->GetName() << "), .b(" << tempParent1->GetName() << "), ";
 		if (this->nodes.at(nodeNumber)->GetOutType() == ">") { outSS << ".gt("; }
 		if (this->nodes.at(nodeNumber)->GetOutType() == "<") { outSS << ".lt("; }
 		if (this->nodes.at(nodeNumber)->GetOutType() == "==") { outSS << ".eq("; }
-		outSS <<  tempConnector << "))"; //this is missing which gt, eq, lt that the child edge should be connected too
+		outSS <<  tempConnector->GetName() << "))"; //this is missing which gt, eq, lt that the child edge should be connected too
 	}
 
 	outSS << ";";
@@ -365,8 +365,8 @@ string Netlist::outputNodeLine(int nodeNumber) {
 }
 
 void Netlist::findCriticalPath() {
-	int i = 0;
-	int j = 0;
+	unsigned int i = 0;
+	unsigned int j = 0;
 	float maxDelay = 0;
 	float tempDelay = 0;
 	float totalDelay = 0;
