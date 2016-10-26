@@ -74,6 +74,7 @@ void Logic::SetDataWidth(int inputDataWidth) {
 	else if (inputDataWidth == 8) { this->dataWidth = 4; }
 	else if (inputDataWidth == 16) { this->dataWidth = 5; }
 	else if (inputDataWidth == 32) { this->dataWidth = 6; }
+	else if (inputDataWidth == 64) { this->dataWidth = 7; }
 	else { this->dataWidth = 0; }
 
 	return;
@@ -86,6 +87,7 @@ int Logic::GetDataWidth() {
 	else if (this->dataWidth == 4) { return 8; }
 	else if (this->dataWidth == 5) { return 16; }
 	else if (this->dataWidth == 6) { return 32; }
+	else if (this->dataWidth == 7) { return 64; }
 	else { return false; }
 
 	return true;
@@ -93,19 +95,19 @@ int Logic::GetDataWidth() {
 
 void Logic::SetDelay() {
 
-	//					0	1-bit	2-bit	4-bit	8-bit	16-bit	32-bit
-	float regArray[7] = { 0,	2.616,	2.644,	2.879,	3.061,	3.602,	3.966 };	//REG
-	float addArray[7] = { 0,	2.704,	3.713,	4.924,	5.638,	7.270,	9.566 };	//Add
-	float subArray[7] = { 0,	3.024,	3.412,	4.890,	5.569,	7.253,	9.566 };	//SUB
-	float mulArray[7] = { 0,	2.438,	3.651,	7.453,	7.811,	12.395,	15.354 };	//MUL
-	float compArray[7] = { 0,	3.031,	3.934,	5.949,	6.256,	7.264,	8.416 };	//COMP
-	float muxArray[7] = { 0,	4.083,	4.115,	4.815,	5.623,	8.079,	8.766 };	//MUX2x1
-	float shrArray[7] = { 0,	3.644,	4.007,	5.178,	6.460,	8.819,	11.095 };	//SHR
-	float shlArray[7] = { 0,	3.614,	3.980,	5.152,	6.549,	8.565,	11.220 };	//SHL
-	float divArray[7] = { 0,	0.619,	2.144,	15.439, 33.093,	86.312,	243.233 };	//DIV
-	float modArray[7] = { 0,	0.758,	2.149,	16.078, 35.563,	88.142,	250.583 };	//MOD
-	float incArray[7] = { 0,	1.792,	2.218,	3.111,	3.471,	4.347,	6.200 };	//INC
-	float decArray[7] = { 0,	1.792,	2.218,	3.108,	3.701,	4.685,	6.503 };	//DEC
+	//						0	1-bit	2-bit	4-bit	8-bit	16-bit	32-bit	64-bit
+	float regArray[8] = { 0,	2.616,	2.644,	0,		2.879,	3.061,	3.602,	3.966 };	//REG
+	float addArray[8] = { 0,	2.704,	3.713,	0,		4.924,	5.638,	7.270,	9.566 };	//Add
+	float subArray[8] = { 0,	3.024,	3.412,	0,		4.890,	5.569,	7.253,	9.566 };	//SUB
+	float mulArray[8] = { 0,	2.438,	3.651,	0,		7.453,	7.811,	12.395,	15.354 };	//MUL
+	float compArray[8] = { 0,	3.031,	3.934,	0,		5.949,	6.256,	7.264,	8.416 };	//COMP
+	float muxArray[8] = { 0,	4.083,	4.115,	0,		4.815,	5.623,	8.079,	8.766 };	//MUX2x1
+	float shrArray[8] = { 0,	3.644,	4.007,	0,		5.178,	6.460,	8.819,	11.095 };	//SHR
+	float shlArray[8] = { 0,	3.614,	3.980,	0,		5.152,	6.549,	8.565,	11.220 };	//SHL
+	float divArray[8] = { 0,	0.619,	2.144,	0,		15.439, 33.093,	86.312,	243.233 };	//DIV
+	float modArray[8] = { 0,	0.758,	2.149,	0,		16.078, 35.563,	88.142,	250.583 };	//MOD
+	float incArray[8] = { 0,	1.792,	2.218,	0,		3.111,	3.471,	4.347,	6.200 };	//INC
+	float decArray[8] = { 0,	1.792,	2.218,	0,		3.108,	3.701,	4.685,	6.503 };	//DEC
 
 	switch (this->GetType())
 	{

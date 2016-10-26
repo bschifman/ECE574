@@ -39,10 +39,11 @@ bool Netlist::parseFile(string filename) {
 
 		while (!inFile.eof()) {			// then while the file does not end, keep going through the loop
 			getline(inFile, line);		// grabs the entire line of the input file
-			if (!line.empty()) {			// checks for empty line
-				inSS.clear();
-				inSS.str(line);
-				inSS >> edgeType;
+			inSS.clear();
+			inSS.str(line);
+			edgeType = "";
+			inSS >> edgeType;
+			if (!edgeType.empty()) {			// checks for empty line
 				if ((atNodes == false) && ((edgeType == "wire") || (edgeType == "input") || (edgeType == "output") || (edgeType == "register"))) {
 
 					if (!parseEdge(line)) { cout << "Error: Edge Parsing" << endl; CorrectFormat = false; break; }//parse edges/connectors here
@@ -73,15 +74,15 @@ bool Netlist::parseEdge(string inputLine) {
 	string type = "";
 	string dataWidthString = "";
 	string dataWidthString2 = "";
-	bool tempSign = false;
+	bool tempSign = true;
 	int dataWidthInt = 0;
 
 	inSS >> type;
 	inSS >> dataWidthString;
 
 	if (dataWidthString.find("Int") != string::npos) {		//looks for datawidth idenifier, ie proper file format
-		if (dataWidthString.find("U") != string::npos) { tempSign = true; dataWidthString2 = dataWidthString.substr(4); }
-		else { tempSign = false; dataWidthString2 = dataWidthString.substr(3); }
+		if (dataWidthString.find("U") != string::npos) { tempSign = false; dataWidthString2 = dataWidthString.substr(4); }
+		else { tempSign = true; dataWidthString2 = dataWidthString.substr(3); }
 		istringstream dataWidthSS(dataWidthString2);
 		dataWidthSS >> dataWidthInt;
 		//still may need to check for no value int width
@@ -170,10 +171,6 @@ bool Netlist::parseNode(string inputLine) {
 		else if (!logicSymbol.compare("/")) { type = "DIV"; }
 		else if (!logicSymbol.compare("%")) { type = "MOD"; }
 		else { cerr << "Error: incorrect operator " << endl; return false; }
-	}
-
-	if (sign) {
-		type  = "S" + type;
 	}
 	//change size maybe depending on inputs?  I don't think so I would imagine the output size would determine but need to examine if so.
 
@@ -268,7 +265,7 @@ bool Netlist::outputModule(string outputFilename) {			//write all current data i
 			}
 		}
 		outFS << "clk, rst);" << endl;
-		outFS << "input clk, rst;" << endl;
+		outFS << "\t" << "input clk, rst;" << endl;
 		for (i = 0; i < 7; i++) { outFS << this->outputEdgeLine("input", (1 << i)) ; }	//output all input variables
 		outFS << endl;
 		for (i = 0; i < 7; i++) { outFS << this->outputEdgeLine("output", (1 << i)) ; }	//output all output variables
@@ -298,7 +295,7 @@ string Netlist::outputEdgeLine(string type, unsigned int datawidth) {	//formats 
 	for (i = 0; i < this->edges.size(); i++) {			//lists all of the imputs into the module prototype
 		if ((this->edges.at(i)->GetType() == type) && ((unsigned int)this->edges.at(i)->GetSize() == datawidth)) {
 			if (checked == false) {
-				outSS << type << " "; 
+				outSS << "\t" << type << " ";
 				if (datawidth > 1) {
 					outSS << "[" << (datawidth - 1) << ":0] ";
 				}
@@ -321,6 +318,7 @@ string Netlist::outputNodeLine(int nodeNumber) {
 	unsigned int i = 0;
 	unsigned int j = 0;
 
+	outSS << "\t";
 	if (this->nodes.at(nodeNumber)->GetSign() == 1) { outSS << "S"; }	//if module is signed, mark as such
 	outSS << this->nodes.at(nodeNumber)->GetTypeString();
 	if(this->nodes.at(nodeNumber)->GetTypeString() == "MUX"){ outSS << "2X1"; }	//mux has a special designator, maybe should change name to that throughout code....
@@ -338,7 +336,7 @@ string Netlist::outputNodeLine(int nodeNumber) {
 		if (this->nodes.at(nodeNumber)->GetTypeString() == this->nodes.at(i)->GetTypeString()) { j++; }	//count how many of this module already exist
 	}
 	outSS << this->nodes.at(nodeNumber)->GetTypeString() << "_" << (j) << " (";
-	if(this->nodes.at(nodeNumber)->GetTypeString() == "REG"){ outSS << this->nodes.at(nodeNumber)->GetParent().at(0)->GetName() << ", Clk, Rst, " << this->nodes.at(nodeNumber)->GetConnector()->GetName() << ")"; }
+	if(this->nodes.at(nodeNumber)->GetTypeString() == "REG"){ outSS << this->nodes.at(nodeNumber)->GetParent().at(0)->GetName() << ", clk, rst, " << this->nodes.at(nodeNumber)->GetConnector()->GetName() << ")"; }
 	else if (this->nodes.at(nodeNumber)->GetTypeString() == "ADD") { outSS << this->nodes.at(nodeNumber)->GetParent().at(0)->GetName() << ", " << this->nodes.at(nodeNumber)->GetParent().at(1)->GetName() << ", " << this->nodes.at(nodeNumber)->GetConnector()->GetName() << ")"; }
 	else if (this->nodes.at(nodeNumber)->GetTypeString() == "SUB") { outSS << this->nodes.at(nodeNumber)->GetParent().at(0)->GetName() << ", " << this->nodes.at(nodeNumber)->GetParent().at(1)->GetName() << ", " << this->nodes.at(nodeNumber)->GetConnector()->GetName() << ")"; }
 	else if (this->nodes.at(nodeNumber)->GetTypeString() == "MUL") { outSS << this->nodes.at(nodeNumber)->GetParent().at(0)->GetName() << ", " << this->nodes.at(nodeNumber)->GetParent().at(1)->GetName() << ", " << this->nodes.at(nodeNumber)->GetConnector()->GetName() << ")"; }
@@ -351,9 +349,9 @@ string Netlist::outputNodeLine(int nodeNumber) {
 	else if (this->nodes.at(nodeNumber)->GetTypeString() == "DEC") { outSS << this->nodes.at(nodeNumber)->GetParent().at(0)->GetName() << ", " << this->nodes.at(nodeNumber)->GetConnector()->GetName() << ")"; }
 	else if (this->nodes.at(nodeNumber)->GetTypeString() == "COMP") { //depending 
 		outSS << ".a(" << this->nodes.at(nodeNumber)->GetParent().at(0)->GetName() << "), .b(" << this->nodes.at(nodeNumber)->GetParent().at(1)->GetName() << "), ";
-		if (this->nodes.at(nodeNumber)->GetOutType() == ">") { outSS << "gt.("; }
-		if (this->nodes.at(nodeNumber)->GetOutType() == "<") { outSS << "lt.("; }
-		if (this->nodes.at(nodeNumber)->GetOutType() == "==") { outSS << "et.("; }
+		if (this->nodes.at(nodeNumber)->GetOutType() == ">") { outSS << ".gt("; }
+		if (this->nodes.at(nodeNumber)->GetOutType() == "<") { outSS << ".lt("; }
+		if (this->nodes.at(nodeNumber)->GetOutType() == "==") { outSS << ".eq("; }
 		outSS <<  this->nodes.at(nodeNumber)->GetConnector()->GetName() << "))"; //this is missing which gt, eq, lt that the child edge should be connected too
 	}
 
