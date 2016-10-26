@@ -36,6 +36,7 @@ public:
 
 	//Getters
 	Connector* GetConnector() { return this->logicOutput; }
+	vector <Connector*> GetParent() { return this->logicInputs; }
 	string GetName() { return this->name; }	
 	string GetTypeString();
 	string GetOutType() { return this->outType; }

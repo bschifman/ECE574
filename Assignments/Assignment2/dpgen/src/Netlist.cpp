@@ -183,17 +183,17 @@ bool Netlist::parseNode(string inputLine) {
 	tempConnector->SetParent(tempLogic);
 	if (tempLogic->GetTypeString() == "COMP") { tempLogic->SetOutType(logicSymbol); }		//if the new node is a comparator, record which type it is
 
-	if (!variable1.empty()) {
+	if (!variable1.empty() && (variable1 != "1")) {
 		tempConnector = this->findEdge(variable1);								//these "ifs" add the current node to any edge used in the logic
-		if (tempConnector != NULL) { tempConnector->AddChild(tempLogic); }
+		if (tempConnector != NULL) { tempConnector->AddChild(tempLogic); tempLogic->AddParent(tempConnector); }
 	}
-	if (!variable2.empty()) {
+	if (!variable2.empty() && (variable2 != "1")) {
 		tempConnector = this->findEdge(variable2);
-		if (tempConnector != NULL) { tempConnector->AddChild(tempLogic); }
+		if (tempConnector != NULL) { tempConnector->AddChild(tempLogic); tempLogic->AddParent(tempConnector); }
 	}
-	if (!variable3.empty()) {
+	if (!variable3.empty() && (variable3 != "1")) {
 		tempConnector = this->findEdge(variable3);
-		if (tempConnector != NULL) { tempConnector->AddChild(tempLogic); }
+		if (tempConnector != NULL) { tempConnector->AddChild(tempLogic); tempLogic->AddParent(tempConnector); }
 	}
 
 
@@ -234,6 +234,7 @@ void Netlist::outputToReg() {
 				tempLogic = new Logic("REG", tempConnector, tempConnector->GetSize(), sign);
 				this->nodes.push_back(tempLogic);//create the new logic element with its output edge, type and datawidth
 				tempConnector->SetParent(tempLogic);
+				tempLogic->AddParent(this->edges.at(i));
 			}
 		}
 	}
@@ -264,18 +265,18 @@ bool Netlist::outputModule(string outputFilename) {			//write all current data i
 		outFS << "module " << truncatedFilename << "(";
 
 		for (i = 0; i < this->edges.size(); i++) {				//lists all of the imputs into the module prototype
-			if (this->edges.at(i)->GetType() == "input") {
+			if ((this->edges.at(i)->GetType() == "input")|| (this->edges.at(i)->GetType() == "output")) {
 				outFS << this->edges.at(i)->GetName() << ", ";
 				hasInputs = true;
 			}
 		}
-		outFS << " clk, rst);" << endl;
+		outFS << "clk, rst);" << endl;
 		outFS << "input clk, rst;" << endl;
 		for (i = 0; i < 7; i++) { outFS << this->outputEdgeLine("input", (1 << i)) ; }	//output all input variables
 		outFS << endl;
-		for (i = 0; i < 7; i++) { outFS << this->outputEdgeLine("output", (1 << i)) ; }	//output all input variables
+		for (i = 0; i < 7; i++) { outFS << this->outputEdgeLine("output", (1 << i)) ; }	//output all output variables
 		outFS << endl;
-		for (i = 0; i < 7; i++) { outFS << this->outputEdgeLine("wire", (1 << i)) ; }	//output all input variables
+		for (i = 0; i < 7; i++) { outFS << this->outputEdgeLine("wire", (1 << i)) ; }	//output all wire variables
 		outFS << endl;
 
 		for (i = 0; i < this->nodes.size(); i++) { outFS << this->outputNodeLine(i) << endl;	}		//output all nodes/logics
@@ -327,23 +328,30 @@ string Netlist::outputNodeLine(int nodeNumber) {
 	if (this->nodes.at(nodeNumber)->GetSign() == 1) { outSS << "S"; }	//if module is signed, mark as such
 	outSS << this->nodes.at(nodeNumber)->GetTypeString();
 	if(this->nodes.at(nodeNumber)->GetTypeString() == "MUX"){ outSS << "2X1"; }
-	outSS <<  "\t";
+	outSS <<  "\t\t";
 	for (i = 0; i < nodeNumber; i++) { 
 		if (this->nodes.at(nodeNumber)->GetTypeString() == this->nodes.at(i)->GetTypeString()) { j++; }	//count how many of this module already exist
 	}
-	outSS << this->nodes.at(nodeNumber)->GetTypeString() << "_" << (j) << "(";
-	if(this->nodes.at(nodeNumber)->GetTypeString() == "REG"){ outSS << "d, Clk, Rst, " << this->nodes.at(nodeNumber)->GetConnector()->GetName() << ")"; }
-	else if (this->nodes.at(nodeNumber)->GetTypeString() == "ADD") { outSS << "a, b, " << this->nodes.at(nodeNumber)->GetConnector()->GetName() << ")"; }
-	else if (this->nodes.at(nodeNumber)->GetTypeString() == "SUB") { outSS << "a, b, " << this->nodes.at(nodeNumber)->GetConnector()->GetName() << ")"; }
-	else if (this->nodes.at(nodeNumber)->GetTypeString() == "MUL") { outSS << "a, b, " << this->nodes.at(nodeNumber)->GetConnector()->GetName() << ")"; }
-	else if (this->nodes.at(nodeNumber)->GetTypeString() == "COMP") { outSS << "a, b, gt, lt, " << this->nodes.at(nodeNumber)->GetConnector()->GetName() << ")"; }
-	else if (this->nodes.at(nodeNumber)->GetTypeString() == "MUX") { outSS << "a, b, sel, " << this->nodes.at(nodeNumber)->GetConnector()->GetName() << ")"; }
-	else if (this->nodes.at(nodeNumber)->GetTypeString() == "SHR") { outSS << "a, sh_amt, " << this->nodes.at(nodeNumber)->GetConnector()->GetName() << ")"; }
-	else if (this->nodes.at(nodeNumber)->GetTypeString() == "SHL") { outSS << "a, sh_amt, " << this->nodes.at(nodeNumber)->GetConnector()->GetName() << ")"; }
-	else if (this->nodes.at(nodeNumber)->GetTypeString() == "DIV") { outSS << "a, b, " << this->nodes.at(nodeNumber)->GetConnector()->GetName() << ")"; }
-	else if (this->nodes.at(nodeNumber)->GetTypeString() == "MOD") { outSS << "a, b, " << this->nodes.at(nodeNumber)->GetConnector()->GetName() << ")"; }
-	else if (this->nodes.at(nodeNumber)->GetTypeString() == "INC") { outSS << "a, b, " << this->nodes.at(nodeNumber)->GetConnector()->GetName() << ")"; }
-	else if (this->nodes.at(nodeNumber)->GetTypeString() == "DEC") { outSS << "a, b, " << this->nodes.at(nodeNumber)->GetConnector()->GetName() << ")"; }
+	outSS << this->nodes.at(nodeNumber)->GetTypeString() << "_" << (j) << " (";
+	if(this->nodes.at(nodeNumber)->GetTypeString() == "REG"){ outSS << this->nodes.at(nodeNumber)->GetParent().at(0)->GetName() << ", Clk, Rst, " << this->nodes.at(nodeNumber)->GetConnector()->GetName() << ")"; }
+	else if (this->nodes.at(nodeNumber)->GetTypeString() == "ADD") { outSS << this->nodes.at(nodeNumber)->GetParent().at(0)->GetName() << ", " << this->nodes.at(nodeNumber)->GetParent().at(1)->GetName() << ", " << this->nodes.at(nodeNumber)->GetConnector()->GetName() << ")"; }
+	else if (this->nodes.at(nodeNumber)->GetTypeString() == "SUB") { outSS << this->nodes.at(nodeNumber)->GetParent().at(0)->GetName() << ", " << this->nodes.at(nodeNumber)->GetParent().at(1)->GetName() << ", " << this->nodes.at(nodeNumber)->GetConnector()->GetName() << ")"; }
+	else if (this->nodes.at(nodeNumber)->GetTypeString() == "MUL") { outSS << this->nodes.at(nodeNumber)->GetParent().at(0)->GetName() << ", " << this->nodes.at(nodeNumber)->GetParent().at(1)->GetName() << ", " << this->nodes.at(nodeNumber)->GetConnector()->GetName() << ")"; }
+	else if (this->nodes.at(nodeNumber)->GetTypeString() == "MUX") { outSS << this->nodes.at(nodeNumber)->GetParent().at(1)->GetName() << ", " << this->nodes.at(nodeNumber)->GetParent().at(2)->GetName() << ", " << this->nodes.at(nodeNumber)->GetParent().at(0)->GetName() << ", " << this->nodes.at(nodeNumber)->GetConnector()->GetName() << ")"; }
+	else if (this->nodes.at(nodeNumber)->GetTypeString() == "SHR") { outSS << this->nodes.at(nodeNumber)->GetParent().at(0)->GetName() << ", " << this->nodes.at(nodeNumber)->GetParent().at(1)->GetName() << ", " << this->nodes.at(nodeNumber)->GetConnector()->GetName() << ")"; }
+	else if (this->nodes.at(nodeNumber)->GetTypeString() == "SHL") { outSS << this->nodes.at(nodeNumber)->GetParent().at(0)->GetName() << ", " << this->nodes.at(nodeNumber)->GetParent().at(1)->GetName() << ", " << this->nodes.at(nodeNumber)->GetConnector()->GetName() << ")"; }
+	else if (this->nodes.at(nodeNumber)->GetTypeString() == "DIV") { outSS << this->nodes.at(nodeNumber)->GetParent().at(0)->GetName() << ", " << this->nodes.at(nodeNumber)->GetParent().at(1)->GetName() << ", " << this->nodes.at(nodeNumber)->GetConnector()->GetName() << ")"; }
+	else if (this->nodes.at(nodeNumber)->GetTypeString() == "MOD") { outSS << this->nodes.at(nodeNumber)->GetParent().at(0)->GetName() << ", " << this->nodes.at(nodeNumber)->GetParent().at(1)->GetName() << ", " << this->nodes.at(nodeNumber)->GetConnector()->GetName() << ")"; }
+	else if (this->nodes.at(nodeNumber)->GetTypeString() == "INC") { outSS << this->nodes.at(nodeNumber)->GetParent().at(0)->GetName() << ", " << this->nodes.at(nodeNumber)->GetConnector()->GetName() << ")"; }
+	else if (this->nodes.at(nodeNumber)->GetTypeString() == "DEC") { outSS << this->nodes.at(nodeNumber)->GetParent().at(0)->GetName() << ", " << this->nodes.at(nodeNumber)->GetConnector()->GetName() << ")"; }
+	else if (this->nodes.at(nodeNumber)->GetTypeString() == "COMP") { 
+		//need to do something with the COMP gt lt eq
+		outSS << ".a(" << this->nodes.at(nodeNumber)->GetParent().at(0)->GetName() << "), .b(" << this->nodes.at(nodeNumber)->GetParent().at(1)->GetName() << "), ";
+		if (this->nodes.at(nodeNumber)->GetOutType() == ">") { outSS << "gt.("; }
+		if (this->nodes.at(nodeNumber)->GetOutType() == "<") { outSS << "lt.("; }
+		if (this->nodes.at(nodeNumber)->GetOutType() == "==") { outSS << "et.("; }
+		outSS <<  this->nodes.at(nodeNumber)->GetConnector()->GetName() << "))"; //this is missing which gt, eq, lt that the child edge should be connected too
+	}
 
 	//outSS << "COMP    #(.DATAWIDTH(8))    COMP_0(.a(d), .b(e), .gt(g));";
 
@@ -362,6 +370,7 @@ string Netlist::outputNodeLine(int nodeNumber) {
 	module DEC(a, d);
 	*/
 
+	outSS << ";";
 	return outSS.str();
 }
 
