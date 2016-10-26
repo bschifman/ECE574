@@ -337,9 +337,9 @@ string Netlist::outputNodeLine(int nodeNumber) {
 	outSS << "\t\t" << "#(.DATAWIDTH("; 
 	if (tempString == "COMP") { 
 		if (this->nodes.at(nodeNumber)->GetParents().at(0)->GetSize() > this->nodes.at(nodeNumber)->GetParents().at(1)->GetSize()) {	//compare the 2 imput edges and use the larger datawidth
-			outSS << this->nodes.at(nodeNumber)->GetParents().at(0)->GetSize();
+			outSS << this->nodes.at(nodeNumber)->GetParents().at(0)->GetSize();		//if vector at 0 is bigger, use it
 		}
-		else{ outSS << this->nodes.at(nodeNumber)->GetParents().at(1)->GetSize(); }
+		else{ outSS << this->nodes.at(nodeNumber)->GetParents().at(1)->GetSize(); }	//if vector at 1 is bigger, use it
 	}
 	else { outSS << this->nodes.at(nodeNumber)->GetConnector()->GetSize(); }		//if node is not a comparator, get datawidth from its output edge
 
@@ -349,15 +349,17 @@ string Netlist::outputNodeLine(int nodeNumber) {
 	}
 	outSS << tempString << "_" << (j) << " (";
 	if(tempString == "REG"){ outSS << tempParent0->GetName() << ", clk, rst, " << tempConnector->GetName() << ")"; }
-	else if ((tempString == "ADD") || (tempString == "SUB") || (tempString == "MUL") || (tempString == "SHR") || (tempString == "SHL") || (tempString == "DIV") || (tempString == "MOD")) {outSS << tempParent0->GetName() << ", " << tempParent1->GetName() << ", " << tempConnector->GetName() << ")"; }
+	else if ((tempString == "ADD") || (tempString == "SUB") || (tempString == "MUL") || (tempString == "SHR") || (tempString == "SHL") || (tempString == "DIV") || (tempString == "MOD")) 
+		{outSS << tempParent0->GetName() << ", " << tempParent1->GetName() << ", " << tempConnector->GetName() << ")"; 
+	}
 	else if (tempString == "MUX2x1") { outSS << tempParent1->GetName() << ", " << tempParent2->GetName() << ", " << tempParent0->GetName() << ", " << tempConnector->GetName() << ")"; }
 	else if ((tempString == "INC") || (tempString == "DEC")) { outSS << tempParent0->GetName() << ", " << tempConnector->GetName() << ")"; }
-	else if (tempString == "COMP") { //depending 
+	else if (tempString == "COMP") {	//depending on logic type (<,>,==) it will label output to proper channel
 		outSS << ".a(" << tempParent0->GetName() << "), .b(" << tempParent1->GetName() << "), ";
 		if (this->nodes.at(nodeNumber)->GetOutType() == ">") { outSS << ".gt("; }
 		if (this->nodes.at(nodeNumber)->GetOutType() == "<") { outSS << ".lt("; }
 		if (this->nodes.at(nodeNumber)->GetOutType() == "==") { outSS << ".eq("; }
-		outSS <<  tempConnector->GetName() << "))"; //this is missing which gt, eq, lt that the child edge should be connected too
+		outSS <<  tempConnector->GetName() << "))"; 
 	}
 
 	outSS << ";";
