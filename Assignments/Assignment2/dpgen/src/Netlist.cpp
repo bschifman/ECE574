@@ -216,7 +216,6 @@ void Netlist::outputToReg() {
 	Connector *tempConnector = NULL;
 	Logic *tempLogic = NULL;
 	string tempName = "";
-	bool sign = false;
 	unsigned int i = 0;
 
 	for (i = 0; i < this->edges.size(); i++) {
@@ -228,7 +227,7 @@ void Netlist::outputToReg() {
 				this->edges.push_back(tempConnector);
 				this->edges.at(i)->SetName(tempName);
 				this->edges.at(i)->SetType("wire");
-				tempLogic = new Logic("REG", tempConnector, tempConnector->GetSize(), sign);
+				tempLogic = new Logic("REG", tempConnector, tempConnector->GetSize(), this->edges.at(i)->GetSign());
 				this->nodes.push_back(tempLogic);//create the new logic element with its output edge, type and datawidth
 				tempConnector->SetParent(tempLogic);
 				tempLogic->AddParent(this->edges.at(i));
