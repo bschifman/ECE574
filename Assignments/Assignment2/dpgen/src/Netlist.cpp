@@ -79,7 +79,7 @@ bool Netlist::parseEdge(string inputLine) {
 	inSS >> type;
 	inSS >> dataWidthString;
 
-	if (dataWidthString.find("Int") != string::npos) {
+	if (dataWidthString.find("Int") != string::npos) {		//looks for datawidth idenifier, ie proper file format
 		if (dataWidthString.find("U") != string::npos) { tempSign = true; dataWidthString2 = dataWidthString.substr(4); }
 		else { tempSign = false; dataWidthString2 = dataWidthString.substr(3); }
 		istringstream dataWidthSS(dataWidthString2);
@@ -143,12 +143,12 @@ bool Netlist::parseNode(string inputLine) {
 	}
 	else {
 		
-		if (logicSymbol.empty()) { cerr << "Error: missing datapath component type(+,-,*,==,>>,<<,/,%)" << endl; return false; }		//improper input, report error
+		if (logicSymbol.empty()) { cerr << "Error: missing datapath component type(+,-,*,==,>>,<<,/,%,?)" << endl; return false; }		//improper input, report error
 		if (variable2.empty()) { cerr << "Error: missing input variable for datapath component " << endl; return false; }		//improper input, report error
 		tempChkConnector = this->findEdge(variable2);
 		if ((tempChkConnector == NULL) && (variable2 != "1") ) { cerr << "Error: missing input variable for datapath component " << endl; return false; }
 
-		if (logicSymbol.find("?") != string::npos) {		//Logic is a MUX 
+		if (logicSymbol == "?") {		//Logic is a MUX 
 			type = "MUX";									//deal with MUX here, has 3 input thingys
 			if (!(garbage == ":")) { cerr << "Error: missing ':' for compator component " << endl; return false; }		//improper operator, should be a ':' report error
 			if (variable3.empty()) { cerr << "Error: missing input variable for datapath component " << endl; return false; }		//improper operator, report error
@@ -248,7 +248,6 @@ bool Netlist::outputModule(string outputFilename) {			//write all current data i
 	ofstream outFS; // Output file stream
 	string truncatedFilename = "";
 	unsigned int i = 0;
-	bool hasInputs = false;
 
 	outFS.open(outputFilename.c_str());	// Open file
 
@@ -266,7 +265,6 @@ bool Netlist::outputModule(string outputFilename) {			//write all current data i
 		for (i = 0; i < this->edges.size(); i++) {				//lists all of the imputs into the module prototype
 			if ((this->edges.at(i)->GetType() == "input")|| (this->edges.at(i)->GetType() == "output")) {
 				outFS << this->edges.at(i)->GetName() << ", ";
-				hasInputs = true;
 			}
 		}
 		outFS << "clk, rst);" << endl;
@@ -325,8 +323,17 @@ string Netlist::outputNodeLine(int nodeNumber) {
 
 	if (this->nodes.at(nodeNumber)->GetSign() == 1) { outSS << "S"; }	//if module is signed, mark as such
 	outSS << this->nodes.at(nodeNumber)->GetTypeString();
-	if(this->nodes.at(nodeNumber)->GetTypeString() == "MUX"){ outSS << "2X1"; }
-	outSS <<  "\t\t";
+	if(this->nodes.at(nodeNumber)->GetTypeString() == "MUX"){ outSS << "2X1"; }	//mux has a special designator, maybe should change name to that throughout code....
+	outSS << "\t\t" << "#(.DATAWIDTH("; 
+	if (this->nodes.at(nodeNumber)->GetTypeString() == "COMP") { 
+		if (this->nodes.at(nodeNumber)->GetParent().at(0)->GetSize() > this->nodes.at(nodeNumber)->GetParent().at(1)->GetSize()) {	//compare the 2 imput edges and use the larger datawidth
+			outSS << this->nodes.at(nodeNumber)->GetParent().at(0)->GetSize();
+		}
+		else{ outSS << this->nodes.at(nodeNumber)->GetParent().at(1)->GetSize(); }
+	}
+	else { outSS << this->nodes.at(nodeNumber)->GetConnector()->GetSize(); }		//if node is not a comparator, get datawidth from its output edge
+
+	outSS << "))" << "\t\t";
 	for (i = 0; i < (unsigned)nodeNumber; i++) { 
 		if (this->nodes.at(nodeNumber)->GetTypeString() == this->nodes.at(i)->GetTypeString()) { j++; }	//count how many of this module already exist
 	}
@@ -342,8 +349,7 @@ string Netlist::outputNodeLine(int nodeNumber) {
 	else if (this->nodes.at(nodeNumber)->GetTypeString() == "MOD") { outSS << this->nodes.at(nodeNumber)->GetParent().at(0)->GetName() << ", " << this->nodes.at(nodeNumber)->GetParent().at(1)->GetName() << ", " << this->nodes.at(nodeNumber)->GetConnector()->GetName() << ")"; }
 	else if (this->nodes.at(nodeNumber)->GetTypeString() == "INC") { outSS << this->nodes.at(nodeNumber)->GetParent().at(0)->GetName() << ", " << this->nodes.at(nodeNumber)->GetConnector()->GetName() << ")"; }
 	else if (this->nodes.at(nodeNumber)->GetTypeString() == "DEC") { outSS << this->nodes.at(nodeNumber)->GetParent().at(0)->GetName() << ", " << this->nodes.at(nodeNumber)->GetConnector()->GetName() << ")"; }
-	else if (this->nodes.at(nodeNumber)->GetTypeString() == "COMP") { 
-		//need to do something with the COMP gt lt eq
+	else if (this->nodes.at(nodeNumber)->GetTypeString() == "COMP") { //depending 
 		outSS << ".a(" << this->nodes.at(nodeNumber)->GetParent().at(0)->GetName() << "), .b(" << this->nodes.at(nodeNumber)->GetParent().at(1)->GetName() << "), ";
 		if (this->nodes.at(nodeNumber)->GetOutType() == ">") { outSS << "gt.("; }
 		if (this->nodes.at(nodeNumber)->GetOutType() == "<") { outSS << "lt.("; }
