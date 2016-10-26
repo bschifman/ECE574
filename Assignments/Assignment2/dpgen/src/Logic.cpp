@@ -22,7 +22,7 @@ Logic::Logic(string type, Connector *logicOutput, int dataWidth, bool sign) {	//
 	this->SetType(type);
 	this->SetDataWidth(dataWidth);
 	this->SetConnector(logicOutput);
-	this->SetDelay();
+	this->SetInherentDelay();
 	this->SetSign(sign);
 }
 
@@ -33,18 +33,18 @@ Logic::~Logic(void) {
 //Logic mutator, will set recieved "type" into a integer class variable. Allowing use of switch statements
 void Logic::SetType(string inputType) {
 	this->typeName = inputType;
-	if (!inputType.compare("REG")) { this->type = 1; }
-	else if (!inputType.compare("ADD")) { this->type = 2; }
-	else if (!inputType.compare("SUB")) { this->type = 3; }
-	else if (!inputType.compare("MUL")) { this->type = 4; }
-	else if (!inputType.compare("COMP")) { this->type = 5; }
-	else if (!inputType.compare("MUX")) { this->type = 6; }
-	else if (!inputType.compare("SHR")) { this->type = 7; }
-	else if (!inputType.compare("SHL")) { this->type = 8; }
-	else if (!inputType.compare("DIV")) { this->type = 9; }
-	else if (!inputType.compare("MOD")) { this->type = 10; }
-	else if (!inputType.compare("INC")) { this->type = 11; }
-	else if (!inputType.compare("DEC")) { this->type = 12; }
+	if (inputType == "REG") { this->type = 1; }
+	else if (inputType == "ADD") { this->type = 2; }
+	else if (inputType == "SUB") { this->type = 3; }
+	else if (inputType == "MUL") { this->type = 4; }
+	else if (inputType == "COMP") { this->type = 5; }
+	else if (inputType == "MUX2x1") { this->type = 6; }
+	else if (inputType == "SHR") { this->type = 7; }
+	else if (inputType == "SHL") { this->type = 8; }
+	else if (inputType == "DIV") { this->type = 9; }
+	else if (inputType == "MOD") { this->type = 10; }
+	else if (inputType == "INC") { this->type = 11; }
+	else if (inputType == "DEC") { this->type = 12; }
 	else { this->type = 0; }
 
 	return;
@@ -93,7 +93,7 @@ int Logic::GetDataWidth() {
 	return true;
 }
 
-void Logic::SetDelay() {
+void Logic::SetInherentDelay() {
 
 	//						0	1-bit	2-bit	4-bit	8-bit	16-bit	32-bit	64-bit
 	float regArray[8] = { 0,	2.616,	2.644,	0,		2.879,	3.061,	3.602,	3.966 };	//REG

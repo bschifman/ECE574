@@ -48,10 +48,11 @@ private:
 	vector<Logic*> children;	//children nodes this edge is connected to
 	string type;				//type of connector (input, output, wire, register)
 	string name;				//name of the variable
+	float delay;				//delay to this point
 	int size;					//data width
 	bool sign;					//signed(1) or unsigned(0) 
 	bool visited;				//check whether this edge has been visited or not when scanning through the list
-	float delay;				//delay to this point
+	
 };
 
 

@@ -48,6 +48,8 @@ int main(int argc, char **argv) {
 		std::cerr << "Usage " << argv[0] << " input output" << std::endl << std::endl;
 		return -1;
 	}
+
+	n1.findCriticalPath();
 	
 	return 0;
 }

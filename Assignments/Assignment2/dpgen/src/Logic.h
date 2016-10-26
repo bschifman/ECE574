@@ -31,12 +31,13 @@ public:
 	void SetOutType(string outType) { this->outType = outType; }
 	void SetDataWidth(int inputDataWidth);
 	void SetSign(bool sign) { this->sign = sign; }
-	void SetDelay(); 
+	void SetInherentDelay();
+	void SetDelay(float totalDelay) { this->delay = totalDelay; }
 	void AddParent(Connector* parentToAdd) { this->logicInputs.push_back(parentToAdd); }
 
 	//Getters
 	Connector* GetConnector() { return this->logicOutput; }
-	vector <Connector*> GetParent() { return this->logicInputs; }
+	vector <Connector*> GetParents() { return this->logicInputs; }
 	string GetName() { return this->name; }	
 	string GetTypeString();
 	string GetOutType() { return this->outType; }
@@ -47,18 +48,18 @@ public:
 		
 private:
 
-	Connector* logicOutput;	//Outputs for logic object(ie comparator might have gt, ln, eq)	//could get away without making a vector if you just made a comparator for each logic line, wouldn't change delay at all
+	Connector* logicOutput;					//Outputs for logic object(ie comparator might have gt, ln, eq)	//could get away without making a vector if you just made a comparator for each logic line, wouldn't change delay at all
 	vector <Connector*> logicInputs;		//edge inputs for the logic object
 	string typeName;
-	string l_inputs;		//I think these should be deleted, use Connector objects instead
+	string l_inputs;						//I think these should be deleted, use Connector objects instead
 	string name;
 	string l_outputs;
-	string outType;			//specifically for the comparator module
+	string outType;							//specifically for the comparator module
 	int type;
 	int dataWidth;
 	bool sign;
-	float delay;			//the delay of this logic item
-
+	float delay;							//the delay of this logic item
+			
 };
 
 

@@ -23,6 +23,7 @@ public:
 	bool parseEdge(string inputLine);	//Parse string
 	bool parseNode(string inputLine);
 	bool outputModule(string outputFilename);
+	void findCriticalPath(void);
 	string outputEdgeLine(string type, unsigned int datawidth);
 	string outputNodeLine(int nodeNumber);
 	void outputToReg();
@@ -31,11 +32,16 @@ public:
 	//Getters
 	vector<Connector*> GetEdges() { return this->edges; }
 	vector<Logic*> GetNodes() { return this->nodes; }
+	float GetCriticalPath() { return this->criticalPath; }
+
+	//Setters
+	void SetCriticalPath(float criticalPath) { this->criticalPath =+ criticalPath; }
 
 
 private:
 	vector<Connector*> edges;
 	vector<Logic*> nodes;
+	float criticalPath;
 };
 
 #endif

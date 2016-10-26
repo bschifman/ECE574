@@ -149,8 +149,8 @@ bool Netlist::parseNode(string inputLine) {
 		tempChkConnector = this->findEdge(variable2);
 		if ((tempChkConnector == NULL) && (variable2 != "1") ) { cerr << "Error: missing input variable for datapath component " << endl; return false; }
 
-		if (logicSymbol == "?") {		//Logic is a MUX 
-			type = "MUX";									//deal with MUX here, has 3 input thingys
+		if (logicSymbol == "?") {		//Logic is a MUX2x1 
+			type = "MUX2x1";									//deal with MUX here, has 3 input thingys
 			if (!(garbage == ":")) { cerr << "Error: missing ':' for compator component " << endl; return false; }		//improper operator, should be a ':' report error
 			if (variable3.empty()) { cerr << "Error: missing input variable for datapath component " << endl; return false; }		//improper operator, report error
 			tempChkConnector = this->findEdge(variable3);
@@ -175,7 +175,7 @@ bool Netlist::parseNode(string inputLine) {
 	//change size maybe depending on inputs?  I don't think so I would imagine the output size would determine but need to examine if so.
 
 	tempLogic = new Logic(type, tempConnector, tempConnector->GetSize(), sign);	//create the new logic element with its output edge, type and datawidth 
-	this->nodes.push_back(tempLogic);										//create new logic/node and add to vector
+	this->nodes.push_back(tempLogic);											//create new logic/node and add to vector
 	tempConnector->SetParent(tempLogic);
 	if (tempLogic->GetTypeString() == "COMP") { tempLogic->SetOutType(logicSymbol); }		//if the new node is a comparator, record which type it is
 
@@ -258,8 +258,8 @@ bool Netlist::outputModule(string outputFilename) {			//write all current data i
 		outFS << "`timescale 1ns / 1ps" << endl << endl;
 		outFS << "module " << truncatedFilename << "(";
 
-		for (i = 0; i < this->edges.size(); i++) {				//lists all of the imputs into the module prototype
-			if ((this->edges.at(i)->GetType() == "input")|| (this->edges.at(i)->GetType() == "output")) {
+		for (i = 0; i < this->edges.size(); i++) {				//lists all of the inputs into the module prototype
+			if ((this->edges.at(i)->GetType() == "input") || (this->edges.at(i)->GetType() == "output")) {
 				outFS << this->edges.at(i)->GetName() << ", ";
 			}
 		}
@@ -291,7 +291,7 @@ string Netlist::outputEdgeLine(string type, unsigned int datawidth) {	//formats 
 	bool checked = false;
 
 	checked = false;
-	for (i = 0; i < this->edges.size(); i++) {			//lists all of the imputs into the module prototype
+	for (i = 0; i < this->edges.size(); i++) {			//lists all of the inputs into the module prototype
 		if ((this->edges.at(i)->GetType() == type) && ((unsigned int)this->edges.at(i)->GetSize() == datawidth)) {
 			if (checked == false) {
 				outSS << "\t" << type << " ";
@@ -313,71 +313,83 @@ string Netlist::outputEdgeLine(string type, unsigned int datawidth) {	//formats 
 
 string Netlist::outputNodeLine(int nodeNumber) {
 	string outputLine = "";
+	string tempString = this->nodes.at(nodeNumber)->GetTypeString();
+	string tempParent0 = this->nodes.at(nodeNumber)->GetParents().at(0)->GetName();
+	string tempParent1 = "";
+	string tempParent2 = "";
+	string tempConnector = this->nodes.at(nodeNumber)->GetConnector()->GetName();
+	
+	if (tempString != "REG") { 
+		tempParent1 = this->nodes.at(nodeNumber)->GetParents().at(1)->GetName(); 
+	}
+	if (tempString == "MUX2x1") { 
+		tempParent2 = this->nodes.at(nodeNumber)->GetParents().at(2)->GetName(); 
+	}
+	
+
 	ostringstream outSS;
 	unsigned int i = 0;
 	unsigned int j = 0;
 
 	outSS << "\t";
 	if (this->nodes.at(nodeNumber)->GetSign() == 1) { outSS << "S"; }	//if module is signed, mark as such
-	outSS << this->nodes.at(nodeNumber)->GetTypeString();
-	if(this->nodes.at(nodeNumber)->GetTypeString() == "MUX"){ outSS << "2X1"; }	//mux has a special designator, maybe should change name to that throughout code....
+	outSS << tempString;
 	outSS << "\t\t" << "#(.DATAWIDTH("; 
-	if (this->nodes.at(nodeNumber)->GetTypeString() == "COMP") { 
-		if (this->nodes.at(nodeNumber)->GetParent().at(0)->GetSize() > this->nodes.at(nodeNumber)->GetParent().at(1)->GetSize()) {	//compare the 2 imput edges and use the larger datawidth
-			outSS << this->nodes.at(nodeNumber)->GetParent().at(0)->GetSize();
+	if (tempString == "COMP") { 
+		if (this->nodes.at(nodeNumber)->GetParents().at(0)->GetSize() > this->nodes.at(nodeNumber)->GetParents().at(1)->GetSize()) {	//compare the 2 imput edges and use the larger datawidth
+			outSS << this->nodes.at(nodeNumber)->GetParents().at(0)->GetSize();
 		}
-		else{ outSS << this->nodes.at(nodeNumber)->GetParent().at(1)->GetSize(); }
+		else{ outSS << this->nodes.at(nodeNumber)->GetParents().at(1)->GetSize(); }
 	}
 	else { outSS << this->nodes.at(nodeNumber)->GetConnector()->GetSize(); }		//if node is not a comparator, get datawidth from its output edge
 
 	outSS << "))" << "\t\t";
 	for (i = 0; i < (unsigned)nodeNumber; i++) { 
-		if (this->nodes.at(nodeNumber)->GetTypeString() == this->nodes.at(i)->GetTypeString()) { j++; }	//count how many of this module already exist
+		if (tempString == this->nodes.at(i)->GetTypeString()) { j++; }	//count how many of this module already exist
 	}
-	outSS << this->nodes.at(nodeNumber)->GetTypeString() << "_" << (j) << " (";
-	if(this->nodes.at(nodeNumber)->GetTypeString() == "REG"){ outSS << this->nodes.at(nodeNumber)->GetParent().at(0)->GetName() << ", clk, rst, " << this->nodes.at(nodeNumber)->GetConnector()->GetName() << ")"; }
-	else if (this->nodes.at(nodeNumber)->GetTypeString() == "ADD") { outSS << this->nodes.at(nodeNumber)->GetParent().at(0)->GetName() << ", " << this->nodes.at(nodeNumber)->GetParent().at(1)->GetName() << ", " << this->nodes.at(nodeNumber)->GetConnector()->GetName() << ")"; }
-	else if (this->nodes.at(nodeNumber)->GetTypeString() == "SUB") { outSS << this->nodes.at(nodeNumber)->GetParent().at(0)->GetName() << ", " << this->nodes.at(nodeNumber)->GetParent().at(1)->GetName() << ", " << this->nodes.at(nodeNumber)->GetConnector()->GetName() << ")"; }
-	else if (this->nodes.at(nodeNumber)->GetTypeString() == "MUL") { outSS << this->nodes.at(nodeNumber)->GetParent().at(0)->GetName() << ", " << this->nodes.at(nodeNumber)->GetParent().at(1)->GetName() << ", " << this->nodes.at(nodeNumber)->GetConnector()->GetName() << ")"; }
-	else if (this->nodes.at(nodeNumber)->GetTypeString() == "MUX") { outSS << this->nodes.at(nodeNumber)->GetParent().at(1)->GetName() << ", " << this->nodes.at(nodeNumber)->GetParent().at(2)->GetName() << ", " << this->nodes.at(nodeNumber)->GetParent().at(0)->GetName() << ", " << this->nodes.at(nodeNumber)->GetConnector()->GetName() << ")"; }
-	else if (this->nodes.at(nodeNumber)->GetTypeString() == "SHR") { outSS << this->nodes.at(nodeNumber)->GetParent().at(0)->GetName() << ", " << this->nodes.at(nodeNumber)->GetParent().at(1)->GetName() << ", " << this->nodes.at(nodeNumber)->GetConnector()->GetName() << ")"; }
-	else if (this->nodes.at(nodeNumber)->GetTypeString() == "SHL") { outSS << this->nodes.at(nodeNumber)->GetParent().at(0)->GetName() << ", " << this->nodes.at(nodeNumber)->GetParent().at(1)->GetName() << ", " << this->nodes.at(nodeNumber)->GetConnector()->GetName() << ")"; }
-	else if (this->nodes.at(nodeNumber)->GetTypeString() == "DIV") { outSS << this->nodes.at(nodeNumber)->GetParent().at(0)->GetName() << ", " << this->nodes.at(nodeNumber)->GetParent().at(1)->GetName() << ", " << this->nodes.at(nodeNumber)->GetConnector()->GetName() << ")"; }
-	else if (this->nodes.at(nodeNumber)->GetTypeString() == "MOD") { outSS << this->nodes.at(nodeNumber)->GetParent().at(0)->GetName() << ", " << this->nodes.at(nodeNumber)->GetParent().at(1)->GetName() << ", " << this->nodes.at(nodeNumber)->GetConnector()->GetName() << ")"; }
-	else if (this->nodes.at(nodeNumber)->GetTypeString() == "INC") { outSS << this->nodes.at(nodeNumber)->GetParent().at(0)->GetName() << ", " << this->nodes.at(nodeNumber)->GetConnector()->GetName() << ")"; }
-	else if (this->nodes.at(nodeNumber)->GetTypeString() == "DEC") { outSS << this->nodes.at(nodeNumber)->GetParent().at(0)->GetName() << ", " << this->nodes.at(nodeNumber)->GetConnector()->GetName() << ")"; }
-	else if (this->nodes.at(nodeNumber)->GetTypeString() == "COMP") { //depending 
-		outSS << ".a(" << this->nodes.at(nodeNumber)->GetParent().at(0)->GetName() << "), .b(" << this->nodes.at(nodeNumber)->GetParent().at(1)->GetName() << "), ";
+	outSS << tempString << "_" << (j) << " (";
+	if(tempString == "REG"){ outSS << tempParent0 << ", clk, rst, " << tempConnector << ")"; }
+	else if ((tempString == "ADD") || (tempString == "MUL") || (tempString == "SHR") || (tempString == "SHL") || (tempString == "DIV") || (tempString == "MOD")) {outSS << tempParent0 << ", " << tempParent1 << ", " << tempConnector << ")"; }
+	else if (tempString == "MUX2x1") { outSS << tempParent1 << ", " << tempParent2 << ", " << tempParent0 << ", " << tempConnector << ")"; }
+	else if ((tempString == "INC") || (tempString == "DEC")) { outSS << tempParent0 << ", " << tempConnector << ")"; }
+	else if (tempString == "COMP") { //depending 
+		outSS << ".a(" << tempParent0 << "), .b(" << tempParent1 << "), ";
 		if (this->nodes.at(nodeNumber)->GetOutType() == ">") { outSS << ".gt("; }
 		if (this->nodes.at(nodeNumber)->GetOutType() == "<") { outSS << ".lt("; }
 		if (this->nodes.at(nodeNumber)->GetOutType() == "==") { outSS << ".eq("; }
-		outSS <<  this->nodes.at(nodeNumber)->GetConnector()->GetName() << "))"; //this is missing which gt, eq, lt that the child edge should be connected too
+		outSS <<  tempConnector << "))"; //this is missing which gt, eq, lt that the child edge should be connected too
 	}
-
-	//outSS << "COMP    #(.DATAWIDTH(8))    COMP_0(.a(d), .b(e), .gt(g));";
-
-	/*
-	module REG(d, Clk, Rst, q);
-	module ADD(a, b, sum);
-	module SUB(a, b, diff);
-	module MUL(a, b, prod);
-	module COMP(a, b, gt, lt, eq);
-	module MUX2x1(a, b, sel, d);
-	module SHR(a, sh_amt, d);
-	module SHL(a, sh_amt, d);
-	module DIV(a, b, quot);
-	module MOD(a, b, rem);
-	module INC(a, d);
-	module DEC(a, d);
-	*/
 
 	outSS << ";";
 	return outSS.str();
 }
 
+void Netlist::findCriticalPath() {
+	int i = 0;
+	int j = 0;
+	float maxDelay = 0;
+	float tempDelay = 0;
+	float totalDelay = 0;
 
+	for (i = 0; i < this->nodes.size(); i++) {								//loop through all nodes
+		maxDelay = 0;
+		tempDelay = 0;
 
-Netlist::Netlist(void) {}
+		for (j = 0; j < this->nodes.at(i)->GetParents().size(); j++) {		//loop through all Parent Edges of each individual node
+			tempDelay = this->nodes.at(i)->GetParents().at(j)->GetDelay();	//assign a tempDelay from each Parent Edge
+			if (maxDelay < tempDelay) { maxDelay = tempDelay; }				//choose the longest delay from all of the Parent Edges
+		}
+
+		totalDelay = maxDelay + this->nodes.at(i)->GetDelay();				//sum the inherent delay of the logic with the delay of the parent edge 
+		this->nodes.at(i)->SetDelay(totalDelay);							//set delay of node
+		this->nodes.at(i)->GetConnector()->SetDelay(totalDelay);				//set delay of output of node
+		if (this->GetCriticalPath() < totalDelay) { this->SetCriticalPath(totalDelay); }
+	}
+
+	cout << "Critical Path: " << this->GetCriticalPath() << endl;
+}
+
+Netlist::Netlist(void) { this->criticalPath = 0; }
 Netlist::~Netlist(void) {
 	unsigned int i = 0;
 
