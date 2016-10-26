@@ -175,7 +175,12 @@ bool Netlist::parseNode(string inputLine) {
 	if ((!variable2.empty()) && (variable2 != "1")) { sign |= this->findEdge(variable2)->GetSign(); }
 	if ((!variable3.empty()) && (variable3 != "1")) { sign |= this->findEdge(variable3)->GetSign(); }
 
-	tempLogic = new Logic(type, tempConnector, tempConnector->GetSize(), sign);	//create the new logic element with its output edge, type and datawidth 
+	if (type != "COMP") { tempLogic = new Logic(type, tempConnector, tempConnector->GetSize(), sign); }	//create the new logic element with its output edge, type and datawidth 
+	else if (this->findEdge(variable1)->GetSize() > this->findEdge(variable2)->GetSize()) {				//compare the 2 input edges and use the larger datawidth
+		tempLogic = new Logic(type, tempConnector, this->findEdge(variable1)->GetSize(), sign);			//if vector at 0 is bigger, use it
+	}
+	else { tempLogic = new Logic(type, tempConnector, this->findEdge(variable2)->GetSize(), sign); }	//if vector at 1 is bigger, use it
+
 	this->nodes.push_back(tempLogic);											//create new logic/node and add to vector
 	tempConnector->SetParent(tempLogic);
 	if (tempLogic->GetTypeString() == "COMP") { tempLogic->SetOutType(logicSymbol); }		//if the new node is a comparator, record which type it is
