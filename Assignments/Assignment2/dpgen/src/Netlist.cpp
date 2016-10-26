@@ -20,7 +20,6 @@ using namespace std;
 
 bool Netlist::parseFile(string filename) {
 
-	Logic *tempLogic = NULL;
 	string line;
 	fstream inFile;					    // Input file stream
 	istringstream inSS("");
@@ -83,7 +82,8 @@ bool Netlist::parseEdge(string inputLine) {
 	if (dataWidthString.find("Int") != string::npos) {
 		if (dataWidthString.find("U") != string::npos) { tempSign = true; dataWidthString2 = dataWidthString.substr(4); }
 		else { tempSign = false; dataWidthString2 = dataWidthString.substr(3); }
-		dataWidthInt = stoi(dataWidthString2);
+		istringstream dataWidthSS(dataWidthString2);
+		dataWidthSS >> dataWidthInt;
 		//still may need to check for no value int width
 	}
 	else { cerr << "Error: missing proper datawidth callout " << endl; return false; }		//if no int width described, return an error
@@ -110,7 +110,6 @@ bool Netlist::parseNode(string inputLine) {
 	string variable2 = "";
 	string variable3 = "";
 	bool sign = false;
-	int i = 0;
 
 
 	inSS >> outputEdge;	//records output of this Node/Logic
@@ -203,7 +202,7 @@ bool Netlist::parseNode(string inputLine) {
 
 Connector *Netlist::findEdge(string edgeName) {
 	Connector *tempConnector = NULL;
-	int i = 0;
+	unsigned int i = 0;
 	//vector<Connector>::iterator it = find(this->edges.begin(), this->edges.end(), tempConnector);
 
 	for (i = 0; i < this->edges.size(); ++i) {//search through 'edges' for name 'edgeName' and save to *tempConnector, ie find the edge this string is referencing and pass it's address on
@@ -221,7 +220,7 @@ void Netlist::outputToReg() {
 	Logic *tempLogic = NULL;
 	string tempName = "";
 	bool sign = false;
-	int i = 0;
+	unsigned int i = 0;
 
 	for (i = 0; i < this->edges.size(); i++) {
 		if (this->edges.at(i)->GetType() == "output") {
@@ -231,6 +230,7 @@ void Netlist::outputToReg() {
 				tempConnector = new Connector(this->edges.at(i)->GetName(), this->edges.at(i)->GetType(), this->edges.at(i)->GetSize(), this->edges.at(i)->GetSign());
 				this->edges.push_back(tempConnector);
 				this->edges.at(i)->SetName(tempName);
+				this->edges.at(i)->SetType("wire");
 				tempLogic = new Logic("REG", tempConnector, tempConnector->GetSize(), sign);
 				this->nodes.push_back(tempLogic);//create the new logic element with its output edge, type and datawidth
 				tempConnector->SetParent(tempLogic);
@@ -249,7 +249,6 @@ bool Netlist::outputModule(string outputFilename) {			//write all current data i
 	string truncatedFilename = "";
 	unsigned int i = 0;
 	bool hasInputs = false;
-	bool checked = false;
 
 	outFS.open(outputFilename.c_str());	// Open file
 
@@ -323,13 +322,12 @@ string Netlist::outputNodeLine(int nodeNumber) {
 	ostringstream outSS;
 	unsigned int i = 0;
 	unsigned int j = 0;
-	bool checked = false;
 
 	if (this->nodes.at(nodeNumber)->GetSign() == 1) { outSS << "S"; }	//if module is signed, mark as such
 	outSS << this->nodes.at(nodeNumber)->GetTypeString();
 	if(this->nodes.at(nodeNumber)->GetTypeString() == "MUX"){ outSS << "2X1"; }
 	outSS <<  "\t\t";
-	for (i = 0; i < nodeNumber; i++) { 
+	for (i = 0; i < (unsigned)nodeNumber; i++) { 
 		if (this->nodes.at(nodeNumber)->GetTypeString() == this->nodes.at(i)->GetTypeString()) { j++; }	//count how many of this module already exist
 	}
 	outSS << this->nodes.at(nodeNumber)->GetTypeString() << "_" << (j) << " (";
