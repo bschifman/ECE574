@@ -44,6 +44,7 @@ bool Netlist::parseFile(string filename) {
 			edgeType = "";
 			inSS >> edgeType;
 			if (!edgeType.empty()) {			// checks for empty line
+				line = line.substr(0, line.find("//"));
 				if ((atNodes == false) && ((edgeType == "wire") || (edgeType == "input") || (edgeType == "output") || (edgeType == "register"))) {
 
 					if (!parseEdge(line)) { cout << "Error: Edge Parsing" << endl; CorrectFormat = false; break; }//parse edges/connectors here
@@ -115,12 +116,12 @@ bool Netlist::parseNode(string inputLine) {
 
 	inSS >> outputEdge;	//records output of this Node/Logic
 	tempConnector = this->findEdge(outputEdge);
-	sign |= tempConnector->GetSign();
 	if (tempConnector == NULL) {
 		cerr << "Error: missing output or wire variable callout" << endl;
 		return false;
 	}
 
+	sign |= tempConnector->GetSign();
 	inSS >> garbage;									//records the '=' to get rid of it
 	inSS >> variable1;									//records the first input variable
 	inSS >> logicSymbol;								//records the symbol of logic type
@@ -133,10 +134,6 @@ bool Netlist::parseNode(string inputLine) {
 			}
 		}
 	}
-	if ((!variable1.empty()) && (variable1 != "1")) { sign |= this->findEdge(variable1)->GetSign(); }
-	if ((!variable2.empty()) && (variable2 != "1")) { sign |= this->findEdge(variable2)->GetSign(); }
-	if ((!variable3.empty()) && (variable3 != "1")) { sign |= this->findEdge(variable3)->GetSign(); }
-
 
 	if ((tempConnector->GetType() == "register")||(logicSymbol.empty())) {				//check if the data type is a register, this will make the logic a REG since there is no +-/* symbol for reg in logic lines
 		type = "REG";
@@ -173,6 +170,10 @@ bool Netlist::parseNode(string inputLine) {
 		else { cerr << "Error: incorrect operator " << endl; return false; }
 	}
 	//change size maybe depending on inputs?  I don't think so I would imagine the output size would determine but need to examine if so.
+	
+	if ((!variable1.empty()) && (variable1 != "1")) { sign |= this->findEdge(variable1)->GetSign(); }
+	if ((!variable2.empty()) && (variable2 != "1")) { sign |= this->findEdge(variable2)->GetSign(); }
+	if ((!variable3.empty()) && (variable3 != "1")) { sign |= this->findEdge(variable3)->GetSign(); }
 
 	tempLogic = new Logic(type, tempConnector, tempConnector->GetSize(), sign);	//create the new logic element with its output edge, type and datawidth 
 	this->nodes.push_back(tempLogic);											//create new logic/node and add to vector
@@ -319,7 +320,7 @@ string Netlist::outputNodeLine(int nodeNumber) {
 	string outputLine = "";
 	string tempString = this->nodes.at(nodeNumber)->GetTypeString();
 		
-	if (tempString != "REG") { 
+	if ((tempString != "REG") && (tempString != "DEC") && (tempString != "INC")) {
 		tempParent1 = this->nodes.at(nodeNumber)->GetParents().at(1); 
 	}
 	if (tempString == "MUX2x1") { 
