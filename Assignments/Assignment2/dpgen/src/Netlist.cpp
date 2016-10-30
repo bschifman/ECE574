@@ -338,7 +338,9 @@ string Netlist::outputNodeLine(int nodeNumber) {
 	unsigned int j = 0;
 
 	outSS << "\t";
-	if (this->nodes.at(nodeNumber)->GetSign() == 1) { outSS << "S"; }	//if module is signed, mark as such
+	if ((tempString == "COMP") || (tempString == "DIV") || (tempString == "MOD") || (tempString == "SHR")) {
+		if (this->nodes.at(nodeNumber)->GetSign() == 1) { outSS << "S"; }	//if module is signed, mark as such
+	}
 	outSS << tempString;
 	outSS << "\t\t" << "#(.DATAWIDTH("; 
 	if (tempString == "COMP") { 

@@ -11,7 +11,6 @@ File: main.cpp
 
 int main(int argc, char **argv) {
 	Netlist n1;
-	int n;
 	string filename = "";
 	string filename2 = "";
 	if (argc == 2) {					//check for 1 input argument
