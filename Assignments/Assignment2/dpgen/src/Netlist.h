@@ -24,6 +24,7 @@ public:
 	bool parseNode(string inputLine);
 	bool outputModule(string outputFilename);
 	void findCriticalPath(void);
+	void findCriticalPathTemp(vector<Logic*> tempList);
 	string outputEdgeLine(string type, unsigned int datawidth);
 	string outputNodeLine(int nodeNumber);
 	void outputToReg();

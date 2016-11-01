@@ -375,28 +375,81 @@ string Netlist::outputNodeLine(int nodeNumber) {
 }
 
 void Netlist::findCriticalPath() {
+	vector<Logic*> tempList;
 	unsigned int i = 0;
 	unsigned int j = 0;
 	float maxDelay = 0;
 	float tempDelay = 0;
 	float totalDelay = 0;
+	bool check = false;
 
-	for (i = 0; i < this->nodes.size(); i++) {								//loop through all nodes
+	for (i = 0; i < this->nodes.size(); i++) {										//loop through all nodes
 		maxDelay = 0;
 		tempDelay = 0;
 
-		for (j = 0; j < this->nodes.at(i)->GetParents().size(); j++) {		//loop through all Parent Edges of each individual node
-			tempDelay = this->nodes.at(i)->GetParents().at(j)->GetDelay();	//assign a tempDelay from each Parent Edge
-			if (maxDelay < tempDelay) { maxDelay = tempDelay; }				//choose the longest delay from all of the Parent Edges
+		for (j = 0; j < this->nodes.at(i)->GetParents().size(); j++) {				//loop through all Parent Edges of each individual node
+			if ((this->nodes.at(i)->GetParents().at(j)->GetType() != "input") && (this->nodes.at(i)->GetParents().at(j)->GetDelay() == 0)) { //check to see if components are created before there input edges have delays
+				tempList.push_back(this->nodes.at(i));
+				check = true;
+				break;
+			}
+			else {
+				tempDelay = this->nodes.at(i)->GetParents().at(j)->GetDelay();		//assign a tempDelay from each Parent Edge
+				if (maxDelay < tempDelay) { maxDelay = tempDelay; }					//choose the longest delay from all of the Parent Edges
+			}	
 		}
-
-		totalDelay = maxDelay + this->nodes.at(i)->GetDelay();				//sum the inherent delay of the logic with the delay of the parent edge 
-		this->nodes.at(i)->SetDelay(totalDelay);							//set delay of node
-		this->nodes.at(i)->GetConnector()->SetDelay(totalDelay);				//set delay of output of node
-		if (this->GetCriticalPath() < totalDelay) { this->SetCriticalPath(totalDelay); }
+		if (!check) {
+			totalDelay = maxDelay + this->nodes.at(i)->GetDelay();					//sum the inherent delay of the logic with the delay of the parent edge 
+			this->nodes.at(i)->SetDelay(totalDelay);								//set delay of node
+			this->nodes.at(i)->GetConnector()->SetDelay(totalDelay);				//set delay of output of node
+			if (this->GetCriticalPath() < totalDelay) { this->SetCriticalPath(totalDelay); }
+		}
+		check = false;
 	}
 
-	cout << "Critical Path: " << this->GetCriticalPath() << endl;
+	findCriticalPathTemp(tempList);
+	cout << "Critical Path : " << this->GetCriticalPath() << " ns" << endl;
+}
+
+void Netlist::findCriticalPathTemp(vector<Logic*> tempList) {
+	unsigned int i = 0;
+	unsigned int j = 0;
+	float maxDelay = 0;
+	float tempDelay = 0;
+	float totalDelay = 0;
+	bool check = false;
+
+	while (!tempList.empty()) {
+
+		for (i = 0; i < tempList.size(); i++) {										//loop through all nodes in tempList
+			maxDelay = 0;
+			tempDelay = 0;
+			check = false;
+
+			for (j = 0; j < tempList.at(i)->GetParents().size(); j++) {				//loop through all Parent Edges of each individual node
+				if ((tempList.at(i)->GetParents().at(j)->GetDelay() == 0) && (tempList.at(i)->GetParents().at(j)->GetType() != "input")) {
+					check = true;
+					break;					
+				}
+				else {
+					tempDelay = tempList.at(i)->GetParents().at(j)->GetDelay();		//assign a tempDelay from each Parent Edge
+					if (maxDelay < tempDelay) { maxDelay = tempDelay; }				//choose the longest delay from all of the Parent Edges
+				}
+			}
+
+			if (!check) {
+				totalDelay = maxDelay + tempList.at(i)->GetDelay();					//sum the inherent delay of the logic with the delay of the parent edge 
+				tempList.at(i)->SetDelay(totalDelay);								//set delay of node
+				tempList.at(i)->GetConnector()->SetDelay(totalDelay);				//set delay of output of node
+				if (this->GetCriticalPath() < totalDelay) { this->SetCriticalPath(totalDelay); }
+				tempList.erase(tempList.begin()+i);
+				i--;
+			}
+
+		}
+
+	}
+
 }
 
 Netlist::Netlist(void) { this->criticalPath = 0; }
