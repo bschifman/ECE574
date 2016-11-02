@@ -277,6 +277,8 @@ bool Netlist::outputModule(string outputFilename) {			//write all current data i
 		outFS << endl;
 		for (i = 0; i < 7; i++) { outFS << this->outputEdgeLine("wire", (1 << i)) ; }	//output all wire variables
 		outFS << endl;
+		for (i = 0; i < 7; i++) { outFS << this->outputEdgeLine("register", (1 << i)); }	//output all wire variables
+		outFS << endl;
 
 		for (i = 0; i < this->nodes.size(); i++) { outFS << this->outputNodeLine(i) << endl;	}		//output all nodes/logics
 		
@@ -356,14 +358,19 @@ string Netlist::outputNodeLine(int nodeNumber) {
 		if (tempString == this->nodes.at(i)->GetTypeString()) { j++; }	//count how many of this module already exist
 	}
 	outSS << tempString << "_" << (j) << " (";
-	if(tempString == "REG"){ outSS << tempParent0->GetName() << ", clk, rst, " << tempConnector->GetName() << ")"; }
-	else if ((tempString == "ADD") || (tempString == "SUB") || (tempString == "MUL") || (tempString == "SHR") || (tempString == "SHL") || (tempString == "DIV") || (tempString == "MOD")) 
-		{outSS << tempParent0->GetName() << ", " << tempParent1->GetName() << ", " << tempConnector->GetName() << ")"; 
+	if(tempString == "REG"){ 
+		
+		outSS << CreateInputName(this->nodes.at(nodeNumber), tempParent0);
+		outSS << ", clk, rst, ";
+		outSS << tempConnector->GetName() << ")";
 	}
-	else if (tempString == "MUX2x1") { outSS << tempParent1->GetName() << ", " << tempParent2->GetName() << ", " << tempParent0->GetName() << ", " << tempConnector->GetName() << ")"; }
-	else if ((tempString == "INC") || (tempString == "DEC")) { outSS << tempParent0->GetName() << ", " << tempConnector->GetName() << ")"; }
+	else if ((tempString == "ADD") || (tempString == "SUB") || (tempString == "MUL") || (tempString == "SHR") || (tempString == "SHL") || (tempString == "DIV") || (tempString == "MOD")) 
+		{outSS << CreateInputName(this->nodes.at(nodeNumber), tempParent0) << ", " << CreateInputName(this->nodes.at(nodeNumber), tempParent1) << ", " << tempConnector->GetName() << ")";
+	}
+	else if (tempString == "MUX2x1") { outSS << CreateInputName(this->nodes.at(nodeNumber), tempParent1) << ", " << CreateInputName(this->nodes.at(nodeNumber), tempParent2) << ", " << tempParent0->GetName() << "[0:0], " << tempConnector->GetName() << ")"; }
+	else if ((tempString == "INC") || (tempString == "DEC")) { outSS << CreateInputName(this->nodes.at(nodeNumber), tempParent0) << ", " << tempConnector->GetName() << ")"; }
 	else if (tempString == "COMP") {	//depending on logic type (<,>,==) it will label output to proper channel
-		outSS << ".a(" << tempParent0->GetName() << "), .b(" << tempParent1->GetName() << "), ";
+		outSS << ".a(" << CreateCOMPInputName(tempParent0, tempParent1) << "), .b(" << CreateCOMPInputName(tempParent1, tempParent0) << "), ";
 		if (this->nodes.at(nodeNumber)->GetOutType() == ">") { outSS << ".gt("; }
 		if (this->nodes.at(nodeNumber)->GetOutType() == "<") { outSS << ".lt("; }
 		if (this->nodes.at(nodeNumber)->GetOutType() == "==") { outSS << ".eq("; }
@@ -371,6 +378,39 @@ string Netlist::outputNodeLine(int nodeNumber) {
 	}
 
 	outSS << ";";
+	return outSS.str();
+}
+
+string Netlist::CreateInputName(Logic* CurrentNode, Connector * tempParent) {
+	ostringstream outSS;       // output string stream
+	Connector *tempConnector = CurrentNode->GetConnector();
+
+	if (tempParent->GetSize() != tempConnector->GetSize()) {
+		if (tempParent->GetSize() > tempConnector->GetSize()) {
+			outSS << tempParent->GetName() << "[" << tempConnector->GetSize() - 1 << ":" << "0" << "]";
+		}
+		else {
+			outSS << "{{" << tempConnector->GetSize() - tempParent->GetSize() << "{" << tempParent->GetName() << "[" << tempParent->GetSize() - 1 << "]}}, ";
+			outSS << tempParent->GetName() << "[" << tempParent->GetSize() - 1 << ":" << "0" << "]}";
+		}
+	}
+	else { outSS << tempParent->GetName(); }
+
+	return outSS.str();
+}
+
+
+string Netlist::CreateCOMPInputName(Connector * tempParent0, Connector * tempParent1) {
+	ostringstream outSS;       // output string stream
+
+	if (!(tempParent0->GetSize() >= tempParent1->GetSize())) {
+		
+		outSS << "{{" << tempParent1->GetSize() - tempParent0->GetSize() << "{" << tempParent0->GetName() << "[" << tempParent0->GetSize() - 1 << "]}}, ";
+		outSS << tempParent0->GetName() << "[" << tempParent0->GetSize() - 1 << ":" << "0" << "]}";
+		
+	}
+	else { outSS << tempParent0->GetName(); }
+
 	return outSS.str();
 }
 
