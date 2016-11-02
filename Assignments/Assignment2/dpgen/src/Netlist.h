@@ -24,7 +24,8 @@ public:
 	bool parseNode(string inputLine);
 	bool outputModule(string outputFilename);
 	string CreateInputName(Logic* CurrentNode, Connector * tempParent);
-	string CreateCOMPInputName( Connector * tempParent0, Connector * tempParent1);
+	string CreateCOMPInputName(Connector * tempParent0, Connector * tempParent1);
+	string CreateShiftName(Logic* CurrentNode, Connector * tempParent);
 	void findCriticalPath(void);
 	void findCriticalPathTemp(vector<Logic*> tempList);
 	string outputEdgeLine(string type, unsigned int datawidth);

@@ -276,7 +276,6 @@ bool Netlist::outputModule(string outputFilename) {			//write all current data i
 		for (i = 0; i < 7; i++) { outFS << this->outputEdgeLine("output", (1 << i)) ; }	//output all output variables
 		outFS << endl;
 		for (i = 0; i < 7; i++) { outFS << this->outputEdgeLine("wire", (1 << i)) ; }	//output all wire variables
-		outFS << endl;
 		for (i = 0; i < 7; i++) { outFS << this->outputEdgeLine("register", (1 << i)); }	//output all wire variables
 		outFS << endl;
 
@@ -297,12 +296,20 @@ string Netlist::outputEdgeLine(string type, unsigned int datawidth) {	//formats 
 	ostringstream outSS;
 	unsigned int i = 0;
 	bool checked = false;
+	string outType = "";
+
+	if (type == "register") {
+		outType = "wire";
+	}
+	else {
+		outType = type;
+	}
 
 	checked = false;
 	for (i = 0; i < this->edges.size(); i++) {			//lists all of the inputs into the module prototype
 		if ((this->edges.at(i)->GetType() == type) && ((unsigned int)this->edges.at(i)->GetSize() == datawidth)) {
 			if (checked == false) {
-				outSS << "\t" << type << " ";
+				outSS << "\t" << outType << " ";
 				if (datawidth > 1) {
 					outSS << "[" << (datawidth - 1) << ":0] ";
 				}
@@ -341,7 +348,7 @@ string Netlist::outputNodeLine(int nodeNumber) {
 
 	outSS << "\t";
 	if ((tempString == "COMP") || (tempString == "DIV") || (tempString == "MOD") || (tempString == "SHR")) {
-		if (this->nodes.at(nodeNumber)->GetSign() == 1) { outSS << "S"; }	//if module is signed, mark as such
+		if (this->nodes.at(nodeNumber)->GetSign() == 1) { outSS << "S"; }			//if module is signed, mark as such
 	}
 	outSS << tempString;
 	outSS << "\t\t" << "#(.DATAWIDTH("; 
@@ -364,10 +371,15 @@ string Netlist::outputNodeLine(int nodeNumber) {
 		outSS << ", clk, rst, ";
 		outSS << tempConnector->GetName() << ")";
 	}
-	else if ((tempString == "ADD") || (tempString == "SUB") || (tempString == "MUL") || (tempString == "SHR") || (tempString == "SHL") || (tempString == "DIV") || (tempString == "MOD")) 
-		{outSS << CreateInputName(this->nodes.at(nodeNumber), tempParent0) << ", " << CreateInputName(this->nodes.at(nodeNumber), tempParent1) << ", " << tempConnector->GetName() << ")";
+	else if ((tempString == "ADD") || (tempString == "SUB") || (tempString == "MUL") || (tempString == "DIV") || (tempString == "MOD")) {
+		outSS << CreateInputName(this->nodes.at(nodeNumber), tempParent0) << ", " << CreateInputName(this->nodes.at(nodeNumber), tempParent1) << ", " << tempConnector->GetName() << ")";
 	}
-	else if (tempString == "MUX2x1") { outSS << CreateInputName(this->nodes.at(nodeNumber), tempParent1) << ", " << CreateInputName(this->nodes.at(nodeNumber), tempParent2) << ", " << tempParent0->GetName() << "[0:0], " << tempConnector->GetName() << ")"; }
+
+	else if ((tempString == "SHR") || (tempString == "SHL")){
+	outSS << CreateInputName(this->nodes.at(nodeNumber), tempParent0) << ", " << CreateShiftName(this->nodes.at(nodeNumber), tempParent1) << ", " << tempConnector->GetName() << ")";
+	}
+
+	else if (tempString == "MUX2x1") { outSS << CreateInputName(this->nodes.at(nodeNumber), tempParent1) << ", " << CreateInputName(this->nodes.at(nodeNumber), tempParent2) << ", " << tempParent0->GetName() << "[0], " << tempConnector->GetName() << ")"; }
 	else if ((tempString == "INC") || (tempString == "DEC")) { outSS << CreateInputName(this->nodes.at(nodeNumber), tempParent0) << ", " << tempConnector->GetName() << ")"; }
 	else if (tempString == "COMP") {	//depending on logic type (<,>,==) it will label output to proper channel
 		outSS << ".a(" << CreateCOMPInputName(tempParent0, tempParent1) << "), .b(" << CreateCOMPInputName(tempParent1, tempParent0) << "), ";
@@ -386,12 +398,18 @@ string Netlist::CreateInputName(Logic* CurrentNode, Connector * tempParent) {
 	Connector *tempConnector = CurrentNode->GetConnector();
 
 	if (tempParent->GetSize() != tempConnector->GetSize()) {
-		if (tempParent->GetSize() > tempConnector->GetSize()) {
+		if (tempParent->GetSize() > tempConnector->GetSize()) {		//truncate if the Parents size is greater than that of the output of the module
 			outSS << tempParent->GetName() << "[" << tempConnector->GetSize() - 1 << ":" << "0" << "]";
 		}
-		else {
-			outSS << "{{" << tempConnector->GetSize() - tempParent->GetSize() << "{" << tempParent->GetName() << "[" << tempParent->GetSize() - 1 << "]}}, ";
-			outSS << tempParent->GetName() << "[" << tempParent->GetSize() - 1 << ":" << "0" << "]}";
+		else {														//Output is larger than the input depending on sign, pad with numbers
+			if (tempParent->GetSign()) {							//if it is signed
+				outSS << "{{" << tempConnector->GetSize() - tempParent->GetSize() << "{" << tempParent->GetName() << "[" << tempParent->GetSize() - 1 << "]}}, ";
+				outSS << tempParent->GetName() << "[" << tempParent->GetSize() - 1 << ":" << "0" << "]}";
+			}
+			else {													//for unsigned connector
+				outSS << "{{" << tempConnector->GetSize() - tempParent->GetSize() << "{" << 0 << "}},";
+				outSS << tempParent->GetName() << "[" << tempParent->GetSize() - 1 << ":" << "0" << "]}";
+			}
 		}
 	}
 	else { outSS << tempParent->GetName(); }
@@ -399,16 +417,50 @@ string Netlist::CreateInputName(Logic* CurrentNode, Connector * tempParent) {
 	return outSS.str();
 }
 
+string Netlist::CreateShiftName(Logic* CurrentNode, Connector * tempParent) {
+	ostringstream outSS;       // output string stream
+	Connector *tempConnector = CurrentNode->GetConnector();
+
+	if (tempParent->GetSize() != tempConnector->GetSize()) {
+		if (tempParent->GetSize() > tempConnector->GetSize()) {		//truncate if the Parents size is greater than that of the output of the module
+			if (tempParent->GetSize() > 1) {
+				outSS << tempParent->GetName() << "[" << tempConnector->GetSize() - 1 << ":" << "0" << "]";
+			}
+			else {
+				outSS << tempParent->GetName();
+			}
+		}
+		else {														//Output is larger than the input depending on sign, pad with zeroz
+			outSS << "{{" << tempConnector->GetSize() - tempParent->GetSize() << "{" << 0 << "}},";
+			if (tempParent->GetSize() > 1) {
+				outSS << tempParent->GetName() << "[" << tempParent->GetSize() - 1 << ":" << "0" << "]";
+			}
+			else {
+				outSS << tempParent->GetName();
+			}
+			outSS << "}";
+		}
+	}
+	else { outSS << tempParent->GetName(); }
+
+	return outSS.str();
+}
 
 string Netlist::CreateCOMPInputName(Connector * tempParent0, Connector * tempParent1) {
 	ostringstream outSS;       // output string stream
 
-	if (!(tempParent0->GetSize() >= tempParent1->GetSize())) {
-		
+	if ((tempParent0->GetSize() < tempParent1->GetSize())) {
+		if (tempParent0->GetSign()) {					//if it is signed
 		outSS << "{{" << tempParent1->GetSize() - tempParent0->GetSize() << "{" << tempParent0->GetName() << "[" << tempParent0->GetSize() - 1 << "]}}, ";
 		outSS << tempParent0->GetName() << "[" << tempParent0->GetSize() - 1 << ":" << "0" << "]}";
+		}
+		else {											//if it is unsigned
+			outSS << "{{" << tempParent1->GetSize() - tempParent0->GetSize() << "{" << 0 << "}}, ";
+			outSS << tempParent0->GetName() << "[" << tempParent0->GetSize() - 1 << ":" << "0" << "]}";
+		}
 		
 	}
+
 	else { outSS << tempParent0->GetName(); }
 
 	return outSS.str();
