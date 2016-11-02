@@ -379,7 +379,7 @@ string Netlist::outputNodeLine(int nodeNumber) {
 	outSS << CreateInputName(this->nodes.at(nodeNumber), tempParent0) << ", " << CreateShiftName(this->nodes.at(nodeNumber), tempParent1) << ", " << tempConnector->GetName() << ")";
 	}
 
-	else if (tempString == "MUX2x1") { outSS << CreateInputName(this->nodes.at(nodeNumber), tempParent1) << ", " << CreateInputName(this->nodes.at(nodeNumber), tempParent2) << ", " << tempParent0->GetName() << "[0], " << tempConnector->GetName() << ")"; }
+	else if (tempString == "MUX2x1") { outSS << CreateInputName(this->nodes.at(nodeNumber), tempParent1) << ", " << CreateInputName(this->nodes.at(nodeNumber), tempParent2) << ", " << tempParent0->GetName() << ", " << tempConnector->GetName() << ")"; }
 	else if ((tempString == "INC") || (tempString == "DEC")) { outSS << CreateInputName(this->nodes.at(nodeNumber), tempParent0) << ", " << tempConnector->GetName() << ")"; }
 	else if (tempString == "COMP") {	//depending on logic type (<,>,==) it will label output to proper channel
 		outSS << ".a(" << CreateCOMPInputName(tempParent0, tempParent1) << "), .b(" << CreateCOMPInputName(tempParent1, tempParent0) << "), ";
