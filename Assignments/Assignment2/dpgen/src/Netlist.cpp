@@ -135,7 +135,7 @@ bool Netlist::parseNode(string inputLine) {
 		}
 	}
 
-	if ((tempConnector->GetType() == "register")||(logicSymbol.empty())) {				//check if the data type is a register, this will make the logic a REG since there is no +-/* symbol for reg in logic lines
+	if ((tempConnector->GetType() == "register") || (logicSymbol.empty())) {				//check if the data type is a register, this will make the logic a REG since there is no +-/* symbol for reg in logic lines
 		type = "REG";
 		//make register stuff
 	}
