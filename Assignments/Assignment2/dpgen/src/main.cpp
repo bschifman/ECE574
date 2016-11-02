@@ -34,7 +34,7 @@ int main(int argc, char **argv) {
 			return -1;
 		}
 		
-		cout << filename.substr(filename.rfind('\\') + 1) << " file successfully parsed." << endl;
+//		cout << filename.substr(filename.rfind('\\') + 1) << " file successfully parsed." << endl;
 		filename2 = argv[2];
 		if (!n1.outputModule(filename2)) {
 			
@@ -42,7 +42,7 @@ int main(int argc, char **argv) {
 			cerr << "Error: Unable to output file " << filename2 << endl;
 			return -1;
 		}
-		cout << filename2 << " file successfully generated." << endl;
+//		cout << filename2 << " file successfully generated." << endl;
 	}
 	else {
 		std::cerr << "Usage " << argv[0] << " input output" << std::endl << std::endl;

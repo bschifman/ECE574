@@ -35,7 +35,7 @@ bool Netlist::parseFile(string filename) {
 		return false;
 	}
 	else if (inFile.is_open()) {//if file is opens
-		cout << "Reading from text file " << filename.substr(filename.rfind('\\') + 1) << "..." << endl;
+//		cout << "Reading from text file " << filename.substr(filename.rfind('\\') + 1) << "..." << endl;
 
 		while (!inFile.eof()) {			// then while the file does not end, keep going through the loop
 			getline(inFile, line);		// grabs the entire line of the input file
@@ -259,7 +259,7 @@ bool Netlist::outputModule(string outputFilename) {			//write all current data i
 		return false;
 	}
 	else if (outFS.is_open()) {//if file is opens
-		cout << "Writing to file " << outputFilename << "..." << endl;
+//		cout << "Writing to file " << outputFilename << "..." << endl;
 		truncatedFilename = outputFilename.substr(0, outputFilename.find("."));		//removes everything after the . of file name to make module name
 		outFS << "`timescale 1ns / 1ps" << endl << endl;
 		outFS << "module " << truncatedFilename << "(";
