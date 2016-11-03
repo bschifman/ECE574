@@ -16,7 +16,7 @@ using namespace std;
 
 
 
-class Connector	//edges
+class Connector	//edges in a directed graph
 {
 public:
 	Connector(void);
@@ -24,23 +24,23 @@ public:
 	~Connector(void);												//destructor
 
 	//Setters
-	void SetType(string type) { this->type = type; }
-	void SetName(string name) { this->name = name; }
-	void SetSize(int size) { this->size = size; } 
-	void SetSign(bool sign) { this->sign = sign; }
-	void SetVisited(bool visited) { this->visited = visited; }
-	void SetDelay(float delay) { this->delay = delay; }
-	void SetParent(Logic* parentToAdd) { this->parent = parentToAdd; }
-	void AddChild(Logic* childToAdd) { this->children.push_back(childToAdd); }
+	void SetType(string type) { this->type = type; }					//set this edges type (input, output, wire, register)
+	void SetName(string name) { this->name = name; }					//set the variable name of this edge (ie a,b,c, xwire, etc)
+	void SetSize(int size) { this->size = size; }						//set the bit width of this edge(ie 1,2,4,8,16,32,64, etc)
+	void SetSign(bool sign) { this->sign = sign; }						//set whether this edge is a signed or unsigned datapath
+	void SetVisited(bool visited) { this->visited = visited; }			//set if this edge has been visited in a search algorithm
+	void SetDelay(float delay) { this->delay = delay; }					//set the delay of the critical path at this edge
+	void SetParent(Logic* parentToAdd) { this->parent = parentToAdd; }	//set this edges parent node(this is a directed graph)
+	void AddChild(Logic* childToAdd) { this->children.push_back(childToAdd); }	//add a child node to this edge(this is a directed graph)
 
 	//Getters
-	Logic* GetParent() { return this->parent; }
-	string GetType() { return this->type; }
-	string GetName() { return this->name; }
-	int GetSize() { return this->size; }
-	bool GetSign() { return this->sign; }
-	bool GetVisited() { return this->visited; }
-	float GetDelay() { return this->delay; }
+	Logic* GetParent() { return this->parent; }		//get this edges parent node(this is a directed graph)
+	string GetType() { return this->type; }			//get this edges type (input, output, wire, register)
+	string GetName() { return this->name; }			//get the variable name of this edge (ie a,b,c, xwire, etc)
+	int GetSize() { return this->size; }			//get the bit width of this edge(ie 1,2,4,8,16,32,64, etc)
+	bool GetSign() { return this->sign; }			//get whether this edge is a signed or unsigned datapath
+	bool GetVisited() { return this->visited; }		//check to see if this edge has been visited in a search algorithm
+	float GetDelay() { return this->delay; }		//get the delay of the critical path at this edge
 
 
 private:

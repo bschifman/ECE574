@@ -30,7 +30,7 @@ Logic::~Logic(void) {
 
 }
 
-//Logic mutator, will set recieved "type" into a integer class variable. Allowing use of switch statements
+//Logic mutator, will set recieved "type" into an integer class variable. Allowing use of switch statements
 void Logic::SetType(string inputType) {
 	this->typeName = inputType;
 	if (inputType == "REG") { this->type = 1; }
@@ -67,7 +67,7 @@ string Logic::GetTypeString() {
 	else { return NULL; }
 }
 
-void Logic::SetDataWidth(int inputDataWidth) {
+void Logic::SetDataWidth(int inputDataWidth) {		//stores the datawidth as a sequential int for use in switch statements and arrays
 	if (inputDataWidth == 1) { this->dataWidth = 1; }
 	else if (inputDataWidth == 2) { this->dataWidth = 2; }
 	else if (inputDataWidth == 4) { this->dataWidth = 3; }
@@ -80,7 +80,7 @@ void Logic::SetDataWidth(int inputDataWidth) {
 	return;
 }
 
-int Logic::GetDataWidth() {
+int Logic::GetDataWidth() {							//returns true data width from the stored sequential integer value
 	if (this->dataWidth == 1) { return 1; }
 	else if (this->dataWidth == 2) { return 2; }
 	else if (this->dataWidth == 3) { return 4; }
