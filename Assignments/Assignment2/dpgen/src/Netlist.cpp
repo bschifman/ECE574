@@ -365,6 +365,10 @@ string Netlist::outputNodeLine(int nodeNumber) {
 		if (tempString == this->nodes.at(i)->GetTypeString()) { j++; }	//count how many of this module already exist
 	}
 	outSS << tempString << "_" << (j) << " (";
+	ostringstream nameSS;
+	nameSS << "_" << (j);
+	this->nodes.at(i)->SetName(nameSS.str());
+
 	if(tempString == "REG"){ 
 		
 		outSS << CreateInputName(this->nodes.at(nodeNumber), tempParent0);
