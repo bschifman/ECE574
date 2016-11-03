@@ -26,12 +26,12 @@ public:
 	string CreateInputName(Logic* CurrentNode, Connector * tempParent);		//converts a module input name into a padded input as needed
 	string CreateCOMPInputName(Connector * tempParent0, Connector * tempParent1);	//converts a module input name into a padded input as needed for compartors
 	string CreateShiftName(Logic* CurrentNode, Connector * tempParent);		//converts a module input name into a padded input as needed for shift modules
-	void findCriticalPath(void);
-	void findCriticalPathTemp(vector<Logic*> tempList);
-	string outputEdgeLine(string type, unsigned int datawidth);
-	string outputNodeLine(int nodeNumber);
-	void outputToReg();
-	Connector* findEdge(string edgeName);
+	void findCriticalPath(void);											// loops through the nodes to find the critical path
+	void findCriticalPathTemp(vector<Logic*> tempList);						//  if there are any elements out of order in the netlist, loops through this secondary netlist to complete the critical path
+	string outputEdgeLine(string type, unsigned int datawidth);				// outputs the verilog variables into verilog code format
+	string outputNodeLine(int nodeNumber);									// outputs a line for a verilog module (ie ADD, SUB, DIV, etc) in verilog code
+	void outputToReg();														//finds any output edges and adds a REG module to them if they dont have one
+	Connector* findEdge(string edgeName);									//find the edge object pointer based off a variable name
 
 	//Getters
 	vector<Connector*> GetEdges() { return this->edges; }
@@ -39,7 +39,7 @@ public:
 	float GetCriticalPath() { return this->criticalPath; }
 
 	//Setters
-	void SetCriticalPath(float criticalPath) { this->criticalPath =+ criticalPath; }
+	void SetCriticalPath(float criticalPath) { this->criticalPath =+ criticalPath; }	//updates critical path of the entire circuit with a new critical path
 
 
 private:

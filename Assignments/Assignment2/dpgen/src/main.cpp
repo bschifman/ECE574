@@ -19,7 +19,7 @@ int main(int argc, char **argv) {
 			cerr << "Error: Unable to parse file." << endl;
 			return -1;
 		}
-		cout << filename.substr(filename.rfind('\\')+1) << " file successfully parsed." << endl;
+		cout << filename.substr(filename.rfind('\\')+1) << " file successfully parsed." << endl;	//reports what file was parsed
 		cout << "No output filename detected, will export to dpgenDefault.txt ..." << endl;
 		if (!n1.outputModule("dpgenDefault.txt")) {				//if there is no specified output filename, generate a default output file
 			cerr << "Error: Unable to output file dpgenDefault.txt." << endl;
@@ -49,7 +49,7 @@ int main(int argc, char **argv) {
 		return -1;
 	}
 
-	n1.findCriticalPath();
+	n1.findCriticalPath();	//determine and output the critical path
 	
 	return 0;
 }
