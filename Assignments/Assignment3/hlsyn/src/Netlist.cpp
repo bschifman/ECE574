@@ -18,7 +18,7 @@ File: Netlist.cpp
 
 using namespace std;
 
-bool Netlist::parseFile(string filename) {
+bool Netlist::parseFile(string filename, string latency) {
 
 	string line;
 	fstream inFile;					    // Input file stream
@@ -62,6 +62,9 @@ bool Netlist::parseFile(string filename) {
 		return false;
 	}
 	this->outputToReg();
+	this->SetLatency(latency);
+	this->CalculateASAP();
+
 
 	inFile.close();//close the input file
 	return true;
@@ -548,6 +551,190 @@ void Netlist::findCriticalPathTemp(vector<Logic*> tempList) {						//this is cra
 	}
 
 }
+
+bool Netlist::CalculateASAP() {
+	int i = 0;
+	int j = 0;
+//	int k = 0;
+	int currentLatency = 0;
+	int tempNodeDelay = 0;
+
+	for (i = 0; i < this->edges.size(); i++) {
+		this->edges.at(i)->SetEdgeASAP(-9);			// negative 9 chosen for default arbitrairily since no node has large enough latency to get to that point when subtracting
+	}
+	for (i = 0; i < this->nodes.size(); i++) {
+		this->nodes.at(i)->SetNodeASAP(-9);			// negative 9 chosen for default arbitrairily since no node has large enough latency to get to that point when subtracting
+	}
+
+	for (i = 0; i < this->edges.size(); i++) {				//set the base point for checking the ASAP
+		if (this->edges.at(i)->GetParent() == NULL) {
+			this->edges.at(i)->SetEdgeASAP(0);
+		}
+	}
+	for (currentLatency = 0; currentLatency <= this->GetLatency(); currentLatency++) {									//cycle through each latency timeframe
+		for (i = 0; i < this->edges.size(); i++) {															//look at all the edges for this time frame
+			if (this->edges.at(i)->GetEdgeASAP() == currentLatency) {										//only evaluate edges active during this time frame
+				for (j = 0; j < this->edges.at(i)->GetChildVector().size(); j++) {							//loop through all the nodes this edge is a parent of
+					if (this->edges.at(i)->GetChildVector().at(j)->GetNodeASAP() < currentLatency) {		//if the node value is lower value than this time frame update it
+						tempNodeDelay = this->edges.at(i)->GetChildVector().at(j)->GetTypeScheduleDelay();	//save this node type scheduleing inherihent delay(ie MUL is 2, DIV/MOD is 3, all other types is 1)
+						if ((tempNodeDelay + currentLatency) > this->GetLatency()) {
+							cout << "ERROR:  Input Schedule bounds too small for input file." << endl;
+							return false;
+						}
+						this->edges.at(i)->GetChildVector().at(j)->SetNodeASAP(currentLatency + tempNodeDelay);				//update node ASAP value
+						if ( this->edges.at(i)->GetChildVector().at(j)->GetConnector() != NULL) {			//make sure the current downstream node has a child edge
+							this->edges.at(i)->GetChildVector().at(j)->GetConnector()->SetEdgeASAP(currentLatency + tempNodeDelay);	//update the child edge of the current node to a new ASAP value
+						}
+					}
+				}
+			}
+		}
+	}
+	if (this->CheckIfASAPDone() == false) {
+		cout << "Error is computing ASAP schedule" << endl;		//there is something terribly wrong with the graph if this fails
+		return false;
+	}
+
+	return true;
+}
+
+bool Netlist::CheckIfASAPDone() {
+	int i = 0;
+	bool check = true;
+
+	for (i = 0; i < this->edges.size(); i++) {
+		if (this->edges.at(i)->GetEdgeASAP() == (-9)) {
+			check = false;
+		}
+	}
+
+	for (i = 0; i < this->nodes.size(); i++) {
+		if (this->nodes.at(i)->GetNodeASAP() == (-9)) {
+			check = false;
+		}
+	}
+
+
+	return check;
+}
+
+
+bool Netlist::CalculateALAP() {
+	int i = 0;
+	int j = 0;
+	//	int k = 0;
+	int currentLatency = 0;
+	int tempNodeDelay = 0;
+
+	for (i = 0; i < this->edges.size(); i++) {
+		this->edges.at(i)->SetEdgeALAP((this->GetLatency()) + 1);		// setting all unscheduled edges to larger than the largest possible latency
+	}
+	for (i = 0; i < this->nodes.size(); i++) {
+		this->nodes.at(i)->SetNodeALAP((this->GetLatency())+1);			// setting all unscheduled nodes to larger than the largest possible latency
+	}
+
+	for (i = 0; i < this->edges.size(); i++) {				//set the base point for checking the ASAP
+		if (this->edges.at(i)->GetChildVector().size() == 0) {
+			this->edges.at(i)->SetEdgeALAP(this->GetLatency());
+		}
+	}
+	for (currentLatency = this->GetLatency(); currentLatency > 0; currentLatency--) {						//cycle through each latency timeframe
+		for (i = 0; i < this->edges.size(); i++) {															//look at all the edges for this time frame
+			if (this->edges.at(i)->GetEdgeALAP() == currentLatency) {										//only evaluate edges active during this time frame
+				if (this->edges.at(i)->GetParent() != NULL) {												//check if this edge has a parent node
+					if (this->edges.at(i)->GetParent()->GetNodeALAP() > currentLatency) {					//if the node value is higher value than this time frame update it
+						tempNodeDelay = this->edges.at(i)->GetParent()->GetTypeScheduleDelay();				//save this node type scheduleing inherihent delay(ie MUL is 2, DIV/MOD is 3, all other types is 1)
+						if ((currentLatency - tempNodeDelay) < 0) {
+							cout << "ERROR:  Input Schedule bounds too small for input file." << endl;
+							return false;
+						}
+						this->edges.at(i)->GetParent()->SetNodeALAP(currentLatency);						//update parent node ALAP value
+						for (j = 0; j < this->edges.at(i)->GetParent()->GetParents().size(); j++ ) {		//make sure the current upstream nodes have a parent edges
+							this->edges.at(i)->GetParent()->GetParents().at(j)->SetEdgeALAP(currentLatency - tempNodeDelay);	//update the parent edge of the current node to a new ALAP value
+						}
+					}
+				}
+			}
+		}
+	}
+	if (this->CheckIfALAPDone() == false) {
+		cout << "Error is computing ALAP schedule" << endl;		//there is something terribly wrong with the graph if this fails
+		return false;
+	}
+
+	return true;
+}
+
+bool Netlist::CheckIfALAPDone() {
+	int i = 0;
+	bool check = true;
+
+	for (i = 0; i < this->edges.size(); i++) {
+		if (this->edges.at(i)->GetEdgeALAP() == ((this->GetLatency()) + 1)) {	//this means one of the edges didnt get checked during the schedule
+			check = false;
+		}
+	}
+
+	for (i = 0; i < this->nodes.size(); i++) {
+		if (this->nodes.at(i)->GetNodeALAP() == ((this->GetLatency()) + 1)) {
+			check = false;
+		}
+	}
+
+
+	return check;
+}
+
+
+bool Netlist::CalculateProbabilityFDS() {
+	int i = 0;
+	int j = 0;
+	bool check = true;
+
+	this->nodeProbabilityArray.resize(this->nodes.size());												//expanding the array to [#of nodes][#of time slots]
+	for (i = 0; i < this->nodes.size(); ++i) {
+		this->nodeProbabilityArray[i].resize(this->latency +1);
+
+		this->nodeProbabilityArray[i][0] = 0;															//this is an unused filler value to make calculation easier(ie start at 1 not 0)
+		for (j = 1; j < this->nodeProbabilityArray[i].size(); j++) {									//initialize array values to 0
+			if ((this->nodes.at(i)->GetNodeASAP() <= j) && (j <= this->nodes.at(i)->GetNodeALAP())) {	//check if current timeframe is in node mobility
+				this->nodeProbabilityArray[i][j] = 1/(this->nodes.at(i)->GetNodeALAP() - this->nodes.at(i)->GetNodeASAP() +1);
+			}
+			else {
+				this->nodeProbabilityArray[i][j] = 0;													//if current timeframe is not in schedule of node, set to 0
+			}
+		}
+	}
+
+	for (i = 0; i < this->nodeProbabilityArray.size(); i++) {															//loop through each node
+		for (j = 1; j < this->nodeProbabilityArray[i].size(); j++) {													//loop through each scheduled time fram
+			if ((this->nodes.at(i)->GetTypeString() == "ADD") || (this->nodes.at(i)->GetTypeString() == "SUB")) {		//if node is a ADD or SUB increase it's probability for that time frame
+				this->ADDSUBDistribution.at(j) = this->ADDSUBDistribution.at(j) + this->nodeProbabilityArray[i][j];
+			}
+			else if (this->nodes.at(i)->GetTypeString() == "MUL") {														//if node is a MUL increase it's probability for that time frame
+				this->MULDistribution.at(j) = this->MULDistribution.at(j) + this->nodeProbabilityArray[i][j];
+			}
+			else if ((this->nodes.at(i)->GetTypeString() == "DIV") || (this->nodes.at(i)->GetTypeString() == "MOD")) {	//if node is a DIV or MOD increase it's probability for that time frame
+				this->DIVMODDistribution.at(j) = this->DIVMODDistribution.at(j) + this->nodeProbabilityArray[i][j];
+			}
+			else {																										//else if node is anything else increase it's probability for that time frame
+				this->LOGRESDistribution.at(j) = this->LOGRESDistribution.at(j) + this->nodeProbabilityArray[i][j];
+			}
+		}
+	}
+
+	return check;
+}
+
+
+bool Netlist::CalculateFDS() {
+	int i = 0;
+	bool check = true;
+
+
+	return check;
+}
+
 
 Netlist::Netlist(void) { this->criticalPath = 0; }									//DeSTRUCTOR!!!!!!!!~!~!
 Netlist::~Netlist(void) {

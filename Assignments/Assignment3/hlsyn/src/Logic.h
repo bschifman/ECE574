@@ -31,9 +31,11 @@ public:
 	void SetOutType(string outType) { this->outType = outType; }				//set the node output type, specifically for the COMP (ie >,<,==)
 	void SetDataWidth(int inputDataWidth);										//set the datawidth of this node (ie 1,2,4,8,16,32,64, etc)
 	void SetSign(bool sign) { this->sign = sign; }								//set whether this is a signed(1) or unsigned(0) module based on its output type
-	void SetInherentDelay();													//set what the delay is of this specific module(not the total path)
+	void SetInherentDelay();													//set what the delay is of this specific module(not the total path)(both schedule and latency)
 	void SetDelay(float totalDelay) { this->delay = totalDelay; }				//set the delay of the path to this point
 	void AddParent(Connector* parentToAdd) { this->logicInputs.push_back(parentToAdd); }	//add a parent edge to this node (ie an input to the module)
+	void SetNodeALAP(int inputTime) { this->alapt = inputTime; }					//set ALAP time
+	void SetNodeASAP(int inputTime) { this->asapt = inputTime; }					//set ASAP time
 
 	//Getters
 	Connector* GetConnector() { return this->logicOutput; }						//get output(child) edge of this node(ie the output wire)
@@ -45,6 +47,9 @@ public:
 	int GetDataWidth();															//get the datawidth of this node (ie 1,2,4,8,16,32,64, etc)
 	float GetDelay() { return this->delay; }									//get the delay of the path to this point
 	bool GetSign() { return this->sign; }										//get whether this is a signed(1) or unsigned(0) module based on its output type
+	int GetNodeALAP() { return this->alapt; }									//get ALAP time
+	int GetNodeASAP() { return this->asapt; }									//get ASAP time
+	int GetTypeScheduleDelay() { return this->scheduleDelayValue; }					//get schedule value for this node type
 		
 private:
 
@@ -53,6 +58,9 @@ private:
 	string typeName;
 	string name;
 	string outType;							//specifically for the comparator module
+	int asapt;								//sets the ASAP time
+	int alapt;								//sets the ALAP time
+	int scheduleDelayValue;
 	int type;
 	int dataWidth;
 	bool sign;

@@ -19,7 +19,7 @@ public:
 	Netlist(void);
 	~Netlist(void);
 
-	bool parseFile(string filename);						//parse an input file specified upon execution
+	bool parseFile(string filename, string latency);						//parse an input file specified upon execution
 	bool parseEdge(string inputLine);						//Parse string of variables as edges	(ie 'input int64 a, b, c')
 	bool parseNode(string inputLine);						//parse string of logic into a node		(ie 'a = b + c'
 	bool outputModule(string outputFilename);				//writes all the parsed data from the input file into a verilog module 
@@ -32,6 +32,14 @@ public:
 	string outputNodeLine(int nodeNumber);									// outputs a line for a verilog module (ie ADD, SUB, DIV, etc) in verilog code
 	void outputToReg();														//finds any output edges and adds a REG module to them if they dont have one
 	Connector* findEdge(string edgeName);									//find the edge object pointer based off a variable name
+	bool CalculateASAP();													//calculate all ASAP values for nodes and edges
+	bool CheckIfASAPDone();													//absolute check to see if any nodes are unmarked
+	bool CalculateALAP();													//calculate all ALAP values for nodes and edges
+	bool CheckIfALAPDone();													//absolute check to see if any nodes are unmarked
+	bool CalculateProbabilityFDS();											//compute force directed scheduling
+	bool CalculateFDS();													//compute force directed scheduling
+	void SetLatency(string latency) { this->latency = stoi(latency); }		//set the int latency value for the circuit
+	int GetLatency() { return this->latency; }		//s]get the int latency value for the circuit
 
 	//Getters
 	vector<Connector*> GetEdges() { return this->edges; }
@@ -45,7 +53,14 @@ public:
 private:
 	vector<Connector*> edges;
 	vector<Logic*> nodes;
+	vector<vector<float> > nodeProbabilityArray;
+	vector<float> ADDSUBDistribution;
+	vector<float> MULDistribution;
+	vector<float> LOGRESDistribution;
+	vector<float> DIVMODDistribution;
 	float criticalPath;
+	int latency;
+
 };
 
 #endif

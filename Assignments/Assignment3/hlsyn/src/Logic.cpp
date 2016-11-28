@@ -113,42 +113,55 @@ void Logic::SetInherentDelay() {
 	{
 	case(1):
 		this->delay = regArray[this->dataWidth];
+		this->scheduleDelayValue = 1;
 		break;
 	case(2):
 		this->delay = addArray[this->dataWidth];
+		this->scheduleDelayValue = 1;
 		break;
 	case(3):
 		this->delay = subArray[this->dataWidth];
+		this->scheduleDelayValue = 1;
 		break;
 	case(4):
 		this->delay = mulArray[this->dataWidth];
+		this->scheduleDelayValue = 3;
 		break;
 	case(5):
 		this->delay = compArray[this->dataWidth];
+		this->scheduleDelayValue = 1;
 		break;
 	case(6):
 		this->delay = muxArray[this->dataWidth];
+		this->scheduleDelayValue = 1;
 		break;
 	case(7):
 		this->delay = shrArray[this->dataWidth];
+		this->scheduleDelayValue = 1;
 		break;
 	case(8):
 		this->delay = shlArray[this->dataWidth];
+		this->scheduleDelayValue = 1;
 		break;
 	case(9):
 		this->delay = divArray[this->dataWidth];
+		this->scheduleDelayValue = 3;
 		break;
 	case(10):
 		this->delay = modArray[this->dataWidth];
+		this->scheduleDelayValue = 3;
 		break;
 	case(11):
 		this->delay = incArray[this->dataWidth];
+		this->scheduleDelayValue = 1;
 		break;
 	case(12):
 		this->delay = decArray[this->dataWidth];
+		this->scheduleDelayValue = 1;
 		break;
 	default:
 		this->delay = 0;
+		this->scheduleDelayValue = 0;
 		break;
 	}
 
