@@ -36,7 +36,8 @@ public:
 	bool CheckIfASAPDone();													//absolute check to see if any nodes are unmarked
 	bool CalculateALAP();													//calculate all ALAP values for nodes and edges
 	bool CheckIfALAPDone();													//absolute check to see if any nodes are unmarked
-	bool CalculateProbabilityFDS();											//compute force directed scheduling
+	bool CalculateProbabilityFDS();											//compute probabilities for force directed scheduling
+	bool CalculateForcesFDS();												//compute self/predecessor/successor/total forces for force directed scheduling
 	bool CalculateFDS();													//compute force directed scheduling
 	void SetLatency(string latency) { this->latency = stoi(latency); }		//set the int latency value for the circuit
 	int GetLatency() { return this->latency; }		//s]get the int latency value for the circuit

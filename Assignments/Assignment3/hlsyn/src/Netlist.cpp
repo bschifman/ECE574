@@ -582,7 +582,7 @@ bool Netlist::CalculateASAP() {
 							return false;
 						}
 						this->edges.at(i)->GetChildVector().at(j)->SetNodeASAP(currentLatency + tempNodeDelay);				//update node ASAP value
-						if ( this->edges.at(i)->GetChildVector().at(j)->GetConnector() != NULL) {			//make sure the current downstream node has a child edge
+						if ( this->edges.at(i)->GetChildVector().at(j)->GetConnector() != NULL) {							//make sure the current downstream node has a child edge
 							this->edges.at(i)->GetChildVector().at(j)->GetConnector()->SetEdgeASAP(currentLatency + tempNodeDelay);	//update the child edge of the current node to a new ASAP value
 						}
 					}
@@ -603,13 +603,13 @@ bool Netlist::CheckIfASAPDone() {
 	bool check = true;
 
 	for (i = 0; i < this->edges.size(); i++) {
-		if (this->edges.at(i)->GetEdgeASAP() == (-9)) {
+		if (this->edges.at(i)->GetEdgeASAP() == (-9)) {		//this means one of the edges didnt get checked during the schedule
 			check = false;
 		}
 	}
 
 	for (i = 0; i < this->nodes.size(); i++) {
-		if (this->nodes.at(i)->GetNodeASAP() == (-9)) {
+		if (this->nodes.at(i)->GetNodeASAP() == (-9)) {		//this means one of the nodes didnt get checked during the schedule
 			check = false;
 		}
 	}
@@ -630,7 +630,7 @@ bool Netlist::CalculateALAP() {
 		this->edges.at(i)->SetEdgeALAP((this->GetLatency()) + 1);		// setting all unscheduled edges to larger than the largest possible latency
 	}
 	for (i = 0; i < this->nodes.size(); i++) {
-		this->nodes.at(i)->SetNodeALAP((this->GetLatency())+1);			// setting all unscheduled nodes to larger than the largest possible latency
+		this->nodes.at(i)->SetNodeALAP((this->GetLatency()) + 1);			// setting all unscheduled nodes to larger than the largest possible latency
 	}
 
 	for (i = 0; i < this->edges.size(); i++) {				//set the base point for checking the ASAP
@@ -672,12 +672,14 @@ bool Netlist::CheckIfALAPDone() {
 	for (i = 0; i < this->edges.size(); i++) {
 		if (this->edges.at(i)->GetEdgeALAP() == ((this->GetLatency()) + 1)) {	//this means one of the edges didnt get checked during the schedule
 			check = false;
+			break;
 		}
 	}
 
 	for (i = 0; i < this->nodes.size(); i++) {
-		if (this->nodes.at(i)->GetNodeALAP() == ((this->GetLatency()) + 1)) {
+		if (this->nodes.at(i)->GetNodeALAP() == ((this->GetLatency()) + 1)) {	//this means one of the nodes didnt get checked during the schedule
 			check = false;
+			break;
 		}
 	}
 
@@ -698,7 +700,7 @@ bool Netlist::CalculateProbabilityFDS() {
 		this->nodeProbabilityArray[i][0] = 0;															//this is an unused filler value to make calculation easier(ie start at 1 not 0)
 		for (j = 1; j < this->nodeProbabilityArray[i].size(); j++) {									//initialize array values to 0
 			if ((this->nodes.at(i)->GetNodeASAP() <= j) && (j <= this->nodes.at(i)->GetNodeALAP())) {	//check if current timeframe is in node mobility
-				this->nodeProbabilityArray[i][j] = 1/(this->nodes.at(i)->GetNodeALAP() - this->nodes.at(i)->GetNodeASAP() +1);
+				this->nodeProbabilityArray[i][j] = 1/(this->nodes.at(i)->GetNodeALAP() - this->nodes.at(i)->GetNodeASAP() + 1);
 			}
 			else {
 				this->nodeProbabilityArray[i][j] = 0;													//if current timeframe is not in schedule of node, set to 0
@@ -706,7 +708,9 @@ bool Netlist::CalculateProbabilityFDS() {
 		}
 	}
 
-	for (i = 0; i < this->nodeProbabilityArray.size(); i++) {															//loop through each node
+	//MIGHT NEED TO INITIALIZE DISTRIBUTION VECTORS to 0
+
+	for (i = 0; i < this->nodeProbabilityArray.size(); i++) {															//loop through each node, calculate the Distribution graphs
 		for (j = 1; j < this->nodeProbabilityArray[i].size(); j++) {													//loop through each scheduled time fram
 			if ((this->nodes.at(i)->GetTypeString() == "ADD") || (this->nodes.at(i)->GetTypeString() == "SUB")) {		//if node is a ADD or SUB increase it's probability for that time frame
 				this->ADDSUBDistribution.at(j) = this->ADDSUBDistribution.at(j) + this->nodeProbabilityArray[i][j];
@@ -723,8 +727,75 @@ bool Netlist::CalculateProbabilityFDS() {
 		}
 	}
 
-	return check;
+	return check;		//might need checks
 }
+
+
+bool Netlist::CalculateForcesFDS() {
+	int i = 0;
+	int j = 0;
+	int k = 0;
+	bool check = true;
+	vector<float> currentDistribution;
+	vector<vector<float>> selfForces;
+	vector<vector<float>> successorForces;
+	vector<vector<float>> predecessorForces;
+	vector<vector<float>> totalForces;
+	selfForces.resize(this->nodes.size());
+	successorForces.resize(this->nodes.size());
+	predecessorForces.resize(this->nodes.size());
+	totalForces.resize(this->nodes.size());
+
+	for (i = 0; i < this->nodes.size(); ++i) {											//initialize the creation of all the force arrays for each node and time slot
+		selfForces[i].resize(this->latency + 1);
+		successorForces[i].resize(this->latency + 1);
+		predecessorForces[i].resize(this->latency + 1);
+		totalForces[i].resize(this->latency + 1);
+
+		for (j = 1; j < selfForces[i].size(); j++) {									//initialize array values to 0
+				selfForces[i][j] = 0;
+				successorForces[i][j] = 0;
+				predecessorForces[i][j] = 0;
+				totalForces[i][j] = 0;
+			
+		}
+	}
+
+	for (i = 0; i < this->nodes.size(); i++) {
+		if ((this->nodes.at(i)->GetTypeString() == "ADD") || (this->nodes.at(i)->GetTypeString() == "SUB")) {		//if node is a ADD or SUB use that probability for that time frame
+			currentDistribution = this->ADDSUBDistribution;
+		}
+		else if (this->nodes.at(i)->GetTypeString() == "MUL") {														//if node is a MUL use that probability for that time frame
+			currentDistribution = this->MULDistribution;
+		}
+		else if ((this->nodes.at(i)->GetTypeString() == "DIV") || (this->nodes.at(i)->GetTypeString() == "MOD")) {	//if node is a DIV or MOD use that probability for that time frame
+			currentDistribution = this->DIVMODDistribution;
+		}
+		else {																										//else if node is anything else use LOGRES that probability for that time frame
+			currentDistribution = this->LOGRESDistribution;
+		}
+		for (j = 1; j < selfForces[i].size(); j++) {
+			for (k = 1; k <= this->latency; k++) {
+				if (k == j) {
+					selfForces[i][j] = selfForces[i][j] + currentDistribution[j]*(1- this->nodeProbabilityArray[i][j]);
+				}
+				else {
+					selfForces[i][j] = selfForces[i][j] + currentDistribution[j] * (0 - this->nodeProbabilityArray[i][j]);
+				}
+			}
+		}
+		//CALCULATE SUCCESSOR FORCES
+
+		//CALCULATE PREDECESSOR FORCES
+
+		//CALCULATE TOTAL FORCES
+
+	}
+
+
+	return check;		//might need checks
+}
+
 
 
 bool Netlist::CalculateFDS() {
@@ -732,7 +803,7 @@ bool Netlist::CalculateFDS() {
 	bool check = true;
 
 
-	return check;
+	return check;		//might need checks
 }
 
 
