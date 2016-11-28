@@ -40,7 +40,9 @@ public:
 	bool CalculateForcesFDS();												//compute self/predecessor/successor/total forces for force directed scheduling
 	bool CalculateFDS();													//compute force directed scheduling
 	void SetLatency(string latency) { this->latency = stoi(latency); }		//set the int latency value for the circuit
-	int GetLatency() { return this->latency; }		//s]get the int latency value for the circuit
+	void SetIfElseDepth(int depth) { this->ifElseDepth = depth; }			//set the current int depth value for the circuit
+	int GetLatency() { return this->latency; }								//get the int latency value for the circuit
+	int GetIfElseDepth() { return this->ifElseDepth; }						//get the current int depth value for the circuit
 
 	//Getters
 	vector<Connector*> GetEdges() { return this->edges; }
@@ -61,6 +63,7 @@ private:
 	vector<float> DIVMODDistribution;
 	float criticalPath;
 	int latency;
+	int ifElseDepth;
 
 };
 

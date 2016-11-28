@@ -36,6 +36,8 @@ public:
 	void AddParent(Connector* parentToAdd) { this->logicInputs.push_back(parentToAdd); }	//add a parent edge to this node (ie an input to the module)
 	void SetNodeALAP(int inputTime) { this->alapt = inputTime; }					//set ALAP time
 	void SetNodeASAP(int inputTime) { this->asapt = inputTime; }					//set ASAP time
+	void SetNodeFDS(int inputTime) { this->fdst = inputTime; }						//set FDS time
+	void SetIfElseDepth(int depth) { this->ifElseDepth = depth; }					//set if else circuit depth
 
 	//Getters
 	Connector* GetConnector() { return this->logicOutput; }						//get output(child) edge of this node(ie the output wire)
@@ -49,7 +51,9 @@ public:
 	bool GetSign() { return this->sign; }										//get whether this is a signed(1) or unsigned(0) module based on its output type
 	int GetNodeALAP() { return this->alapt; }									//get ALAP time
 	int GetNodeASAP() { return this->asapt; }									//get ASAP time
-	int GetTypeScheduleDelay() { return this->scheduleDelayValue; }					//get schedule value for this node type
+	int GetNodeFDS() { return this->fdst; }										//get FDS time
+	int GetTypeScheduleDelay() { return this->scheduleDelayValue; }				//get schedule value for this node type
+	int GetIfElseDepth() { return this->ifElseDepth; }							//get if else circuit depth this node type
 		
 private:
 
@@ -60,9 +64,11 @@ private:
 	string outType;							//specifically for the comparator module
 	int asapt;								//sets the ASAP time
 	int alapt;								//sets the ALAP time
+	int fdst;								//sets the FDS time
 	int scheduleDelayValue;
 	int type;
 	int dataWidth;
+	int ifElseDepth;						//depth of circuit
 	bool sign;
 	float delay;							//the delay of this logic item
 			

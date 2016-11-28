@@ -45,7 +45,7 @@ bool Netlist::parseFile(string filename, string latency) {
 			inSS >> edgeType;			//put the first variable of the unused whitespace purged line into edgetype
 			if (!edgeType.empty()) {			// checks for empty line
 				line = line.substr(0, line.find("//"));		//remove any comments from the line
-				if ((atNodes == false) && ((edgeType == "wire") || (edgeType == "input") || (edgeType == "output") || (edgeType == "register"))) {
+				if ((atNodes == false) && ((edgeType == "wire") || (edgeType == "input") || (edgeType == "output") || (edgeType == "register") || (edgeType == "variable"))) {
 
 					if (!parseEdge(line)) { cout << "Error: Edge Parsing" << endl; CorrectFormat = false; break; }//parse edges/connectors here
 				}
@@ -61,7 +61,7 @@ bool Netlist::parseFile(string filename, string latency) {
 		inFile.close();//close the input file
 		return false;
 	}
-	this->outputToReg();
+	//this->outputToReg();			//I dont think we need output to register for assignment 3
 	this->SetLatency(latency);
 	this->CalculateASAP();
 
@@ -105,6 +105,7 @@ bool Netlist::parseEdge(string inputLine) {
 bool Netlist::parseNode(string inputLine) {
 	istringstream inSS(inputLine);       // Input string stream
 	Connector *tempConnector = NULL;
+	Connector *tempConnectorUp = NULL;
 	Connector *tempChkConnector = NULL;
 	Logic *tempLogic = NULL;
 	string garbage = "";
@@ -114,93 +115,133 @@ bool Netlist::parseNode(string inputLine) {
 	string variable1 = "";
 	string variable2 = "";
 	string variable3 = "";
+	string tempName = "";
 	bool sign = false;
 
 
-	inSS >> outputEdge;									//records output edge (variable name)of this Node/Logic
-	tempConnector = this->findEdge(outputEdge);			//identify which vector edge is associated with the variable
-	if (tempConnector == NULL) {
-		cerr << "Error: missing output or wire variable callout" << endl;
-		return false;
-	}
+	inSS >> outputEdge;										//records output edge (variable name)of this Node/Logic
+	if (!outputEdge.compare("if")) {
+		inSS >> garbage;									//records begining "("
+		inSS >> variable1;									//records the conditional variable for the if
+		inSS >> garbage;									//records ending ")"
+		this->SetIfElseDepth(this->GetIfElseDepth +int(1));
 
-	sign |= tempConnector->GetSign();
-	inSS >> garbage;									//records the '=' to get rid of it
-	inSS >> variable1;									//records the first input variable
-	inSS >> logicSymbol;								//records the symbol of logic type
-	if (!logicSymbol.empty()) {
-		inSS >> variable2;								//records the second input variable
-		if (!variable2.empty()) {
-			inSS >> garbage;							//records the ':' to get rid of it
-			if (!garbage.empty()) {
-				inSS >> variable3;						//records the third input variable
-			}
-		}
-	}
+		tempConnectorUp = this->findEdge(variable1);			//identify which vector edge is associated with the variable
+		sign |= tempConnectorUp->GetSign();
 
-	if ((tempConnector->GetType() == "register") || (logicSymbol.empty())) {				//check if the data type is a register, this will make the logic a REG since there is no +-/* symbol for reg in logic lines
-		type = "REG";
-		//make register stuff
+		tempName = "if";
+		tempName.append("wire");										//using the orginal outputs name, add 'wire' to the end to distinguish them(ie 'a' to 'awire')
+		tempConnector = new Connector(this->edges.at(i)->GetName(), this->edges.at(i)->GetType(), this->edges.at(i)->GetSize(), this->edges.at(i)->GetSign());
+		this->edges.push_back(tempConnector);
+		this->edges.at(i)->SetName(tempName);
+		this->edges.at(i)->SetType("wire");
+		tempLogic = new Logic("REG", tempConnector, tempConnector->GetSize(), this->edges.at(i)->GetSign());
+		this->nodes.push_back(tempLogic);								//create the new logic element with its output edge, type and datawidth
+		tempConnector->SetParent(tempLogic);
+		tempLogic->AddParent(this->edges.at(i));
+
+		tempLogic = new Logic(type, tempConnectorUp, tempConnector->GetSize(), sign);
+		this->nodes.push_back(tempLogic);
+	}
+	if (!outputEdge.compare("else")) {						//increases depth 
+		this->SetIfElseDepth(this->GetIfElseDepth + int(1));
+	}
+	else if (!outputEdge.compare("for")) {
+		inSS >> garbage;									//records begining "("
+
+		this->SetIfElseDepth(this->GetIfElseDepth + int(1));//increase circuit depth
+
+	}
+	else if (!outputEdge.compare("{")) {
+		//garbage line, shouldn't happen but covered if so, ifElseDepth increased at if/for initialization
+	}
+	else if (!outputEdge.compare("}")) {					//close of an if/for statement
+		this->SetIfElseDepth(this->GetIfElseDepth - int(1));//decrease circuit depth
 	}
 	else {
-		
-		if (logicSymbol.empty()) { cerr << "Error: missing datapath component type(+,-,*,==,>>,<<,/,%,?)" << endl; return false; }		//improper input, report error
-		if (variable2.empty()) { cerr << "Error: missing input variable for datapath component " << endl; return false; }				//improper input, report error
-		tempChkConnector = this->findEdge(variable2);
-		if ((tempChkConnector == NULL) && (variable2 != "1") ) { cerr << "Error: missing input variable for datapath component " << endl; return false; }
-
-		if (logicSymbol == "?") {		//Logic is a MUX2x1 
-			type = "MUX2x1";									//deal with MUX here, has 3 input thingys
-			if (!(garbage == ":")) { cerr << "Error: missing ':' for compator component " << endl; return false; }					//improper operator, should be a ':' report error
-			if (variable3.empty()) { cerr << "Error: missing input variable for datapath component " << endl; return false; }		//improper operator, report error
-			tempChkConnector = this->findEdge(variable3);
-			if (tempChkConnector == NULL) { cerr << "Error: missing input variable for datapath component " << endl; return false; }
+		tempConnector = this->findEdge(outputEdge);			//identify which vector edge is associated with the variable
+		if (tempConnector == NULL) {
+			cerr << "Error: missing output or wire variable callout, improper file format." << endl;
+			return false;
 		}
-		else if (!logicSymbol.compare("+")) {
-			if (!variable2.compare("1")) { type = "INC"; }	//is an incrementor not an adder
-			else { type = "ADD"; }							//is an adder
+
+		sign |= tempConnector->GetSign();
+		inSS >> garbage;									//records the '=' to get rid of it
+		inSS >> variable1;									//records the first input variable
+		inSS >> logicSymbol;								//records the symbol of logic type
+		if (!logicSymbol.empty()) {
+			inSS >> variable2;								//records the second input variable
+			if (!variable2.empty()) {
+				inSS >> garbage;							//records the ':' to get rid of it
+				if (!garbage.empty()) {
+					inSS >> variable3;						//records the third input variable
+				}
+			}
 		}
-		else if (!logicSymbol.compare("-")) {
-			if (!variable2.compare("1")) { type = "DEC"; }  //is an decrementor not a subtractor
-			else { type = "SUB"; }						    //is an subtractor
+
+		if ((tempConnector->GetType() == "register") || (logicSymbol.empty())) {				//check if the data type is a register, this will make the logic a REG since there is no +-/* symbol for reg in logic lines
+			type = "REG";
+			//make register stuff
 		}
-		else if (!logicSymbol.compare("*")) { type = "MUL"; }
-		else if (!logicSymbol.compare(">>")) { type = "SHR"; }
-		else if (!logicSymbol.compare("<<")) { type = "SHL"; }
-		else if ((!logicSymbol.compare("==")) || (!logicSymbol.compare("<")) || (!logicSymbol.compare(">"))) { type = "COMP"; }
-		else if (!logicSymbol.compare("/")) { type = "DIV"; }
-		else if (!logicSymbol.compare("%")) { type = "MOD"; }
-		else { cerr << "Error: incorrect operator " << endl; return false; }							//someone put gibberish into the file, tis a problem
-	}
-	//change size maybe depending on inputs?  I don't think so I would imagine the output size would determine but need to examine if so.
-	
-	if ((!variable1.empty()) && (variable1 != "1")) { sign |= this->findEdge(variable1)->GetSign(); }	//find the edges associated with the each variable and check if they are 'signed'
-	if ((!variable2.empty()) && (variable2 != "1")) { sign |= this->findEdge(variable2)->GetSign(); }
-	if ((!variable3.empty()) && (variable3 != "1")) { sign |= this->findEdge(variable3)->GetSign(); }
+		else {
 
-	if (type != "COMP") { tempLogic = new Logic(type, tempConnector, tempConnector->GetSize(), sign); }	//create the new logic element with its output edge, type and datawidth 
-	else if (this->findEdge(variable1)->GetSize() > this->findEdge(variable2)->GetSize()) {				//compare the 2 input edges and use the larger datawidth
-		tempLogic = new Logic(type, tempConnector, this->findEdge(variable1)->GetSize(), sign);			//if vector at 0 is bigger, use it
-	}
-	else { tempLogic = new Logic(type, tempConnector, this->findEdge(variable2)->GetSize(), sign); }	//if vector at 1 is bigger, use it
+			if (logicSymbol.empty()) { cerr << "Error: missing datapath component type(+,-,*,==,>>,<<,/,%,?)" << endl; return false; }		//improper input, report error
+			if (variable2.empty()) { cerr << "Error: missing input variable for datapath component " << endl; return false; }				//improper input, report error
+			tempChkConnector = this->findEdge(variable2);
+			if ((tempChkConnector == NULL) && (variable2 != "1")) { cerr << "Error: missing input variable for datapath component " << endl; return false; }
 
-	this->nodes.push_back(tempLogic);																	//create new logic/node and add to vector
-	tempConnector->SetParent(tempLogic);
-	if (tempLogic->GetTypeString() == "COMP") { tempLogic->SetOutType(logicSymbol); }					//if the new node is a comparator, record which type it is
+			if (logicSymbol == "?") {		//Logic is a MUX2x1 
+				type = "MUX2x1";									//deal with MUX here, has 3 input thingys
+				if (!(garbage == ":")) { cerr << "Error: missing ':' for compator component " << endl; return false; }					//improper operator, should be a ':' report error
+				if (variable3.empty()) { cerr << "Error: missing input variable for datapath component " << endl; return false; }		//improper operator, report error
+				tempChkConnector = this->findEdge(variable3);
+				if (tempChkConnector == NULL) { cerr << "Error: missing input variable for datapath component " << endl; return false; }
+			}
+			else if (!logicSymbol.compare("+")) {
+				if (!variable2.compare("1")) { type = "INC"; }	//is an incrementor not an adder
+				else { type = "ADD"; }							//is an adder
+			}
+			else if (!logicSymbol.compare("-")) {
+				if (!variable2.compare("1")) { type = "DEC"; }  //is an decrementor not a subtractor
+				else { type = "SUB"; }						    //is an subtractor
+			}
+			else if (!logicSymbol.compare("*")) { type = "MUL"; }
+			else if (!logicSymbol.compare(">>")) { type = "SHR"; }
+			else if (!logicSymbol.compare("<<")) { type = "SHL"; }
+			else if ((!logicSymbol.compare("==")) || (!logicSymbol.compare("<")) || (!logicSymbol.compare(">"))) { type = "COMP"; }
+			else if (!logicSymbol.compare("/")) { type = "DIV"; }
+			else if (!logicSymbol.compare("%")) { type = "MOD"; }
+			else { cerr << "Error: incorrect operator " << endl; return false; }							//someone put gibberish into the file, tis a problem
+		}
+		//change size maybe depending on inputs?  I don't think so I would imagine the output size would determine but need to examine if so.
 
-	if (!variable1.empty() && (variable1 != "1")) {
-		tempConnector = this->findEdge(variable1);														//these "ifs" add the current node to any edge used in the logic
-		if (tempConnector != NULL) { tempConnector->AddChild(tempLogic); tempLogic->AddParent(tempConnector); }
-	}
-	if (!variable2.empty() && (variable2 != "1")) {
-		tempConnector = this->findEdge(variable2);
-		if (tempConnector != NULL) { tempConnector->AddChild(tempLogic); tempLogic->AddParent(tempConnector); }
-	}
-	if (!variable3.empty() && (variable3 != "1")) {
-		tempConnector = this->findEdge(variable3);
-		if (tempConnector != NULL) { tempConnector->AddChild(tempLogic); tempLogic->AddParent(tempConnector); }
-	}
+		if ((!variable1.empty()) && (variable1 != "1")) { sign |= this->findEdge(variable1)->GetSign(); }	//find the edges associated with the each variable and check if they are 'signed'
+		if ((!variable2.empty()) && (variable2 != "1")) { sign |= this->findEdge(variable2)->GetSign(); }
+		if ((!variable3.empty()) && (variable3 != "1")) { sign |= this->findEdge(variable3)->GetSign(); }
 
+		if (type != "COMP") { tempLogic = new Logic(type, tempConnector, tempConnector->GetSize(), sign); }	//create the new logic element with its output edge, type and datawidth 
+		else if (this->findEdge(variable1)->GetSize() > this->findEdge(variable2)->GetSize()) {				//compare the 2 input edges and use the larger datawidth
+			tempLogic = new Logic(type, tempConnector, this->findEdge(variable1)->GetSize(), sign);			//if vector at 0 is bigger, use it
+		}
+		else { tempLogic = new Logic(type, tempConnector, this->findEdge(variable2)->GetSize(), sign); }	//if vector at 1 is bigger, use it
+
+		this->nodes.push_back(tempLogic);																	//create new logic/node and add to vector
+		tempConnector->SetParent(tempLogic);
+		if (tempLogic->GetTypeString() == "COMP") { tempLogic->SetOutType(logicSymbol); }					//if the new node is a comparator, record which type it is
+
+		if (!variable1.empty() && (variable1 != "1")) {
+			tempConnector = this->findEdge(variable1);														//these "ifs" add the current node to any edge used in the logic
+			if (tempConnector != NULL) { tempConnector->AddChild(tempLogic); tempLogic->AddParent(tempConnector); }
+		}
+		if (!variable2.empty() && (variable2 != "1")) {
+			tempConnector = this->findEdge(variable2);
+			if (tempConnector != NULL) { tempConnector->AddChild(tempLogic); tempLogic->AddParent(tempConnector); }
+		}
+		if (!variable3.empty() && (variable3 != "1")) {
+			tempConnector = this->findEdge(variable3);
+			if (tempConnector != NULL) { tempConnector->AddChild(tempLogic); tempLogic->AddParent(tempConnector); }
+		}
+	}
 
 	return true;
 }
@@ -279,6 +320,7 @@ bool Netlist::outputModule(string outputFilename) {										//write all current
 		outFS << endl;
 		for (i = 0; i < 7; i++) { outFS << this->outputEdgeLine("wire", (1 << i)) ; }					//output all wire variables
 		for (i = 0; i < 7; i++) { outFS << this->outputEdgeLine("register", (1 << i)); }				//output all register variables as wire variables
+		for (i = 0; i < 7; i++) { outFS << this->outputEdgeLine("variable", (1 << i)); }				//output all variable variables as variables
 		outFS << endl;
 
 		for (i = 0; i < this->nodes.size(); i++) { outFS << this->outputNodeLine(i) << endl;	}		//output all nodes/logics
@@ -645,7 +687,7 @@ bool Netlist::CalculateALAP() {
 					if (this->edges.at(i)->GetParent()->GetNodeALAP() > currentLatency) {					//if the node value is higher value than this time frame update it
 						tempNodeDelay = this->edges.at(i)->GetParent()->GetTypeScheduleDelay();				//save this node type scheduleing inherihent delay(ie MUL is 2, DIV/MOD is 3, all other types is 1)
 						if ((currentLatency - tempNodeDelay) < 0) {
-							cout << "ERROR:  Input Schedule bounds too small for input file." << endl;
+							cout << "ERROR:  User input Schedule bounds too small for input file." << endl;
 							return false;
 						}
 						this->edges.at(i)->GetParent()->SetNodeALAP(currentLatency);						//update parent node ALAP value
@@ -693,7 +735,7 @@ bool Netlist::CalculateProbabilityFDS() {
 	int j = 0;
 	bool check = true;
 
-	this->nodeProbabilityArray.resize(this->nodes.size());												//expanding the array to [#of nodes][#of time slots]
+	this->nodeProbabilityArray.resize(this->nodes.size());												//DISTRIBUTION ARRAY expanding the array to [#of nodes][#of time slots]
 	for (i = 0; i < this->nodes.size(); ++i) {
 		this->nodeProbabilityArray[i].resize(this->latency +1);
 
@@ -709,6 +751,19 @@ bool Netlist::CalculateProbabilityFDS() {
 	}
 
 	//MIGHT NEED TO INITIALIZE DISTRIBUTION VECTORS to 0
+	this->ADDSUBDistribution.resize(nodeProbabilityArray[0].size());		//resize distribution vectors to latency width of other arrays
+	this->MULDistribution.resize(nodeProbabilityArray[0].size());
+	this->DIVMODDistribution.resize(nodeProbabilityArray[0].size());
+	this->LOGRESDistribution.resize(nodeProbabilityArray[0].size());
+
+	/*
+	for (i = 0; i < this->ADDSUBDistribution.size(); i++) {					//initialize arrays values to 0
+		this->ADDSUBDistribution[i] = 0;
+		this->MULDistribution[i] = 0;
+		this->DIVMODDistribution[i] = 0;
+		this->LOGRESDistribution[i] = 0;
+	}
+	*/
 
 	for (i = 0; i < this->nodeProbabilityArray.size(); i++) {															//loop through each node, calculate the Distribution graphs
 		for (j = 1; j < this->nodeProbabilityArray[i].size(); j++) {													//loop through each scheduled time fram
@@ -737,21 +792,23 @@ bool Netlist::CalculateForcesFDS() {
 	int k = 0;
 	bool check = true;
 	vector<float> currentDistribution;
-	vector<vector<float>> selfForces;
+	vector<vector<float>> selfForces;													//create vectors to become arrays of the forces
 	vector<vector<float>> successorForces;
 	vector<vector<float>> predecessorForces;
 	vector<vector<float>> totalForces;
-	selfForces.resize(this->nodes.size());
+
+	selfForces.resize(this->nodes.size());												
 	successorForces.resize(this->nodes.size());
 	predecessorForces.resize(this->nodes.size());
 	totalForces.resize(this->nodes.size());
 
 	for (i = 0; i < this->nodes.size(); ++i) {											//initialize the creation of all the force arrays for each node and time slot
-		selfForces[i].resize(this->latency + 1);
+		selfForces[i].resize(this->latency + 1);										//expanding the arrays to [#of nodes][#of time slots]
 		successorForces[i].resize(this->latency + 1);
 		predecessorForces[i].resize(this->latency + 1);
 		totalForces[i].resize(this->latency + 1);
 
+		/*
 		for (j = 1; j < selfForces[i].size(); j++) {									//initialize array values to 0
 				selfForces[i][j] = 0;
 				successorForces[i][j] = 0;
@@ -759,9 +816,10 @@ bool Netlist::CalculateForcesFDS() {
 				totalForces[i][j] = 0;
 			
 		}
+		*/
 	}
 
-	for (i = 0; i < this->nodes.size(); i++) {
+	for (i = 0; i < this->nodes.size(); i++) {																		//CALCULATE SELF FORCES
 		if ((this->nodes.at(i)->GetTypeString() == "ADD") || (this->nodes.at(i)->GetTypeString() == "SUB")) {		//if node is a ADD or SUB use that probability for that time frame
 			currentDistribution = this->ADDSUBDistribution;
 		}
@@ -784,6 +842,8 @@ bool Netlist::CalculateForcesFDS() {
 				}
 			}
 		}
+
+
 		//CALCULATE SUCCESSOR FORCES
 
 		//CALCULATE PREDECESSOR FORCES
@@ -807,8 +867,12 @@ bool Netlist::CalculateFDS() {
 }
 
 
-Netlist::Netlist(void) { this->criticalPath = 0; }									//DeSTRUCTOR!!!!!!!!~!~!
-Netlist::~Netlist(void) {
+Netlist::Netlist(void) {															//CONSTRUCTOR...
+	this->criticalPath = 0; 
+	this->ifElseDepth = 0;
+}
+
+Netlist::~Netlist(void) {															//DeSTRUCTOR!!!!!!!!~!~!
 	unsigned int i = 0;
 
 	for (i = this->edges.size(); i > 0; i--) {

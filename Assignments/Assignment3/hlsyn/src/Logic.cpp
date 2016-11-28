@@ -15,6 +15,11 @@ using namespace std;
 
 
 Logic::Logic(void) {
+	this->SetDataWidth(int(0));
+	this->SetSign(int(0));
+	this->SetNodeASAP(int(0));
+	this->SetNodeALAP(int(0));
+	this->SetNodeFDS(int(0));
 
 }
 
@@ -24,6 +29,9 @@ Logic::Logic(string type, Connector *logicOutput, int dataWidth, bool sign) {	//
 	this->SetConnector(logicOutput);
 	this->SetInherentDelay();
 	this->SetSign(sign);
+	this->SetNodeASAP(int(0));
+	this->SetNodeALAP(int(0));
+	this->SetNodeFDS(int(0));
 }
 
 Logic::~Logic(void) {
