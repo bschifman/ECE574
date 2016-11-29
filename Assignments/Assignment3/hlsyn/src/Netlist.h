@@ -39,18 +39,23 @@ public:
 	bool CalculateProbabilityFDS();											//compute probabilities for force directed scheduling
 	bool CalculateForcesFDS();												//compute self/predecessor/successor/total forces for force directed scheduling
 	bool CalculateFDS();													//compute force directed scheduling
-	void SetLatency(string latency) { this->latency = stoi(latency); }		//set the int latency value for the circuit
-	void SetIfElseDepth(int depth) { this->ifElseDepth = depth; }			//set the current int depth value for the circuit
-	int GetLatency() { return this->latency; }								//get the int latency value for the circuit
-	int GetIfElseDepth() { return this->ifElseDepth; }						//get the current int depth value for the circuit
+	bool outputHLSMModule(string outputFilename);							//writes all the parsed data from the input file into a verilog HLSM module 
+	string outputCaseLine(int caseNumber);									// outputs a line for a verilog case module in verilog code
 
 	//Getters
 	vector<Connector*> GetEdges() { return this->edges; }
 	vector<Logic*> GetNodes() { return this->nodes; }
 	float GetCriticalPath() { return this->criticalPath; }
+	int GetLatency() { return this->latency; }								//get the int latency value for the circuit
+	int GetIfElseDepth() { return this->ifElseDepth; }						//get the current int depth value for the circuit
+	int GetIfForIncrementer() { return this->ifForIncrementer; }			//get the current incremented # of if/for variables in the circuit
 
 	//Setters
 	void SetCriticalPath(float criticalPath) { this->criticalPath =+ criticalPath; }	//updates critical path of the entire circuit with a new critical path
+	void SetLatency(string latency) { this->latency = stoi(latency); }		//set the int latency value for the circuit
+	void SetIfElseDepth(int depth) { this->ifElseDepth = depth; }			//set the current int depth value for the circuit
+	void SetIfForIncrementer(int newIncrement) { this->ifForIncrementer = newIncrement; }			//set the current incremented # of if/for variables in the circuit
+	void SetIfForLevelOneOrZero(int level, bool boolValue) { this->ifForLevelOneOrZero[level] = boolValue; }			//set the current incremented # of if/for variables in the circuit
 
 
 private:
@@ -61,9 +66,11 @@ private:
 	vector<float> MULDistribution;
 	vector<float> LOGRESDistribution;
 	vector<float> DIVMODDistribution;
+	vector<bool> ifForLevelOneOrZero;
 	float criticalPath;
 	int latency;
 	int ifElseDepth;
+	int ifForIncrementer;
 
 };
 

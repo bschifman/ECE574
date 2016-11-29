@@ -104,6 +104,7 @@ bool Netlist::parseEdge(string inputLine) {
 
 bool Netlist::parseNode(string inputLine) {
 	istringstream inSS(inputLine);       // Input string stream
+	ostringstream tempName;					//output string stream
 	Connector *tempConnector = NULL;
 	Connector *tempConnectorUp = NULL;
 	Connector *tempChkConnector = NULL;
@@ -115,8 +116,9 @@ bool Netlist::parseNode(string inputLine) {
 	string variable1 = "";
 	string variable2 = "";
 	string variable3 = "";
-	string tempName = "";
+//	string tempName = "";
 	bool sign = false;
+	int i = 0;
 
 
 	inSS >> outputEdge;										//records output edge (variable name)of this Node/Logic
@@ -124,39 +126,53 @@ bool Netlist::parseNode(string inputLine) {
 		inSS >> garbage;									//records begining "("
 		inSS >> variable1;									//records the conditional variable for the if
 		inSS >> garbage;									//records ending ")"
-		this->SetIfElseDepth(this->GetIfElseDepth +int(1));
+		this->SetIfElseDepth(this->GetIfElseDepth() +int(1));					//increment the depth of the circuit(teired if/for statements)
+		this->SetIfForIncrementer((this->GetIfForIncrementer() + int(1)));		//count how many if/for statements there have been
+		this->ifForLevelOneOrZero.resize(this->GetIfElseDepth());				//increase the true/false depth vector(if=true, else=false)
+		this->SetIfForLevelOneOrZero(this->GetIfElseDepth(), true);				//set the current depth vector to true for the if statement
 
-		tempConnectorUp = this->findEdge(variable1);			//identify which vector edge is associated with the variable
+		tempConnectorUp = this->findEdge(variable1);							//identify which vector edge is associated with the variable
 		sign |= tempConnectorUp->GetSign();
 
-		tempName = "if";
-		tempName.append("wire");										//using the orginal outputs name, add 'wire' to the end to distinguish them(ie 'a' to 'awire')
-		tempConnector = new Connector(this->edges.at(i)->GetName(), this->edges.at(i)->GetType(), this->edges.at(i)->GetSize(), this->edges.at(i)->GetSign());
+		tempName << "if ";
+		tempName << this->GetIfForIncrementer();								//using the orginal outputs name, add 'wire' to the end to distinguish them(ie 'a' to 'awire')
+		tempConnector = new Connector(tempName.str(), "wire", 1, 0);			//name, type, datawidth, sign
 		this->edges.push_back(tempConnector);
-		this->edges.at(i)->SetName(tempName);
-		this->edges.at(i)->SetType("wire");
-		tempLogic = new Logic("REG", tempConnector, tempConnector->GetSize(), this->edges.at(i)->GetSign());
-		this->nodes.push_back(tempLogic);								//create the new logic element with its output edge, type and datawidth
-		tempConnector->SetParent(tempLogic);
-		tempLogic->AddParent(this->edges.at(i));
-
-		tempLogic = new Logic(type, tempConnectorUp, tempConnector->GetSize(), sign);
+		tempLogic = new Logic("if", tempConnector, tempConnector->GetSize(), sign, this->GetIfElseDepth());			//create new "if" node
 		this->nodes.push_back(tempLogic);
+		tempConnector->SetParent(tempLogic);
+		tempLogic->AddParent(tempConnectorUp);									//add the conditional variable as the parent to the "if" node
+
+		if (this->GetIfElseDepth() > 1) {																			//this checks if this node is part of a if/else/for statement
+			tempLogic->SetIfLevelOneOrZero(this->ifForLevelOneOrZero.at(this->GetIfElseDepth() - (int)1));			//takes the value of whether it is a if(true) or else(false) section
+
+			for (i = 0; i < this->nodes.size(); i++) {
+				if ((this->nodes.at(i)->GetTypeString() == "if") && (this->nodes.at(i)->GetIfElseDepth() == (this->GetIfElseDepth() - (int)1))) {
+					tempLogic->AddParent(this->nodes.at(i)->GetConnector());										//add the "if"'s output edge as the parent to this node
+				}
+			}
+		}
+		
 	}
-	if (!outputEdge.compare("else")) {						//increases depth 
-		this->SetIfElseDepth(this->GetIfElseDepth + int(1));
+	if (!outputEdge.compare("else")) {											//increases depth 
+		this->SetIfElseDepth(this->GetIfElseDepth() + int(1));
+		this->SetIfForLevelOneOrZero(this->GetIfElseDepth(), false);
 	}
 	else if (!outputEdge.compare("for")) {
-		inSS >> garbage;									//records begining "("
+		inSS >> garbage;														//records begining "("
+		//ALL OTHER FOR LOOP INFORMATION
+		this->SetIfElseDepth(this->GetIfElseDepth() + int(1));					//increase circuit depth
 
-		this->SetIfElseDepth(this->GetIfElseDepth + int(1));//increase circuit depth
-
+		//creation of FOR nodes and edges
+		cerr << "Error: We were too lazy to implement the For loops." << endl;
+		return false;
 	}
 	else if (!outputEdge.compare("{")) {
-		//garbage line, shouldn't happen but covered if so, ifElseDepth increased at if/for initialization
+		//garbage line, shouldn't happen but covered if so, ifElseDepth increased at if/for initialization not the "{" symbol
 	}
 	else if (!outputEdge.compare("}")) {					//close of an if/for statement
-		this->SetIfElseDepth(this->GetIfElseDepth - int(1));//decrease circuit depth
+		this->SetIfElseDepth(this->GetIfElseDepth() - int(1));//decrease circuit depth
+		this->ifForLevelOneOrZero.resize(this->GetIfElseDepth());
 	}
 	else {
 		tempConnector = this->findEdge(outputEdge);			//identify which vector edge is associated with the variable
@@ -219,11 +235,11 @@ bool Netlist::parseNode(string inputLine) {
 		if ((!variable2.empty()) && (variable2 != "1")) { sign |= this->findEdge(variable2)->GetSign(); }
 		if ((!variable3.empty()) && (variable3 != "1")) { sign |= this->findEdge(variable3)->GetSign(); }
 
-		if (type != "COMP") { tempLogic = new Logic(type, tempConnector, tempConnector->GetSize(), sign); }	//create the new logic element with its output edge, type and datawidth 
+		if (type != "COMP") { tempLogic = new Logic(type, tempConnector, tempConnector->GetSize(), sign, this->GetIfElseDepth()); }	//create the new logic element with its output edge, type and datawidth 
 		else if (this->findEdge(variable1)->GetSize() > this->findEdge(variable2)->GetSize()) {				//compare the 2 input edges and use the larger datawidth
-			tempLogic = new Logic(type, tempConnector, this->findEdge(variable1)->GetSize(), sign);			//if vector at 0 is bigger, use it
+			tempLogic = new Logic(type, tempConnector, this->findEdge(variable1)->GetSize(), sign, this->GetIfElseDepth());			//if vector at 0 is bigger, use it
 		}
-		else { tempLogic = new Logic(type, tempConnector, this->findEdge(variable2)->GetSize(), sign); }	//if vector at 1 is bigger, use it
+		else { tempLogic = new Logic(type, tempConnector, this->findEdge(variable2)->GetSize(), sign, this->GetIfElseDepth()); }	//if vector at 1 is bigger, use it
 
 		this->nodes.push_back(tempLogic);																	//create new logic/node and add to vector
 		tempConnector->SetParent(tempLogic);
@@ -240,6 +256,17 @@ bool Netlist::parseNode(string inputLine) {
 		if (!variable3.empty() && (variable3 != "1")) {
 			tempConnector = this->findEdge(variable3);
 			if (tempConnector != NULL) { tempConnector->AddChild(tempLogic); tempLogic->AddParent(tempConnector); }
+		}
+		if (this->GetIfElseDepth() > 0) {																	//this checks if this node is part of a if/else/for statement
+			tempLogic->SetIfLevelOneOrZero(this->ifForLevelOneOrZero.at(this->GetIfElseDepth()));			//takes the value of whether it is a if(true) or else(false) section
+
+			for (i = 0; i < this->nodes.size(); i++) {
+				if ((this->nodes.at(i)->GetTypeString() == "if") && (this->nodes.at(i)->GetIfElseDepth() == this->GetIfElseDepth())) {
+					//this is same level as the "if" statement at this point, bind it as an input
+
+					tempLogic->AddParent(this->nodes.at(i)->GetConnector());								//add the "if"'s output edge as the parent to this node
+				}
+			}
 		}
 	}
 
@@ -276,7 +303,7 @@ void Netlist::outputToReg() {
 				this->edges.push_back(tempConnector);
 				this->edges.at(i)->SetName(tempName);
 				this->edges.at(i)->SetType("wire");
-				tempLogic = new Logic("REG", tempConnector, tempConnector->GetSize(), this->edges.at(i)->GetSign());
+				tempLogic = new Logic("REG", tempConnector, tempConnector->GetSize(), this->edges.at(i)->GetSign(), this->GetIfElseDepth());
 				this->nodes.push_back(tempLogic);								//create the new logic element with its output edge, type and datawidth
 				tempConnector->SetParent(tempLogic);
 				tempLogic->AddParent(this->edges.at(i));
@@ -353,7 +380,11 @@ string Netlist::outputEdgeLine(string type, unsigned int datawidth) {	//formats 
 	for (i = 0; i < this->edges.size(); i++) {							//lists all of the inputs into the module prototype
 		if ((this->edges.at(i)->GetType() == type) && ((unsigned int)this->edges.at(i)->GetSize() == datawidth)) {
 			if (checked == false) {
-				outSS << "\t" << outType << " ";
+				outSS << "\t";
+				if ((outType == "output") || (outType == "variable")) {	//if the edge is an "output" or a "variable", turn it into a "reg" as well
+					outSS << "reg ";
+				}
+				outSS << outType << " ";
 				if (datawidth > 1) {
 					outSS << "[" << (datawidth - 1) << ":0] ";			//declare the datawidth array
 				}
@@ -871,6 +902,160 @@ Netlist::Netlist(void) {															//CONSTRUCTOR...
 	this->criticalPath = 0; 
 	this->ifElseDepth = 0;
 }
+
+
+bool Netlist::outputHLSMModule(string outputFilename) {										//write all current data into a verilog module
+	ofstream outFS;																		// Output file stream
+	string truncatedFilename = "";
+	unsigned int i = 0;
+
+	outFS.open(outputFilename.c_str());													// Open file
+
+	if (!outFS.is_open()) {																//check if it does not build
+		cout << "Could not create or open file " << outputFilename << "." << endl;
+		outFS.close();																	//close the output file
+		return false;
+	}
+	else if (outFS.is_open()) {//if file is opens
+							   //		cout << "Writing to file " << outputFilename << "..." << endl;					//Ben hates helpful comments, removed at his request, we'll be book burning next.
+		truncatedFilename = outputFilename.substr(0, outputFilename.find("."));			//removes everything after the . of file name to make module name
+		outFS << "`timescale 1ns / 1ps" << endl << endl;								//add time scale to the top of the file
+		outFS << "module " << "HLSM " << "(Clk, Rst, Start, Done" << endl;
+
+		for (i = 0; i < this->edges.size(); i++) {										//lists all of the inputs and outputs names into the module prototype
+			if ((this->edges.at(i)->GetType() == "input") || (this->edges.at(i)->GetType() == "output")) {
+				outFS << ", " << this->edges.at(i)->GetName();
+			}
+		}
+		outFS << ");" << endl;
+
+		outFS << "\t" << "input Clk, Rst, Start;" << endl;
+		outFS << "\t" << "output reg Done;" << endl;
+
+		for (i = 0; i < 7; i++) { outFS << this->outputEdgeLine("input", (1 << i)); }					//output all input variables
+		outFS << endl;
+		for (i = 0; i < 7; i++) { outFS << this->outputEdgeLine("output", (1 << i)); }					//output all output variables
+		outFS << endl;
+		for (i = 0; i < 7; i++) { outFS << this->outputEdgeLine("wire", (1 << i)); }					//output all wire variables
+		for (i = 0; i < 7; i++) { outFS << this->outputEdgeLine("register", (1 << i)); }				//output all register variables as wire variables
+		for (i = 0; i < 7; i++) { outFS << this->outputEdgeLine("variable", (1 << i)); }				//output all variable variables as variables
+		
+		outFS << "\t" << "reg State, NextState;" << endl;												//might need a bit width for State...probably use
+		outFS << endl;
+		outFS << "\t" << "always @(State) begin" << endl;
+		outFS << "\t" << "\t" << "case (State)" << endl;
+		outFS << "\t" << "\t" << "\t" << "0: begin" << endl;
+		outFS << "\t" << "\t" << "\t" << "\t" << "if (Start == 1)" << endl;
+		outFS << "\t" << "\t" << "\t" << "\t" << "\t" << "NextState <= 1" << endl;
+		outFS << "\t" << "\t" << "\t" << "\t" << "else" << endl;
+		outFS << "\t" << "\t" << "\t" << "\t" << "\t" << "NextState <= 0" << endl;
+		outFS << "\t" << "\t" << "\t" << "end" << endl;
+
+		for (i = 0; i < this->nodes.size(); i++) { outFS << this->outputNodeLine(i) << endl; }			//NEEDS FIXING!
+
+		outFS << "\t" << "\t" << "endcase" << endl << endl;
+		outFS << "\t" << "end" << endl << endl;
+
+		outFS << "\t" << "always @(posedge Clk) begin" << endl;
+		outFS << "\t" << "\t" << "if (Rst == 1 )" << endl;
+		outFS << "\t" << "\t" << "\t" << "State <= 0" << endl;											//state 0 is wait state
+		outFS << "\t" << "\t" << "else" << endl;
+		outFS << "\t" << "\t" << "\t" << "State <= NextState" << endl;
+		outFS << "\t" << "end" << endl;
+		outFS << "endmodule" << endl;
+	}
+
+
+	outFS.close();		//close the output file
+	return true;
+}
+
+
+string Netlist::outputCaseLine(int nodeNumber) {
+	Connector *tempConnector = this->nodes.at(nodeNumber)->GetConnector();			//c = a + b this is the "c" element
+	Connector *tempParent0 = NULL;													//c = a + b this is the "a" element
+	Connector *tempParent1 = NULL;
+	Connector *tempParent2 = NULL;
+	Connector *tempParent3 = NULL;
+	string outputLine = "";
+	string tempString = this->nodes.at(nodeNumber)->GetTypeString();
+	ostringstream outSS;
+	unsigned int i = 0;
+	unsigned int j = 0;
+	/*
+	if ((tempString != "REG") && (tempString != "DEC") && (tempString != "INC")) {	//if it's not a any of these modules then it will have a "b" element of c = a + b
+		tempParent1 = this->nodes.at(nodeNumber)->GetParents().at(1);
+	}
+	if (tempString == "MUX2x1") {													//if it is a MUX then there will be another element
+		tempParent2 = this->nodes.at(nodeNumber)->GetParents().at(2);
+	}
+	*/
+	for (i = 0; i < this->nodes.at(nodeNumber)->GetParents().size(); i++) {
+		switch (i) {
+		case 0: tempParent0 = this->nodes.at(nodeNumber)->GetParents().at(0);
+			break;
+		case 1: tempParent1 = this->nodes.at(nodeNumber)->GetParents().at(1);
+			break;
+		case 2: tempParent2 = this->nodes.at(nodeNumber)->GetParents().at(2);
+			break;
+		case 3: tempParent3 = this->nodes.at(nodeNumber)->GetParents().at(3);
+			break;
+		}
+	}
+
+
+
+	outSS << "\t";
+	if ((tempString == "COMP") || (tempString == "DIV") || (tempString == "MOD") || (tempString == "SHR")) {
+		if (this->nodes.at(nodeNumber)->GetSign() == 1) { outSS << "S"; }			//if module is signed, mark as such
+	}
+	outSS << tempString;
+	outSS << "\t\t" << "#(.DATAWIDTH(";
+	if (tempString == "COMP") {
+		if (this->nodes.at(nodeNumber)->GetParents().at(0)->GetSize() > this->nodes.at(nodeNumber)->GetParents().at(1)->GetSize()) {	//compare the 2 imput edges and use the larger datawidth
+			outSS << this->nodes.at(nodeNumber)->GetParents().at(0)->GetSize();		//if vector at 0 is bigger, use it
+		}
+		else { outSS << this->nodes.at(nodeNumber)->GetParents().at(1)->GetSize(); }	//if vector at 1 is bigger, use it
+	}
+	else { outSS << this->nodes.at(nodeNumber)->GetConnector()->GetSize(); }		//if node is not a comparator, get datawidth from its output edge
+
+	outSS << "))" << "\t\t";
+	for (i = 0; i < (unsigned)nodeNumber; i++) {
+		if (tempString == this->nodes.at(i)->GetTypeString()) { j++; }	//count how many of this module already exist
+	}
+	outSS << tempString << "_" << (j) << " (";
+	ostringstream nameSS;
+	nameSS << "_" << (j);
+	this->nodes.at(i)->SetName(nameSS.str());
+
+	if (tempString == "REG") {											//if the type is a REG then it will only have a single input and output
+
+		outSS << CreateInputName(this->nodes.at(nodeNumber), tempParent0);
+		outSS << ", clk, rst, ";
+		outSS << tempConnector->GetName() << ")";
+	}
+	else if ((tempString == "ADD") || (tempString == "SUB") || (tempString == "MUL") || (tempString == "DIV") || (tempString == "MOD")) {	//if it is one of these datatypes then it is the standard format a = b + c
+		outSS << CreateInputName(this->nodes.at(nodeNumber), tempParent0) << ", " << CreateInputName(this->nodes.at(nodeNumber), tempParent1) << ", " << tempConnector->GetName() << ")";
+	}
+
+	else if ((tempString == "SHR") || (tempString == "SHL")) {		//for the shifters we need the second element aka the shift ammount to only be unsigned padded
+		outSS << CreateInputName(this->nodes.at(nodeNumber), tempParent0) << ", " << CreateShiftName(this->nodes.at(nodeNumber), tempParent1) << ", " << tempConnector->GetName() << ")";
+	}
+
+	else if (tempString == "MUX2x1") { outSS << CreateInputName(this->nodes.at(nodeNumber), tempParent1) << ", " << CreateInputName(this->nodes.at(nodeNumber), tempParent2) << ", " << tempParent0->GetName() << ", " << tempConnector->GetName() << ")"; }
+	else if ((tempString == "INC") || (tempString == "DEC")) { outSS << CreateInputName(this->nodes.at(nodeNumber), tempParent0) << ", " << tempConnector->GetName() << ")"; }
+	else if (tempString == "COMP") {	//depending on logic type (<,>,==) it will label output to proper channel
+		outSS << ".a(" << CreateCOMPInputName(tempParent0, tempParent1) << "), .b(" << CreateCOMPInputName(tempParent1, tempParent0) << "), ";	//Comps are stupid, they have their own function for creating names
+		if (this->nodes.at(nodeNumber)->GetOutType() == ">") { outSS << ".gt("; }
+		if (this->nodes.at(nodeNumber)->GetOutType() == "<") { outSS << ".lt("; }
+		if (this->nodes.at(nodeNumber)->GetOutType() == "==") { outSS << ".eq("; }
+		outSS << tempConnector->GetName() << "))";
+	}
+
+	outSS << ";";
+	return outSS.str();
+}
+
 
 Netlist::~Netlist(void) {															//DeSTRUCTOR!!!!!!!!~!~!
 	unsigned int i = 0;
