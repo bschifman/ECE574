@@ -23,7 +23,7 @@ int main(int argc, char **argv) {
 		}
 		cout << filename.substr(filename.rfind('\\')+1) << " file successfully parsed." << endl;	//reports what file was parsed
 		cout << "No output filename detected, will export to hlsynDefault.txt ..." << endl;
-		if (!n1.outputModule("hlsynDefault.txt")) {				//if there is no specified output filename, generate a default output file
+		if (!n1.outputHLSMModule("hlsynDefault.txt")) {				//if there is no specified output filename, generate a default output file
 			cerr << "Error: Unable to output file hlsynDefault.txt." << endl;
 			return -1;
 		}
@@ -39,7 +39,7 @@ int main(int argc, char **argv) {
 		
 //		cout << filename.substr(filename.rfind('\\') + 1) << " file successfully parsed." << endl;
 		filename2 = argv[3];
-		if (!n1.outputModule(filename2)) {
+		if (!n1.outputHLSMModule(filename2)) {
 			
 			filename2 = filename2.substr(filename2.rfind('\\') + 1);
 			cerr << "Error: Unable to output file " << filename2 << endl;

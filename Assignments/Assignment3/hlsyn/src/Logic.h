@@ -21,7 +21,7 @@ class Logic				//nodes, will probably need their inputs as well to create the ve
 {
 public:
 	Logic(void);																//default constructor
-	Logic(string type, Connector* logicOutput, int dataWidth, bool sign);		//overload constructor
+	Logic(string type, Connector* logicOutput, int dataWidth, bool sign, int depth);		//overload constructor
 	~Logic(void);																//destructor
 
 	//Setters
@@ -38,6 +38,7 @@ public:
 	void SetNodeASAP(int inputTime) { this->asapt = inputTime; }					//set ASAP time
 	void SetNodeFDS(int inputTime) { this->fdst = inputTime; }						//set FDS time
 	void SetIfElseDepth(int depth) { this->ifElseDepth = depth; }					//set if else circuit depth
+	void SetIfLevelOneOrZero(bool boolValue) { this->ifLevelOneOrZero = boolValue; }	//set the current if/else bool value of the circuit
 
 	//Getters
 	Connector* GetConnector() { return this->logicOutput; }						//get output(child) edge of this node(ie the output wire)
@@ -55,6 +56,7 @@ public:
 	int GetNodeFDS() { return this->fdst; }										//get FDS time
 	int GetTypeScheduleDelay() { return this->scheduleDelayValue; }				//get schedule value for this node type
 	int GetIfElseDepth() { return this->ifElseDepth; }							//get if else circuit depth this node type
+	bool GetIfLevelOneOrZero() { return this->ifLevelOneOrZero; }				//get the current if/else bool value of the circuit
 		
 private:
 
@@ -71,6 +73,7 @@ private:
 	int dataWidth;
 	int ifElseDepth;						//depth of circuit
 	bool sign;
+	bool ifLevelOneOrZero;					//records if the node is part of the if(true) component or the else(false) component
 	float delay;							//the delay of this logic item
 			
 };

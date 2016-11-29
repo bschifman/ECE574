@@ -21,10 +21,11 @@ Logic::Logic(void) {
 	this->SetNodeASAP(int(0));
 	this->SetNodeALAP(int(0));
 	this->SetNodeFDS(int(0));
+	this->SetIfLevelOneOrZero(true);
 
 }
 
-Logic::Logic(string type, Connector *logicOutput, int dataWidth, bool sign) {	//overload constructor
+Logic::Logic(string type, Connector *logicOutput, int dataWidth, bool sign, int depth) {	//overload constructor
 	this->SetType(type);
 	this->SetDataWidth(dataWidth);
 	this->SetConnector(logicOutput);
@@ -33,6 +34,8 @@ Logic::Logic(string type, Connector *logicOutput, int dataWidth, bool sign) {	//
 	this->SetNodeASAP(int(0));
 	this->SetNodeALAP(int(0));
 	this->SetNodeFDS(int(0));
+	this->SetIfElseDepth(depth);
+	this->SetIfLevelOneOrZero(true);
 }
 
 Logic::~Logic(void) {
@@ -54,6 +57,8 @@ void Logic::SetType(string inputType) {
 	else if (inputType == "MOD") { this->type = 10; }
 	else if (inputType == "INC") { this->type = 11; }
 	else if (inputType == "DEC") { this->type = 12; }
+	else if (inputType == "if") { this->type = 13; }
+	else if (inputType == "for") { this->type = 14; }
 	else { this->type = 0; }
 
 	return;
@@ -73,6 +78,8 @@ string Logic::GetTypeString() {
 	else if (this->type == 10) { return "MOD"; }
 	else if (this->type == 11) { return "INC"; }
 	else if (this->type == 12) { return "DEC"; }
+	else if (this->type == 13) { return "if"; }
+	else if (this->type == 14) { return "for"; }
 	else { return NULL; }
 }
 
@@ -166,6 +173,14 @@ void Logic::SetInherentDelay() {
 		break;
 	case(12):
 		this->delay = decArray[this->dataWidth];
+		this->scheduleDelayValue = 1;
+		break;
+	case(13):
+		this->delay = 0;
+		this->scheduleDelayValue = 1;
+		break;
+	case(14):
+		this->delay = 0;
 		this->scheduleDelayValue = 1;
 		break;
 	default:
