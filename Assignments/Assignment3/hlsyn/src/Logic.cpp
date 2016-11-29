@@ -193,15 +193,17 @@ void Logic::SetInherentDelay() {
 	return;
 }
 
-vector <Logic*> GetParentNodes(Logic* tempLogic) {
+vector <Logic*> Logic::GetParentNodes() {
 	vector<Connector*> tempConnectors;
 	vector<Logic*> tempParentNodes;
 	int i = 0;
 
-	tempConnectors = tempLogic->GetParents();
+	tempConnectors = this->GetParents();
 	for (i = 0; i < tempConnectors.size(); i++) {
-		if (tempConnectors.at(i)->GetParent()) {}
+		if (tempConnectors.at(i)->GetParent() != NULL) {
+			tempParentNodes.push_back(tempConnectors.at(i)->GetParent());
+		}
 	}
-	return tempParentNodes;
 
+	return tempParentNodes;
 }

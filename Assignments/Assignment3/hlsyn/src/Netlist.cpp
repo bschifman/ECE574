@@ -821,6 +821,9 @@ bool Netlist::CalculateForcesFDS() {
 	int i = 0;
 	int j = 0;
 	int k = 0;
+	int minNodeNumber = -1;
+	int minTimeSlot = -1;
+	float minVal = 100;
 	bool check = true;
 	vector<float> currentDistribution;
 	vector<vector<float>> selfForces;													//create vectors to become arrays of the forces
@@ -868,10 +871,10 @@ bool Netlist::CalculateForcesFDS() {
 		for (j = 1; j < selfForces[i].size(); j++) {
 			for (k = 1; k <= this->latency; k++) {
 				if (k == j) {
-					selfForces[i][j] = selfForces[i][j] + currentDistribution[j]*(1- this->nodeProbabilityArray[i][j]);
+					selfForces[i][j] = selfForces[i][j] + currentDistribution[j]*(1- this->nodeProbabilityArray[i][j]);		//calculate the self force if it is in its time slot
 				}
 				else {
-					selfForces[i][j] = selfForces[i][j] + currentDistribution[j] * (0 - this->nodeProbabilityArray[i][j]);
+					selfForces[i][j] = selfForces[i][j] + currentDistribution[j] * (0 - this->nodeProbabilityArray[i][j]);	//calculate the self forces not in the time slot	
 				}
 			}
 		}
@@ -881,7 +884,7 @@ bool Netlist::CalculateForcesFDS() {
 			tempChildNodes = this->nodes.at(i)->GetConnector()->GetChildVector();
 			if (tempChildNodes.size() != 0) {																			//If you have any immediate children nodes then continue
 				for (k = 0; k < tempChildNodes.size(); k++) {															//Loop through all of the child nodes
-					if ((j + this->nodes.at(i)->GetTypeScheduleDelay()) == tempChildNodes.at(k)->GetNodeALAP()) {		//If child node has an ALAP time equal to the node time + 1 then it is forced, add it
+					if ((j + this->nodes.at(i)->GetTypeScheduleDelay()) == tempChildNodes.at(k)->GetNodeALAP()) {		//If child node has an ALAP time equal to the node time + delay then it is forced, add it
 						successorForces[i][j] += selfForces[(FindNodeNumber(tempChildNodes.at(k)))][j + this->nodes.at(i)->GetTypeScheduleDelay()];		//set the succesor forces values
 					}
 				}
@@ -889,22 +892,36 @@ bool Netlist::CalculateForcesFDS() {
 		}
 		
 		//CALCULATE PREDECESSOR FORCES
-		/*for (j = 2; j < successorForces[i].size(); j++) {
-			//tempParentNodes = this->nodes.at(i)->GetParents();
-			if (tempChildNodes.size() != 0) {																			//If you have any immediate children nodes then continue
-				for (k = 0; k < tempChildNodes.size(); k++) {															//Loop through all of the child nodes
-					if ((j + this->nodes.at(i)->GetTypeScheduleDelay()) == tempChildNodes.at(k)->GetNodeALAP()) {		//If child node has an ALAP time equal to the node time + 1 then it is forced, add it
-						successorForces[i][j] += selfForces[(FindNodeNumber(tempChildNodes.at(k)))][j + this->nodes.at(i)->GetTypeScheduleDelay()];		//set the succesor forces values
+		for (j = 2; j < successorForces[i].size(); j++) {
+			tempParentNodes = this->nodes.at(i)->GetParentNodes();
+			if (tempParentNodes.size() != 0) {																			//If you have any immediate Parent nodes then continue
+				for (k = 0; k < tempParentNodes.size(); k++) {															//Loop through all of the Parent nodes
+					if ((j - this->nodes.at(i)->GetTypeScheduleDelay()) == tempParentNodes.at(k)->GetNodeASAP()) {		//If Parent node has an ASAP time equal to the node time - delay then it is forced, add it
+						predecessorForces[i][j] += selfForces[(FindNodeNumber(tempParentNodes.at(k)))][j - this->nodes.at(i)->GetTypeScheduleDelay()];		//set the predecessor forces values
 					}
 				}
 			}
-		}*/
+		}
 
 		//CALCULATE TOTAL FORCES
+		for (j = 1; j < totalForces.size(); j++) {													//Loop through all of the times
+			totalForces[i][j] = selfForces[i][j] + successorForces[i][j] + predecessorForces[i][j];	//Calculate the total force for each node at each time
+			if ((totalForces[i][j] < minVal) && (this->nodes.at(i)->GetNodeFDS() != 0)) {			//Look for the lowest value in the total forces matrix that doesn't already have a force
+				minVal = totalForces[i][j];				//Keeps track of the minVal of the total forces matrix
+				minNodeNumber = i;						//Keeps track of the node to lock in to place
+				minTimeSlot = j;						//Keeps track of the time of the node to schedule
+			}
+		}
 
+
+		
 	}
 
-
+	if (this->nodes.at(i)->GetNodeFDS() != 0) {					//After the total forces have been calculated, then check if the node doesn't already have a schedule time
+		this->nodes.at(minNodeNumber)->SetNodeFDS(minTimeSlot);	//Set the FDS of the node with the min val in the total force matrix
+		this->nodes.at(minNodeNumber)->SetNodeALAP(minTimeSlot);//Set the ALAP of the node with the min val in the total force matrix 
+		this->nodes.at(minNodeNumber)->SetNodeASAP(minTimeSlot);//Set the ASAP of the node with the min val in the total force matrix
+	}
 	return check;		//might need checks
 }
 
@@ -913,6 +930,12 @@ bool Netlist::CalculateForcesFDS() {
 bool Netlist::CalculateFDS() {
 	int i = 0;
 	bool check = true;
+
+	for (i = 0; i < this->nodes.size(); i++) {		//Calculate the FDS for all of the nodes
+		if (!CalculateForcesFDS()) {				//If you screwed up...
+			check = false;
+		}
+	}
 
 	return check;		//might need checks
 }
