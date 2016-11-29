@@ -19,7 +19,6 @@ Connector::Connector(string name, string type, int dataWidth, bool sign) {		//ov
 	this->name = name;
 	this->type = type;
 	this->sign = sign;
-	this->parent = NULL;
 	this->delay = 0;
 	return;
 }

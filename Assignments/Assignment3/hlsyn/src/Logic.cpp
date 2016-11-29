@@ -197,11 +197,12 @@ vector <Logic*> Logic::GetParentNodes() {
 	vector<Connector*> tempConnectors;
 	vector<Logic*> tempParentNodes;
 	int i = 0;
+	int j = 0;
 
 	tempConnectors = this->GetParents();
 	for (i = 0; i < tempConnectors.size(); i++) {
-		if (tempConnectors.at(i)->GetParent() != NULL) {
-			tempParentNodes.push_back(tempConnectors.at(i)->GetParent());
+		for (j = 0; j < tempConnectors.at(i)->GetParent().size(); j++ ) {
+			tempParentNodes.push_back(tempConnectors.at(i)->GetParent().at(j));
 		}
 	}
 

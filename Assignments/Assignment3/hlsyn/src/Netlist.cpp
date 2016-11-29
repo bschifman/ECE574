@@ -63,7 +63,7 @@ bool Netlist::parseFile(string filename, string latency) {
 	}
 	//this->outputToReg();			//I dont think we need output to register for assignment 3
 	this->SetLatency(latency);
-	this->CalculateASAP();
+	this->CalculateFDS();
 
 
 	inFile.close();//close the input file
@@ -140,8 +140,9 @@ bool Netlist::parseNode(string inputLine) {
 		this->edges.push_back(tempConnector);
 		tempLogic = new Logic("if", tempConnector, tempConnector->GetSize(), sign, this->GetIfElseDepth());			//create new "if" node
 		this->nodes.push_back(tempLogic);
-		tempConnector->SetParent(tempLogic);
+		tempConnector->AddParent(tempLogic);
 		tempLogic->AddParent(tempConnectorUp);									//add the conditional variable as the parent to the "if" node
+		tempConnectorUp->AddChild(tempLogic);
 
 		if (this->GetIfElseDepth() > 1) {																			//this checks if this node is part of a if/else/for statement
 			tempLogic->SetIfLevelOneOrZero(this->ifForLevelOneOrZero.at(this->GetIfElseDepth() - (int)1));			//takes the value of whether it is a if(true) or else(false) section
@@ -242,7 +243,7 @@ bool Netlist::parseNode(string inputLine) {
 		else { tempLogic = new Logic(type, tempConnector, this->findEdge(variable2)->GetSize(), sign, this->GetIfElseDepth()); }	//if vector at 1 is bigger, use it
 
 		this->nodes.push_back(tempLogic);																	//create new logic/node and add to vector
-		tempConnector->SetParent(tempLogic);
+		tempConnector->AddParent(tempLogic);
 		if (tempLogic->GetTypeString() != "REG") { tempLogic->SetOutType(logicSymbol); }					//if the new node is a comparator, record which type it is
 
 		if (!variable1.empty() && (variable1 != "1")) {
@@ -265,6 +266,7 @@ bool Netlist::parseNode(string inputLine) {
 					//this is same level as the "if" statement at this point, bind it as an input
 
 					tempLogic->AddParent(this->nodes.at(i)->GetConnector());								//add the "if"'s output edge as the parent to this node
+					this->nodes.at(i)->GetConnector()->AddChild(tempLogic);
 				}
 			}
 		}
@@ -289,28 +291,6 @@ Connector *Netlist::findEdge(string edgeName) {	//finds an edge object in the ve
 }
 
 void Netlist::outputToReg() {		
-	Connector *tempConnector = NULL;
-	Logic *tempLogic = NULL;
-	string tempName = "";
-	unsigned int i = 0;
-
-	for (i = 0; i < this->edges.size(); i++) {									//cycle through all of the edges 
-		if (this->edges.at(i)->GetType() == "output") {							//if one of the edges is an output check to see if it is associated with a REG
-			if (this->edges.at(i)->GetParent()->GetTypeString() != "REG") {		//if it is not associated with a REG, add a register in before the output edge
-				tempName = this->edges.at(i)->GetName();
-				tempName.append("wire");										//using the orginal outputs name, add 'wire' to the end to distinguish them(ie 'a' to 'awire')
-				tempConnector = new Connector(this->edges.at(i)->GetName(), this->edges.at(i)->GetType(), this->edges.at(i)->GetSize(), this->edges.at(i)->GetSign());
-				this->edges.push_back(tempConnector);
-				this->edges.at(i)->SetName(tempName);
-				this->edges.at(i)->SetType("wire");
-				tempLogic = new Logic("REG", tempConnector, tempConnector->GetSize(), this->edges.at(i)->GetSign(), this->GetIfElseDepth());
-				this->nodes.push_back(tempLogic);								//create the new logic element with its output edge, type and datawidth
-				tempConnector->SetParent(tempLogic);
-				tempLogic->AddParent(this->edges.at(i));
-			}
-		}
-	}
-
 
 	return;
 }
@@ -640,7 +620,7 @@ bool Netlist::CalculateASAP() {
 	}
 
 	for (i = 0; i < this->edges.size(); i++) {				//set the base point for checking the ASAP
-		if (this->edges.at(i)->GetParent() == NULL) {
+		if (this->edges.at(i)->GetParent().size() == int(0)) {
 			this->edges.at(i)->SetEdgeASAP(0);
 		}
 	}
@@ -678,13 +658,15 @@ bool Netlist::CheckIfASAPDone() {
 
 	for (i = 0; i < this->edges.size(); i++) {
 		if (this->edges.at(i)->GetEdgeASAP() == (-9)) {		//this means one of the edges didnt get checked during the schedule
-			check = false;
+			cerr << "ERROR: ASAP edges not all calculated.";
+			return false;
 		}
 	}
 
 	for (i = 0; i < this->nodes.size(); i++) {
 		if (this->nodes.at(i)->GetNodeASAP() == (-9)) {		//this means one of the nodes didnt get checked during the schedule
-			check = false;
+			cerr << "ERROR: ASAP nodes not all calculated.";
+			return false;
 		}
 	}
 
@@ -696,7 +678,7 @@ bool Netlist::CheckIfASAPDone() {
 bool Netlist::CalculateALAP() {
 	int i = 0;
 	int j = 0;
-	//	int k = 0;
+	int k = 0;
 	int currentLatency = 0;
 	int tempNodeDelay = 0;
 
@@ -715,16 +697,16 @@ bool Netlist::CalculateALAP() {
 	for (currentLatency = this->GetLatency(); currentLatency > 0; currentLatency--) {						//cycle through each latency timeframe
 		for (i = 0; i < this->edges.size(); i++) {															//look at all the edges for this time frame
 			if (this->edges.at(i)->GetEdgeALAP() == currentLatency) {										//only evaluate edges active during this time frame
-				if (this->edges.at(i)->GetParent() != NULL) {												//check if this edge has a parent node
-					if (this->edges.at(i)->GetParent()->GetNodeALAP() > currentLatency) {					//if the node value is higher value than this time frame update it
-						tempNodeDelay = this->edges.at(i)->GetParent()->GetTypeScheduleDelay();				//save this node type scheduleing inherihent delay(ie MUL is 2, DIV/MOD is 3, all other types is 1)
+				for (k = 0; k < this->edges.at(i)->GetParent().size(); k++ ) {										//check if this edge has a parent node
+					if (this->edges.at(i)->GetParent().at(k)->GetNodeALAP() > currentLatency) {					//if the node value is higher value than this time frame update it
+						tempNodeDelay = this->edges.at(i)->GetParent().at(k)->GetTypeScheduleDelay();				//save this node type scheduleing inherihent delay(ie MUL is 2, DIV/MOD is 3, all other types is 1)
 						if ((currentLatency - tempNodeDelay) < 0) {
 							cout << "ERROR:  User input Schedule bounds too small for input file." << endl;
 							return false;
 						}
-						this->edges.at(i)->GetParent()->SetNodeALAP(currentLatency);						//update parent node ALAP value
-						for (j = 0; j < this->edges.at(i)->GetParent()->GetParents().size(); j++ ) {		//make sure the current upstream nodes have a parent edges
-							this->edges.at(i)->GetParent()->GetParents().at(j)->SetEdgeALAP(currentLatency - tempNodeDelay);	//update the parent edge of the current node to a new ALAP value
+						this->edges.at(i)->GetParent().at(k)->SetNodeALAP(currentLatency);						//update parent node ALAP value
+						for (j = 0; j < this->edges.at(i)->GetParent().at(k)->GetParents().size(); j++ ) {		//make sure the current upstream nodes have a parent edges
+							this->edges.at(i)->GetParent().at(k)->GetParents().at(j)->SetEdgeALAP(currentLatency - tempNodeDelay);	//update the parent edge of the current node to a new ALAP value
 						}
 					}
 				}
@@ -745,15 +727,15 @@ bool Netlist::CheckIfALAPDone() {
 
 	for (i = 0; i < this->edges.size(); i++) {
 		if (this->edges.at(i)->GetEdgeALAP() == ((this->GetLatency()) + 1)) {	//this means one of the edges didnt get checked during the schedule
-			check = false;
-			break;
+			cerr << "ERROR: ALAP edges not all calculated.";
+			return false;
 		}
 	}
 
 	for (i = 0; i < this->nodes.size(); i++) {
 		if (this->nodes.at(i)->GetNodeALAP() == ((this->GetLatency()) + 1)) {	//this means one of the nodes didnt get checked during the schedule
-			check = false;
-			break;
+			cerr << "ERROR: ALAP nodes not all calculated.";
+			return false;
 		}
 	}
 
@@ -834,6 +816,8 @@ bool Netlist::CalculateForcesFDS() {
 	vector<Logic*> tempChildNodes;
 	vector<Logic*> tempParentNodes;
 
+	this->CalculateProbabilityFDS();
+
 	selfForces.resize(this->nodes.size());												
 	successorForces.resize(this->nodes.size());
 	predecessorForces.resize(this->nodes.size());
@@ -907,7 +891,7 @@ bool Netlist::CalculateForcesFDS() {
 		//CALCULATE TOTAL FORCES
 		for (j = 1; j < totalForces.size(); j++) {													//Loop through all of the times
 			totalForces[i][j] = selfForces[i][j] + successorForces[i][j] + predecessorForces[i][j];	//Calculate the total force for each node at each time
-			if ((totalForces[i][j] < minVal) && (this->nodes.at(i)->GetNodeFDS() != 0)) {			//Look for the lowest value in the total forces matrix that doesn't already have a force
+			if ((totalForces[i][j] < minVal) && (this->nodes.at(i)->GetNodeFDS() == 0)) {			//Look for the lowest value in the total forces matrix that doesn't already have a force
 				minVal = totalForces[i][j];				//Keeps track of the minVal of the total forces matrix
 				minNodeNumber = i;						//Keeps track of the node to lock in to place
 				minTimeSlot = j;						//Keeps track of the time of the node to schedule
@@ -916,10 +900,10 @@ bool Netlist::CalculateForcesFDS() {
 
 	}
 
-	if (this->nodes.at(i)->GetNodeFDS() != 0) {					//After the total forces have been calculated, then check if the node doesn't already have a schedule time
-		this->nodes.at(minNodeNumber)->SetNodeFDS(minTimeSlot);	//Set the FDS of the node with the min val in the total force matrix
-		this->nodes.at(minNodeNumber)->SetNodeALAP(minTimeSlot);//Set the ALAP of the node with the min val in the total force matrix 
-		this->nodes.at(minNodeNumber)->SetNodeASAP(minTimeSlot);//Set the ASAP of the node with the min val in the total force matrix
+	if (this->nodes.at(minNodeNumber)->GetNodeFDS() == 0) {					//After the total forces have been calculated, then check if the node doesn't already have a schedule time
+		this->nodes.at(minNodeNumber)->SetNodeFDS(minTimeSlot);				//Set the FDS of the node with the min val in the total force matrix
+		this->nodes.at(minNodeNumber)->SetNodeALAP(minTimeSlot);			//Set the ALAP of the node with the min val in the total force matrix 
+		this->nodes.at(minNodeNumber)->SetNodeASAP(minTimeSlot);			//Set the ASAP of the node with the min val in the total force matrix
 	}
 	return check;		//might need checks
 }
@@ -929,6 +913,9 @@ bool Netlist::CalculateForcesFDS() {
 bool Netlist::CalculateFDS() {
 	int i = 0;
 	bool check = true;
+
+	this->CalculateASAP();
+	this->CalculateALAP();
 
 	for (i = 0; i < this->nodes.size(); i++) {		//Calculate the FDS for all of the nodes
 		if (!CalculateForcesFDS()) {				//If you screwed up...
