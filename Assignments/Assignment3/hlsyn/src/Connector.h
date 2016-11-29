@@ -29,7 +29,6 @@ public:
 	void SetSize(int size) { this->size = size; }						//set the bit width of this edge(ie 1,2,4,8,16,32,64, etc)
 	void SetSign(bool sign) { this->sign = sign; }						//set whether this edge is a signed or unsigned datapath
 	void SetVisited(bool visited) { this->visited = visited; }			//set if this edge has been visited in a search algorithm
-	void SetDelay(float delay) { this->delay = delay; }					//set the delay of the critical path at this edge
 	void AddParent(Logic* parentToAdd) { this->parent.push_back(parentToAdd); }	//set this edges parent node(this is a directed graph)
 	void AddChild(Logic* childToAdd) { this->children.push_back(childToAdd); }	//add a child node to this edge(this is a directed graph)
 	void SetEdgeALAP(int inputTime) { this->alapt = inputTime; }					//set ALAP time
@@ -43,7 +42,6 @@ public:
 	int GetSize() { return this->size; }			//get the bit width of this edge(ie 1,2,4,8,16,32,64, etc)
 	bool GetSign() { return this->sign; }			//get whether this edge is a signed or unsigned datapath
 	bool GetVisited() { return this->visited; }		//check to see if this edge has been visited in a search algorithm
-	float GetDelay() { return this->delay; }		//get the delay of the critical path at this edge
 	int GetEdgeALAP() { return this->alapt; }										//get ALAP time
 	int GetEdgeASAP() { return this->asapt; }										//get ASAP time
 
@@ -53,7 +51,6 @@ private:
 	vector<Logic*> children;	//children nodes this edge is connected to
 	string type;				//type of connector (input, output, wire, register)
 	string name;				//name of the variable
-	float delay;				//delay to this point
 	int asapt;								//sets the ASAP time
 	int alapt;								//sets the ALAP time
 	int size;					//data width

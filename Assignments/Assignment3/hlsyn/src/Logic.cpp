@@ -29,7 +29,6 @@ Logic::Logic(string type, Connector *logicOutput, int dataWidth, bool sign, int 
 	this->SetType(type);
 	this->SetDataWidth(dataWidth);
 	this->SetConnector(logicOutput);
-	this->SetInherentDelay();
 	this->SetSign(sign);
 	this->SetNodeASAP(int(0));
 	this->SetNodeALAP(int(0));
@@ -109,89 +108,6 @@ int Logic::GetDataWidth() {							//returns true data width from the stored sequ
 	return true;
 }
 
-void Logic::SetInherentDelay() {
-
-	//						0	1-bit	2-bit	4-bit	8-bit	16-bit	32-bit	64-bit
-	float regArray[8] = { 0,	2.616,	2.644,	0,		2.879,	3.061,	3.602,	3.966 };	//REG
-	float addArray[8] = { 0,	2.704,	3.713,	0,		4.924,	5.638,	7.270,	9.566 };	//Add
-	float subArray[8] = { 0,	3.024,	3.412,	0,		4.890,	5.569,	7.253,	9.566 };	//SUB
-	float mulArray[8] = { 0,	2.438,	3.651,	0,		7.453,	7.811,	12.395,	15.354 };	//MUL
-	float compArray[8] = { 0,	3.031,	3.934,	0,		5.949,	6.256,	7.264,	8.416 };	//COMP
-	float muxArray[8] = { 0,	4.083,	4.115,	0,		4.815,	5.623,	8.079,	8.766 };	//MUX2x1
-	float shrArray[8] = { 0,	3.644,	4.007,	0,		5.178,	6.460,	8.819,	11.095 };	//SHR
-	float shlArray[8] = { 0,	3.614,	3.980,	0,		5.152,	6.549,	8.565,	11.220 };	//SHL
-	float divArray[8] = { 0,	0.619,	2.144,	0,		15.439, 33.093,	86.312,	243.233 };	//DIV
-	float modArray[8] = { 0,	0.758,	2.149,	0,		16.078, 35.563,	88.142,	250.583 };	//MOD
-	float incArray[8] = { 0,	1.792,	2.218,	0,		3.111,	3.471,	4.347,	6.200 };	//INC
-	float decArray[8] = { 0,	1.792,	2.218,	0,		3.108,	3.701,	4.685,	6.503 };	//DEC
-
-	switch (this->GetType())
-	{
-	case(1):
-		this->delay = regArray[this->dataWidth];
-		this->scheduleDelayValue = 1;
-		break;
-	case(2):
-		this->delay = addArray[this->dataWidth];
-		this->scheduleDelayValue = 1;
-		break;
-	case(3):
-		this->delay = subArray[this->dataWidth];
-		this->scheduleDelayValue = 1;
-		break;
-	case(4):
-		this->delay = mulArray[this->dataWidth];
-		this->scheduleDelayValue = 3;
-		break;
-	case(5):
-		this->delay = compArray[this->dataWidth];
-		this->scheduleDelayValue = 1;
-		break;
-	case(6):
-		this->delay = muxArray[this->dataWidth];
-		this->scheduleDelayValue = 1;
-		break;
-	case(7):
-		this->delay = shrArray[this->dataWidth];
-		this->scheduleDelayValue = 1;
-		break;
-	case(8):
-		this->delay = shlArray[this->dataWidth];
-		this->scheduleDelayValue = 1;
-		break;
-	case(9):
-		this->delay = divArray[this->dataWidth];
-		this->scheduleDelayValue = 3;
-		break;
-	case(10):
-		this->delay = modArray[this->dataWidth];
-		this->scheduleDelayValue = 3;
-		break;
-	case(11):
-		this->delay = incArray[this->dataWidth];
-		this->scheduleDelayValue = 1;
-		break;
-	case(12):
-		this->delay = decArray[this->dataWidth];
-		this->scheduleDelayValue = 1;
-		break;
-	case(13):
-		this->delay = 0;
-		this->scheduleDelayValue = 1;
-		break;
-	case(14):
-		this->delay = 0;
-		this->scheduleDelayValue = 1;
-		break;
-	default:
-		this->delay = 0;
-		this->scheduleDelayValue = 0;
-		break;
-	}
-
-
-	return;
-}
 
 vector <Logic*> Logic::GetParentNodes() {
 	vector<Connector*> tempConnectors;
@@ -207,4 +123,14 @@ vector <Logic*> Logic::GetParentNodes() {
 	}
 
 	return tempParentNodes;
+}
+
+void Logic::SetEasyInputs() {
+	int i = 0;
+
+	for (i = 0; i < this->GetParents().size(); i++) {
+		this->easyInputs = this->easyInputs + this->GetParents().at(i)->GetName() + ' ';
+	}
+
+	return;
 }

@@ -290,11 +290,6 @@ Connector *Netlist::findEdge(string edgeName) {	//finds an edge object in the ve
 	return tempConnector;
 }
 
-void Netlist::outputToReg() {		
-
-	return;
-}
-
 
 bool Netlist::outputModule(string outputFilename) {										//write all current data into a verilog module
 	ofstream outFS;																		// Output file stream
@@ -525,86 +520,6 @@ string Netlist::CreateCOMPInputName(Connector * tempParent0, Connector * tempPar
 	return outSS.str();
 }
 
-void Netlist::findCriticalPath() {
-	vector<Logic*> tempList;
-	unsigned int i = 0;
-	unsigned int j = 0;
-	float maxDelay = 0;
-	float tempDelay = 0;
-	float totalDelay = 0;
-	bool check = false;
-
-	for (i = 0; i < this->nodes.size(); i++) {											//loop through all nodes
-		maxDelay = 0;
-		tempDelay = 0;
-
-		if (this->nodes.at(i)->GetTypeString() != "REG") {
-			for (j = 0; j < this->nodes.at(i)->GetParents().size(); j++) {				//loop through all Parent Edges of each individual node
-				if ((this->nodes.at(i)->GetParents().at(j)->GetType() != "input") && (this->nodes.at(i)->GetParents().at(j)->GetDelay() == 0)) { //check to see if components are created before there input edges have delays aka netlist is out of order
-					tempList.push_back(this->nodes.at(i));
-					check = true;
-					break;
-				}
-				else {
-					tempDelay = this->nodes.at(i)->GetParents().at(j)->GetDelay();		//assign a tempDelay from each Parent Edge
-					if (maxDelay < tempDelay) { maxDelay = tempDelay; }					//choose the longest delay from all of the Parent Edges
-				}
-			}
-		}
-		if (!check) {
-			totalDelay = maxDelay + this->nodes.at(i)->GetDelay();					//sum the inherent delay of the logic with the delay of the parent edge 
-			this->nodes.at(i)->SetDelay(totalDelay);								//set delay of node
-			this->nodes.at(i)->GetConnector()->SetDelay(totalDelay);				//set delay of output of node
-			if (this->GetCriticalPath() < totalDelay) { this->SetCriticalPath(totalDelay); }
-		}
-		check = false;
-	}
-
-	findCriticalPathTemp(tempList);													//this is kinda crap, we probably can implement it in this function instead of creating a new one. Pressed for time.
-	cout << "Critical Path : " << this->GetCriticalPath() << " ns" << endl;
-}
-
-void Netlist::findCriticalPathTemp(vector<Logic*> tempList) {						//this is crap, refer up to function call
-	unsigned int i = 0;
-	unsigned int j = 0;
-	float maxDelay = 0;
-	float tempDelay = 0;
-	float totalDelay = 0;
-	bool check = false;
-
-	while (!tempList.empty()) {
-
-		for (i = 0; i < tempList.size(); i++) {										//loop through all nodes in tempList
-			maxDelay = 0;
-			tempDelay = 0;
-			check = false;
-
-			for (j = 0; j < tempList.at(i)->GetParents().size(); j++) {				//loop through all Parent Edges of each individual node
-				if ((tempList.at(i)->GetParents().at(j)->GetDelay() == 0) && (tempList.at(i)->GetParents().at(j)->GetType() != "input")) {
-					check = true;
-					break;					
-				}
-				else {
-					tempDelay = tempList.at(i)->GetParents().at(j)->GetDelay();		//assign a tempDelay from each Parent Edge
-					if (maxDelay < tempDelay) { maxDelay = tempDelay; }				//choose the longest delay from all of the Parent Edges
-				}
-			}
-
-			if (!check) {
-				totalDelay = maxDelay + tempList.at(i)->GetDelay();					//sum the inherent delay of the logic with the delay of the parent edge 
-				tempList.at(i)->SetDelay(totalDelay);								//set delay of node
-				tempList.at(i)->GetConnector()->SetDelay(totalDelay);				//set delay of output of node
-				if (this->GetCriticalPath() < totalDelay) { this->SetCriticalPath(totalDelay); }
-				tempList.erase(tempList.begin()+i);
-				i--;																//decrement node element beacause the list has done gotten shrunked
-			}
-
-		}
-
-	}
-
-}
-
 bool Netlist::CalculateASAP() {
 	int i = 0;
 	int j = 0;
@@ -770,15 +685,6 @@ bool Netlist::CalculateProbabilityFDS() {
 	this->DIVMODDistribution.resize(nodeProbabilityArray[0].size());
 	this->LOGRESDistribution.resize(nodeProbabilityArray[0].size());
 
-	/*
-	for (i = 0; i < this->ADDSUBDistribution.size(); i++) {					//initialize arrays values to 0
-		this->ADDSUBDistribution[i] = 0;
-		this->MULDistribution[i] = 0;
-		this->DIVMODDistribution[i] = 0;
-		this->LOGRESDistribution[i] = 0;
-	}
-	*/
-
 	for (i = 0; i < this->nodeProbabilityArray.size(); i++) {															//loop through each node, calculate the Distribution graphs
 		for (j = 1; j < this->nodeProbabilityArray[i].size(); j++) {													//loop through each scheduled time fram
 			if ((this->nodes.at(i)->GetTypeString() == "ADD") || (this->nodes.at(i)->GetTypeString() == "SUB")) {		//if node is a ADD or SUB increase it's probability for that time frame
@@ -914,6 +820,10 @@ bool Netlist::CalculateFDS() {
 	int i = 0;
 	bool check = true;
 
+	for (i = 0; i < this->nodes.size(); i++) {		//Make it easier to read
+		this->nodes.at(i)->SetEasyInputs();
+	}
+
 	this->CalculateASAP();
 	this->CalculateALAP();
 
@@ -942,7 +852,7 @@ int Netlist::FindNodeNumber(Logic* tempLogic) {
 
 
 
-bool Netlist::outputHLSMModule(string outputFilename) {										//write all current data into a verilog module
+bool Netlist::outputHLSMModule(string outputFilename) {									//write all current data into a verilog module
 	ofstream outFS;																		// Output file stream
 	string truncatedFilename = "";
 	unsigned int i = 0;
@@ -1063,7 +973,6 @@ string Netlist::outputCaseLine(int nodeNumber) {
 
 
 Netlist::Netlist(void) {															//CONSTRUCTOR...
-	this->criticalPath = 0;
 	this->ifElseDepth = 0;
 	this->ifForIncrementer = 0;
 }

@@ -14,22 +14,22 @@ int main(int argc, char **argv) {
 	string filename = "";
 	string filename2 = "";
 	string latency = "";
-	if (argc == 3) {					//check for 1 input argument
+	if (argc == 3) {					//check for 2 input argument
 		filename = argv[1];
 		latency = argv[2];
 		if (!n1.parseFile(filename, latency)){	
 			cerr << "Error: Unable to parse file." << endl;
 			return -1;
 		}
-		cout << filename.substr(filename.rfind('\\')+1) << " file successfully parsed." << endl;	//reports what file was parsed
+		cout << filename.substr(filename.rfind('\\') + 1) << " file successfully parsed." << endl;	//reports what file was parsed
 		cout << "No output filename detected, will export to hlsynDefault.txt ..." << endl;
-		if (!n1.outputHLSMModule("hlsynDefault.txt")) {				//if there is no specified output filename, generate a default output file
+		if (!n1.outputHLSMModule("hlsynDefault.txt")) {												//if there is no specified output filename, generate a default output file
 			cerr << "Error: Unable to output file hlsynDefault.txt." << endl;
 			return -1;
 		}
 		cout << "hlsynDefault.txt file successfully generated." << endl;
 	}
-	else if (argc == 4) {	//check for 2 input arguments
+	else if (argc == 4) {	//check for 4 input arguments
 		filename = argv[1];
 		latency = argv[2];
 		if (!n1.parseFile(filename, latency)) {		//if there is a output filename specified, generate that file
@@ -51,8 +51,6 @@ int main(int argc, char **argv) {
 		std::cerr << "Usage " << argv[0] << " input latency output" << std::endl << std::endl;
 		return -1;
 	}
-
-	n1.findCriticalPath();	//determine and output the critical path
 	
 	return 0;
 }

@@ -26,11 +26,8 @@ public:
 	string CreateInputName(Logic* CurrentNode, Connector * tempParent);		//converts a module input name into a padded input as needed
 	string CreateCOMPInputName(Connector * tempParent0, Connector * tempParent1);	//converts a module input name into a padded input as needed for compartors
 	string CreateShiftName(Logic* CurrentNode, Connector * tempParent);		//converts a module input name into a padded input as needed for shift modules
-	void findCriticalPath(void);											// loops through the nodes to find the critical path
-	void findCriticalPathTemp(vector<Logic*> tempList);						//  if there are any elements out of order in the netlist, loops through this secondary netlist to complete the critical path
 	string outputEdgeLine(string type, unsigned int datawidth);				// outputs the verilog variables into verilog code format
 	string outputNodeLine(int nodeNumber);									// outputs a line for a verilog module (ie ADD, SUB, DIV, etc) in verilog code
-	void outputToReg();														//finds any output edges and adds a REG module to them if they dont have one
 	Connector* findEdge(string edgeName);									//find the edge object pointer based off a variable name
 	bool CalculateASAP();													//calculate all ASAP values for nodes and edges
 	bool CheckIfASAPDone();													//absolute check to see if any nodes are unmarked
@@ -47,13 +44,11 @@ public:
 	//Getters
 	vector<Connector*> GetEdges() { return this->edges; }
 	vector<Logic*> GetNodes() { return this->nodes; }
-	float GetCriticalPath() { return this->criticalPath; }
 	int GetLatency() { return this->latency; }								//get the int latency value for the circuit
 	int GetIfElseDepth() { return this->ifElseDepth; }						//get the current int depth value for the circuit
 	int GetIfForIncrementer() { return this->ifForIncrementer; }			//get the current incremented # of if/for variables in the circuit
 
 	//Setters
-	void SetCriticalPath(float criticalPath) { this->criticalPath =+ criticalPath; }	//updates critical path of the entire circuit with a new critical path
 	void SetLatency(string latency) { this->latency = stoi(latency); }		//set the int latency value for the circuit
 	void SetIfElseDepth(int depth) { this->ifElseDepth = depth; }			//set the current int depth value for the circuit
 	void SetIfForIncrementer(int newIncrement) { this->ifForIncrementer = newIncrement; }			//set the current incremented # of if/for variables in the circuit
@@ -69,7 +64,6 @@ private:
 	vector<float> LOGRESDistribution;
 	vector<float> DIVMODDistribution;
 	vector<bool> ifForLevelOneOrZero;
-	float criticalPath;
 	int latency;
 	int ifElseDepth;
 	int ifForIncrementer;
