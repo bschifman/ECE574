@@ -914,8 +914,6 @@ bool Netlist::CalculateForcesFDS() {
 			}
 		}
 
-
-		
 	}
 
 	if (this->nodes.at(i)->GetNodeFDS() != 0) {					//After the total forces have been calculated, then check if the node doesn't already have a schedule time
