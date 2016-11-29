@@ -129,7 +129,7 @@ bool Netlist::parseNode(string inputLine) {
 		this->SetIfElseDepth(this->GetIfElseDepth() +int(1));					//increment the depth of the circuit(teired if/for statements)
 		this->SetIfForIncrementer((this->GetIfForIncrementer() + int(1)));		//count how many if/for statements there have been
 		this->ifForLevelOneOrZero.resize(this->GetIfElseDepth());				//increase the true/false depth vector(if=true, else=false)
-		this->SetIfForLevelOneOrZero(this->GetIfElseDepth(), true);				//set the current depth vector to true for the if statement
+		this->SetIfForLevelOneOrZero((this->GetIfElseDepth() - int(1)), true);				//set the current depth vector to true for the if statement
 
 		tempConnectorUp = this->findEdge(variable1);							//identify which vector edge is associated with the variable
 		sign |= tempConnectorUp->GetSign();
@@ -154,7 +154,7 @@ bool Netlist::parseNode(string inputLine) {
 		}
 		
 	}
-	if (!outputEdge.compare("else")) {											//increases depth 
+	else if (!outputEdge.compare("else")) {											//increases depth 
 		this->SetIfElseDepth(this->GetIfElseDepth() + int(1));
 		this->SetIfForLevelOneOrZero(this->GetIfElseDepth(), false);
 	}
@@ -243,7 +243,7 @@ bool Netlist::parseNode(string inputLine) {
 
 		this->nodes.push_back(tempLogic);																	//create new logic/node and add to vector
 		tempConnector->SetParent(tempLogic);
-		if (tempLogic->GetTypeString() == "COMP") { tempLogic->SetOutType(logicSymbol); }					//if the new node is a comparator, record which type it is
+		if (tempLogic->GetTypeString() != "REG") { tempLogic->SetOutType(logicSymbol); }					//if the new node is a comparator, record which type it is
 
 		if (!variable1.empty() && (variable1 != "1")) {
 			tempConnector = this->findEdge(variable1);														//these "ifs" add the current node to any edge used in the logic
@@ -258,7 +258,7 @@ bool Netlist::parseNode(string inputLine) {
 			if (tempConnector != NULL) { tempConnector->AddChild(tempLogic); tempLogic->AddParent(tempConnector); }
 		}
 		if (this->GetIfElseDepth() > 0) {																	//this checks if this node is part of a if/else/for statement
-			tempLogic->SetIfLevelOneOrZero(this->ifForLevelOneOrZero.at(this->GetIfElseDepth()));			//takes the value of whether it is a if(true) or else(false) section
+			tempLogic->SetIfLevelOneOrZero(this->ifForLevelOneOrZero.at(this->GetIfElseDepth() - int(1)));			//takes the value of whether it is a if(true) or else(false) section
 
 			for (i = 0; i < this->nodes.size(); i++) {
 				if ((this->nodes.at(i)->GetTypeString() == "if") && (this->nodes.at(i)->GetIfElseDepth() == this->GetIfElseDepth())) {
@@ -644,6 +644,7 @@ bool Netlist::CalculateASAP() {
 			this->edges.at(i)->SetEdgeASAP(0);
 		}
 	}
+
 	for (currentLatency = 0; currentLatency <= this->GetLatency(); currentLatency++) {									//cycle through each latency timeframe
 		for (i = 0; i < this->edges.size(); i++) {															//look at all the edges for this time frame
 			if (this->edges.at(i)->GetEdgeASAP() == currentLatency) {										//only evaluate edges active during this time frame
@@ -972,7 +973,7 @@ bool Netlist::outputHLSMModule(string outputFilename) {										//write all cur
 							   //		cout << "Writing to file " << outputFilename << "..." << endl;					//Ben hates helpful comments, removed at his request, we'll be book burning next.
 		truncatedFilename = outputFilename.substr(0, outputFilename.find("."));			//removes everything after the . of file name to make module name
 		outFS << "`timescale 1ns / 1ps" << endl << endl;								//add time scale to the top of the file
-		outFS << "module " << "HLSM " << "(Clk, Rst, Start, Done" << endl;
+		outFS << "module " << "HLSM " << "(Clk, Rst, Start, Done";
 
 		for (i = 0; i < this->edges.size(); i++) {										//lists all of the inputs and outputs names into the module prototype
 			if ((this->edges.at(i)->GetType() == "input") || (this->edges.at(i)->GetType() == "output")) {
@@ -1003,7 +1004,7 @@ bool Netlist::outputHLSMModule(string outputFilename) {										//write all cur
 		outFS << "\t" << "\t" << "\t" << "\t" << "\t" << "NextState <= 0" << endl;
 		outFS << "\t" << "\t" << "\t" << "end" << endl;
 
-		for (i = 0; i < this->nodes.size(); i++) { outFS << this->outputNodeLine(i) << endl; }			//NEEDS FIXING!
+		for (i = 0; i < this->nodes.size(); i++) { outFS << this->outputCaseLine(i) << endl; }			//NEEDS FIXING! not based on nodes, but latency +else statements
 
 		outFS << "\t" << "\t" << "endcase" << endl << endl;
 		outFS << "\t" << "end" << endl << endl;
@@ -1029,19 +1030,9 @@ string Netlist::outputCaseLine(int nodeNumber) {
 	Connector *tempParent1 = NULL;
 	Connector *tempParent2 = NULL;
 	Connector *tempParent3 = NULL;
-	string outputLine = "";
-	string tempString = this->nodes.at(nodeNumber)->GetTypeString();
 	ostringstream outSS;
-	unsigned int i = 0;
-	unsigned int j = 0;
-	/*
-	if ((tempString != "REG") && (tempString != "DEC") && (tempString != "INC")) {	//if it's not a any of these modules then it will have a "b" element of c = a + b
-		tempParent1 = this->nodes.at(nodeNumber)->GetParents().at(1);
-	}
-	if (tempString == "MUX2x1") {													//if it is a MUX then there will be another element
-		tempParent2 = this->nodes.at(nodeNumber)->GetParents().at(2);
-	}
-	*/
+	unsigned int i = 0; 
+
 	for (i = 0; i < this->nodes.at(nodeNumber)->GetParents().size(); i++) {
 		switch (i) {
 		case 0: tempParent0 = this->nodes.at(nodeNumber)->GetParents().at(0);
@@ -1057,53 +1048,28 @@ string Netlist::outputCaseLine(int nodeNumber) {
 
 
 
-	outSS << "\t";
-	if ((tempString == "COMP") || (tempString == "DIV") || (tempString == "MOD") || (tempString == "SHR")) {
-		if (this->nodes.at(nodeNumber)->GetSign() == 1) { outSS << "S"; }			//if module is signed, mark as such
+	outSS << "\t\t\t\t\t" << tempConnector->GetName() << " = ";						//print out the output edge(ie 'b = ')
+	if (tempParent0 != NULL) {
+		outSS << tempParent0->GetName() << " ";										//print out to first input edge(ie 'b = c')
 	}
-	outSS << tempString;
-	outSS << "\t\t" << "#(.DATAWIDTH(";
-	if (tempString == "COMP") {
-		if (this->nodes.at(nodeNumber)->GetParents().at(0)->GetSize() > this->nodes.at(nodeNumber)->GetParents().at(1)->GetSize()) {	//compare the 2 imput edges and use the larger datawidth
-			outSS << this->nodes.at(nodeNumber)->GetParents().at(0)->GetSize();		//if vector at 0 is bigger, use it
+	if (this->nodes.at(nodeNumber)->GetTypeString() == "MUX2x1") {
+		outSS << "? ";																//print out mux symbol(ie 'b = c ? ')
+		if (tempParent1 != NULL) {
+			outSS << tempParent1->GetName() << " : ";								//print out second input edge and mux symbol(ie 'b = c ? d : ')
 		}
-		else { outSS << this->nodes.at(nodeNumber)->GetParents().at(1)->GetSize(); }	//if vector at 1 is bigger, use it
+		if (tempParent2 != NULL) {
+			outSS << tempParent2->GetName();										//print out third input edge and mux symbol(ie 'b = c ? d : e')
+		}
 	}
-	else { outSS << this->nodes.at(nodeNumber)->GetConnector()->GetSize(); }		//if node is not a comparator, get datawidth from its output edge
-
-	outSS << "))" << "\t\t";
-	for (i = 0; i < (unsigned)nodeNumber; i++) {
-		if (tempString == this->nodes.at(i)->GetTypeString()) { j++; }	//count how many of this module already exist
+	else if ((this->nodes.at(nodeNumber)->GetTypeString() == "INC") || (this->nodes.at(nodeNumber)->GetTypeString() == "DEC")) {
+		outSS << this->nodes.at(nodeNumber)->GetOutType() << " 1";					//print out inc/dec symbol and 1(ie 'b = c + 1')
 	}
-	outSS << tempString << "_" << (j) << " (";
-	ostringstream nameSS;
-	nameSS << "_" << (j);
-	this->nodes.at(i)->SetName(nameSS.str());
-
-	if (tempString == "REG") {											//if the type is a REG then it will only have a single input and output
-
-		outSS << CreateInputName(this->nodes.at(nodeNumber), tempParent0);
-		outSS << ", clk, rst, ";
-		outSS << tempConnector->GetName() << ")";
+	else {
+		outSS << this->nodes.at(nodeNumber)->GetOutType() << " ";					//print out component symbol(ie 'b = c % ')
+		if (tempParent1 != NULL) {
+			outSS << tempParent1->GetName();										//print out second input edge(ie 'b = c % d')
+		}
 	}
-	else if ((tempString == "ADD") || (tempString == "SUB") || (tempString == "MUL") || (tempString == "DIV") || (tempString == "MOD")) {	//if it is one of these datatypes then it is the standard format a = b + c
-		outSS << CreateInputName(this->nodes.at(nodeNumber), tempParent0) << ", " << CreateInputName(this->nodes.at(nodeNumber), tempParent1) << ", " << tempConnector->GetName() << ")";
-	}
-
-	else if ((tempString == "SHR") || (tempString == "SHL")) {		//for the shifters we need the second element aka the shift ammount to only be unsigned padded
-		outSS << CreateInputName(this->nodes.at(nodeNumber), tempParent0) << ", " << CreateShiftName(this->nodes.at(nodeNumber), tempParent1) << ", " << tempConnector->GetName() << ")";
-	}
-
-	else if (tempString == "MUX2x1") { outSS << CreateInputName(this->nodes.at(nodeNumber), tempParent1) << ", " << CreateInputName(this->nodes.at(nodeNumber), tempParent2) << ", " << tempParent0->GetName() << ", " << tempConnector->GetName() << ")"; }
-	else if ((tempString == "INC") || (tempString == "DEC")) { outSS << CreateInputName(this->nodes.at(nodeNumber), tempParent0) << ", " << tempConnector->GetName() << ")"; }
-	else if (tempString == "COMP") {	//depending on logic type (<,>,==) it will label output to proper channel
-		outSS << ".a(" << CreateCOMPInputName(tempParent0, tempParent1) << "), .b(" << CreateCOMPInputName(tempParent1, tempParent0) << "), ";	//Comps are stupid, they have their own function for creating names
-		if (this->nodes.at(nodeNumber)->GetOutType() == ">") { outSS << ".gt("; }
-		if (this->nodes.at(nodeNumber)->GetOutType() == "<") { outSS << ".lt("; }
-		if (this->nodes.at(nodeNumber)->GetOutType() == "==") { outSS << ".eq("; }
-		outSS << tempConnector->GetName() << "))";
-	}
-
 	outSS << ";";
 	return outSS.str();
 }
@@ -1114,6 +1080,7 @@ string Netlist::outputCaseLine(int nodeNumber) {
 Netlist::Netlist(void) {															//CONSTRUCTOR...
 	this->criticalPath = 0;
 	this->ifElseDepth = 0;
+	this->ifForIncrementer = 0;
 }
 
 Netlist::~Netlist(void) {															//DeSTRUCTOR!!!!!!!!~!~!
