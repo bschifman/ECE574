@@ -30,13 +30,13 @@ public:
 	void SetSign(bool sign) { this->sign = sign; }						//set whether this edge is a signed or unsigned datapath
 	void SetVisited(bool visited) { this->visited = visited; }			//set if this edge has been visited in a search algorithm
 	void SetDelay(float delay) { this->delay = delay; }					//set the delay of the critical path at this edge
-	void SetParent(Logic* parentToAdd) { this->parent = parentToAdd; }	//set this edges parent node(this is a directed graph)
+	void AddParent(Logic* parentToAdd) { this->parent.push_back(parentToAdd); }	//set this edges parent node(this is a directed graph)
 	void AddChild(Logic* childToAdd) { this->children.push_back(childToAdd); }	//add a child node to this edge(this is a directed graph)
 	void SetEdgeALAP(int inputTime) { this->alapt = inputTime; }					//set ALAP time
 	void SetEdgeASAP(int inputTime) { this->asapt = inputTime; }					//set ASAP time
 
 	//Getters
-	Logic* GetParent() { return this->parent; }		//get this edges parent node(this is a directed graph)
+	vector<Logic*> GetParent() { return this->parent; }		//get this edges parent node(this is a directed graph)
 	vector<Logic*> GetChildVector() { return this->children; }		//get this edges children vector
 	string GetType() { return this->type; }			//get this edges type (input, output, wire, register)
 	string GetName() { return this->name; }			//get the variable name of this edge (ie a,b,c, xwire, etc)
@@ -49,7 +49,7 @@ public:
 
 
 private:
-	Logic *parent;				//parent node of this edge
+	vector<Logic*> parent;				//parent node of this edge
 	vector<Logic*> children;	//children nodes this edge is connected to
 	string type;				//type of connector (input, output, wire, register)
 	string name;				//name of the variable
