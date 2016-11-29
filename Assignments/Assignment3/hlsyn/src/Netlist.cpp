@@ -903,9 +903,9 @@ bool Netlist::CalculateForcesFDS() {
 	}
 
 	if (this->nodes.at(minNodeNumber)->GetNodeFDS() == 0) {					//After the total forces have been calculated, then check if the node doesn't already have a schedule time
-		this->nodes.at(minNodeNumber)->SetNodeFDS(minTimeSlot);	//Set the FDS of the node with the min val in the total force matrix
-		this->nodes.at(minNodeNumber)->SetNodeALAP(minTimeSlot);//Set the ALAP of the node with the min val in the total force matrix 
-		this->nodes.at(minNodeNumber)->SetNodeASAP(minTimeSlot);//Set the ASAP of the node with the min val in the total force matrix
+		this->nodes.at(minNodeNumber)->SetNodeFDS(minTimeSlot);				//Set the FDS of the node with the min val in the total force matrix
+		this->nodes.at(minNodeNumber)->SetNodeALAP(minTimeSlot);			//Set the ALAP of the node with the min val in the total force matrix 
+		this->nodes.at(minNodeNumber)->SetNodeASAP(minTimeSlot);			//Set the ASAP of the node with the min val in the total force matrix
 	}
 	return check;		//might need checks
 }
