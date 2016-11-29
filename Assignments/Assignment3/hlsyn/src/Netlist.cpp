@@ -142,6 +142,7 @@ bool Netlist::parseNode(string inputLine) {
 		this->nodes.push_back(tempLogic);
 		tempConnector->SetParent(tempLogic);
 		tempLogic->AddParent(tempConnectorUp);									//add the conditional variable as the parent to the "if" node
+		tempConnectorUp->AddChild(tempLogic);
 
 		if (this->GetIfElseDepth() > 1) {																			//this checks if this node is part of a if/else/for statement
 			tempLogic->SetIfLevelOneOrZero(this->ifForLevelOneOrZero.at(this->GetIfElseDepth() - (int)1));			//takes the value of whether it is a if(true) or else(false) section
@@ -265,6 +266,7 @@ bool Netlist::parseNode(string inputLine) {
 					//this is same level as the "if" statement at this point, bind it as an input
 
 					tempLogic->AddParent(this->nodes.at(i)->GetConnector());								//add the "if"'s output edge as the parent to this node
+					this->nodes.at(i)->GetConnector()->AddChild(tempLogic);
 				}
 			}
 		}
