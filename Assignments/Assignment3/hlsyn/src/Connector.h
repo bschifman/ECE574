@@ -47,12 +47,12 @@ public:
 
 
 private:
-	vector<Logic*> parent;				//parent node of this edge
+	vector<Logic*> parent;		//parent node of this edge
 	vector<Logic*> children;	//children nodes this edge is connected to
 	string type;				//type of connector (input, output, wire, register)
 	string name;				//name of the variable
-	int asapt;								//sets the ASAP time
-	int alapt;								//sets the ALAP time
+	int asapt;					//sets the ASAP time
+	int alapt;					//sets the ALAP time
 	int size;					//data width
 	bool sign;					//signed(1) or unsigned(0) 
 	bool visited;				//check whether this edge has been visited or not when scanning through the list

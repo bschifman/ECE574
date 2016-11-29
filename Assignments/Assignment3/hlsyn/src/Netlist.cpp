@@ -523,7 +523,7 @@ string Netlist::CreateCOMPInputName(Connector * tempParent0, Connector * tempPar
 bool Netlist::CalculateASAP() {
 	int i = 0;
 	int j = 0;
-//	int k = 0;
+	int k = 0;
 	int currentLatency = 0;
 	int tempNodeDelay = 0;
 
@@ -535,24 +535,29 @@ bool Netlist::CalculateASAP() {
 	}
 
 	for (i = 0; i < this->edges.size(); i++) {				//set the base point for checking the ASAP
-		if (this->edges.at(i)->GetParent().size() == int(0)) {
+		if (this->edges.at(i)->GetType() == "input") {		//if the connector is an input then it will have an ASAP of 0
 			this->edges.at(i)->SetEdgeASAP(0);
 		}
 	}
 
-	for (currentLatency = 0; currentLatency <= this->GetLatency(); currentLatency++) {									//cycle through each latency timeframe
+	for (currentLatency = 0; currentLatency <= this->GetLatency(); currentLatency++) {						//cycle through each latency timeframe
 		for (i = 0; i < this->edges.size(); i++) {															//look at all the edges for this time frame
 			if (this->edges.at(i)->GetEdgeASAP() == currentLatency) {										//only evaluate edges active during this time frame
 				for (j = 0; j < this->edges.at(i)->GetChildVector().size(); j++) {							//loop through all the nodes this edge is a parent of
-					if (this->edges.at(i)->GetChildVector().at(j)->GetNodeASAP() < currentLatency) {		//if the node value is lower value than this time frame update it
+					if (this->edges.at(i)->GetChildVector().at(j)->GetNodeASAP() <= currentLatency) {		//if the node value is lower value than this time frame update it
 						tempNodeDelay = this->edges.at(i)->GetChildVector().at(j)->GetTypeScheduleDelay();	//save this node type scheduleing inherihent delay(ie MUL is 2, DIV/MOD is 3, all other types is 1)
 						if ((tempNodeDelay + currentLatency) > this->GetLatency()) {
 							cout << "ERROR:  Input Schedule bounds too small for input file." << endl;
 							return false;
 						}
-						this->edges.at(i)->GetChildVector().at(j)->SetNodeASAP(currentLatency + tempNodeDelay);				//update node ASAP value
-						if ( this->edges.at(i)->GetChildVector().at(j)->GetConnector() != NULL) {							//make sure the current downstream node has a child edge
+						this->edges.at(i)->GetChildVector().at(j)->SetNodeASAP(currentLatency + 1);									//update node ASAP value
+						if ( this->edges.at(i)->GetChildVector().at(j)->GetConnector() != NULL) {									//make sure the current downstream node has a child edge
 							this->edges.at(i)->GetChildVector().at(j)->GetConnector()->SetEdgeASAP(currentLatency + tempNodeDelay);	//update the child edge of the current node to a new ASAP value
+						}
+					}
+					for (k = 0; k < this->edges.at(i)->GetParent().size(); k++) {
+						if ((this->edges.at(i)->GetChildVector().at(j)->GetNodeASAP() == currentLatency) && (this->edges.at(i)->GetParent().at(k)->GetTypeString() == "MUL")) {
+
 						}
 					}
 				}
@@ -598,29 +603,29 @@ bool Netlist::CalculateALAP() {
 	int tempNodeDelay = 0;
 
 	for (i = 0; i < this->edges.size(); i++) {
-		this->edges.at(i)->SetEdgeALAP((this->GetLatency()) + 1);		// setting all unscheduled edges to larger than the largest possible latency
+		this->edges.at(i)->SetEdgeALAP((this->GetLatency()) + 1);			// setting all unscheduled edges to larger than the largest possible latency
 	}
 	for (i = 0; i < this->nodes.size(); i++) {
 		this->nodes.at(i)->SetNodeALAP((this->GetLatency()) + 1);			// setting all unscheduled nodes to larger than the largest possible latency
 	}
 
-	for (i = 0; i < this->edges.size(); i++) {				//set the base point for checking the ASAP
-		if (this->edges.at(i)->GetChildVector().size() == 0) {
+	for (i = 0; i < this->edges.size(); i++) {								//set the base point for checking the ASAP
+		if (!this->edges.at(i)->GetChildVector().size()) {
 			this->edges.at(i)->SetEdgeALAP(this->GetLatency());
 		}
 	}
 	for (currentLatency = this->GetLatency(); currentLatency > 0; currentLatency--) {						//cycle through each latency timeframe
 		for (i = 0; i < this->edges.size(); i++) {															//look at all the edges for this time frame
 			if (this->edges.at(i)->GetEdgeALAP() == currentLatency) {										//only evaluate edges active during this time frame
-				for (k = 0; k < this->edges.at(i)->GetParent().size(); k++ ) {										//check if this edge has a parent node
-					if (this->edges.at(i)->GetParent().at(k)->GetNodeALAP() > currentLatency) {					//if the node value is higher value than this time frame update it
-						tempNodeDelay = this->edges.at(i)->GetParent().at(k)->GetTypeScheduleDelay();				//save this node type scheduleing inherihent delay(ie MUL is 2, DIV/MOD is 3, all other types is 1)
+				for (k = 0; k < this->edges.at(i)->GetParent().size(); k++ ) {								//check if this edge has a parent node
+					if (this->edges.at(i)->GetParent().at(k)->GetNodeALAP() > currentLatency) {				//if the node value is higher value than this time frame update it
+						tempNodeDelay = this->edges.at(i)->GetParent().at(k)->GetTypeScheduleDelay();		//save this node type scheduleing inherihent delay(ie MUL is 2, DIV/MOD is 3, all other types is 1)
 						if ((currentLatency - tempNodeDelay) < 0) {
 							cout << "ERROR:  User input Schedule bounds too small for input file." << endl;
 							return false;
 						}
-						this->edges.at(i)->GetParent().at(k)->SetNodeALAP(currentLatency);						//update parent node ALAP value
-						for (j = 0; j < this->edges.at(i)->GetParent().at(k)->GetParents().size(); j++ ) {		//make sure the current upstream nodes have a parent edges
+						this->edges.at(i)->GetParent().at(k)->SetNodeALAP(currentLatency - tempNodeDelay + 1);											//update parent node ALAP value
+						for (j = 0; j < this->edges.at(i)->GetParent().at(k)->GetParents().size(); j++ ) {							//make sure the current upstream nodes have a parent edges
 							this->edges.at(i)->GetParent().at(k)->GetParents().at(j)->SetEdgeALAP(currentLatency - tempNodeDelay);	//update the parent edge of the current node to a new ALAP value
 						}
 					}
@@ -671,7 +676,7 @@ bool Netlist::CalculateProbabilityFDS() {
 		this->nodeProbabilityArray[i][0] = 0;															//this is an unused filler value to make calculation easier(ie start at 1 not 0)
 		for (j = 1; j < this->nodeProbabilityArray[i].size(); j++) {									//initialize array values to 0
 			if ((this->nodes.at(i)->GetNodeASAP() <= j) && (j <= this->nodes.at(i)->GetNodeALAP())) {	//check if current timeframe is in node mobility
-				this->nodeProbabilityArray[i][j] = 1/(this->nodes.at(i)->GetNodeALAP() - this->nodes.at(i)->GetNodeASAP() + 1);
+				this->nodeProbabilityArray[i][j] = 1/((float)this->nodes.at(i)->GetNodeALAP() - (float)this->nodes.at(i)->GetNodeASAP() + 1);
 			}
 			else {
 				this->nodeProbabilityArray[i][j] = 0;													//if current timeframe is not in schedule of node, set to 0

@@ -150,7 +150,7 @@ void Logic::SetInherentDelay() {
 		this->scheduleDelayValue = 1;
 		break;
 	case(4):
-		this->scheduleDelayValue = 3;
+		this->scheduleDelayValue = 2;		//Multiplier
 		break;
 	case(5):
 		this->scheduleDelayValue = 1;
@@ -165,10 +165,10 @@ void Logic::SetInherentDelay() {
 		this->scheduleDelayValue = 1;
 		break;
 	case(9):
-		this->scheduleDelayValue = 3;
+		this->scheduleDelayValue = 3;		//Divider
 		break;
 	case(10):
-		this->scheduleDelayValue = 3;
+		this->scheduleDelayValue = 3;		//Modulo
 		break;
 	case(11):
 		this->scheduleDelayValue = 1;
