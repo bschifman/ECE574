@@ -42,6 +42,7 @@ public:
 	//Getters
 	Connector* GetConnector() { return this->logicOutput; }						//get output(child) edge of this node(ie the output wire)
 	vector <Connector*> GetParents() { return this->logicInputs; }				//get parent edge list to this node (ie an input to the module)
+	vector <Logic*> GetParentNodes(Logic* tempLogic);							//get the parent nodes of a node
 	string GetName() { return this->name; }										//get the name of this node (ie ADD_0, ADD_4, etc)
 	string GetTypeString();														//get the type of node(logic element) this is (ie ADD, REG, DIV...)
 	string GetOutType() { return this->outType; }								//get the node output type, specifically for the COMP (ie >,<,==)

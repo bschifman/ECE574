@@ -796,6 +796,8 @@ bool Netlist::CalculateForcesFDS() {
 	vector<vector<float>> successorForces;
 	vector<vector<float>> predecessorForces;
 	vector<vector<float>> totalForces;
+	vector<Logic*> tempChildNodes;
+	vector<Logic*> tempParentNodes;
 
 	selfForces.resize(this->nodes.size());												
 	successorForces.resize(this->nodes.size());
@@ -843,10 +845,29 @@ bool Netlist::CalculateForcesFDS() {
 			}
 		}
 
-
 		//CALCULATE SUCCESSOR FORCES
-
+		for (j = 1; j < successorForces[i].size() - 1; j++) {
+			tempChildNodes = this->nodes.at(i)->GetConnector()->GetChildVector();
+			if (tempChildNodes.size() != 0) {																			//If you have any immediate children nodes then continue
+				for (k = 0; k < tempChildNodes.size(); k++) {															//Loop through all of the child nodes
+					if ((j + this->nodes.at(i)->GetTypeScheduleDelay()) == tempChildNodes.at(k)->GetNodeALAP()) {		//If child node has an ALAP time equal to the node time + 1 then it is forced, add it
+						successorForces[i][j] += selfForces[(FindNodeNumber(tempChildNodes.at(k)))][j + this->nodes.at(i)->GetTypeScheduleDelay()];		//set the succesor forces values
+					}
+				}
+			}
+		}
+		
 		//CALCULATE PREDECESSOR FORCES
+		for (j = 2; j < successorForces[i].size(); j++) {
+			tempParentNodes = this->nodes.at(i)->GetParents();
+			if (tempChildNodes.size() != 0) {																			//If you have any immediate children nodes then continue
+				for (k = 0; k < tempChildNodes.size(); k++) {															//Loop through all of the child nodes
+					if ((j + this->nodes.at(i)->GetTypeScheduleDelay()) == tempChildNodes.at(k)->GetNodeALAP()) {		//If child node has an ALAP time equal to the node time + 1 then it is forced, add it
+						successorForces[i][j] += selfForces[(FindNodeNumber(tempChildNodes.at(k)))][j + this->nodes.at(i)->GetTypeScheduleDelay()];		//set the succesor forces values
+					}
+				}
+			}
+		}
 
 		//CALCULATE TOTAL FORCES
 
@@ -866,6 +887,19 @@ bool Netlist::CalculateFDS() {
 	return check;		//might need checks
 }
 
+
+int Netlist::FindNodeNumber(Logic* tempLogic) {
+	int number = 0;
+	int i = 0;
+
+	for (i = 0; i < this->nodes.size(); i++) {
+		if (tempLogic->GetName() == this->nodes.at(i)->GetName()) {
+			return i;
+		}
+	}
+
+	return -1;
+}
 
 Netlist::Netlist(void) {															//CONSTRUCTOR...
 	this->criticalPath = 0; 

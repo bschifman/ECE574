@@ -43,6 +43,7 @@ public:
 	void SetIfElseDepth(int depth) { this->ifElseDepth = depth; }			//set the current int depth value for the circuit
 	int GetLatency() { return this->latency; }								//get the int latency value for the circuit
 	int GetIfElseDepth() { return this->ifElseDepth; }						//get the current int depth value for the circuit
+	int FindNodeNumber(Logic* tempLogic);									//Finds node number in the netlist node vector of an inputted node
 
 	//Getters
 	vector<Connector*> GetEdges() { return this->edges; }
