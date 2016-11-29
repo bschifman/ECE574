@@ -29,6 +29,7 @@ Logic::Logic(string type, Connector *logicOutput, int dataWidth, bool sign, int 
 	this->SetType(type);
 	this->SetDataWidth(dataWidth);
 	this->SetConnector(logicOutput);
+	this->SetInherentDelay();
 	this->SetSign(sign);
 	this->SetNodeASAP(int(0));
 	this->SetNodeALAP(int(0));
@@ -131,6 +132,61 @@ void Logic::SetEasyInputs() {
 	for (i = 0; i < this->GetParents().size(); i++) {
 		this->easyInputs = this->easyInputs + this->GetParents().at(i)->GetName() + ' ';
 	}
+
+	return;
+}
+
+void Logic::SetInherentDelay() {
+
+	switch (this->GetType())
+	{
+	case(1):
+		this->scheduleDelayValue = 1;
+		break;
+	case(2):
+		this->scheduleDelayValue = 1;
+		break;
+	case(3):
+		this->scheduleDelayValue = 1;
+		break;
+	case(4):
+		this->scheduleDelayValue = 3;
+		break;
+	case(5):
+		this->scheduleDelayValue = 1;
+		break;
+	case(6):
+		this->scheduleDelayValue = 1;
+		break;
+	case(7):
+		this->scheduleDelayValue = 1;
+		break;
+	case(8):
+		this->scheduleDelayValue = 1;
+		break;
+	case(9):
+		this->scheduleDelayValue = 3;
+		break;
+	case(10):
+		this->scheduleDelayValue = 3;
+		break;
+	case(11):
+		this->scheduleDelayValue = 1;
+		break;
+	case(12):
+		this->scheduleDelayValue = 1;
+		break;
+	case(13):
+		this->scheduleDelayValue = 1;
+		break;
+	case(14):
+		this->scheduleDelayValue = 1;
+		break;
+	default:
+		this->scheduleDelayValue = 0;
+		break;
+	}
+
 
 	return;
 }

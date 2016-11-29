@@ -30,6 +30,7 @@ public:
 	void SetConnector(Connector *recievedConnector) { this->logicOutput = recievedConnector; }	//set output(child) edge of this node(ie the output wire)
 	void SetOutType(string outType) { this->outType = outType; }				//set the node output type, specifically for the COMP (ie >,<,==)
 	void SetDataWidth(int inputDataWidth);										//set the datawidth of this node (ie 1,2,4,8,16,32,64, etc)
+	void SetInherentDelay();
 	void SetSign(bool sign) { this->sign = sign; }								//set whether this is a signed(1) or unsigned(0) module based on its output type
 	void AddParent(Connector* parentToAdd) { this->logicInputs.push_back(parentToAdd); }	//add a parent edge to this node (ie an input to the module)
 	void SetNodeALAP(int inputTime) { this->alapt = inputTime; }					//set ALAP time
