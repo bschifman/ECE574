@@ -814,11 +814,16 @@ bool Netlist::CalculateForcesFDS() {
 		this->nodes.at(minNodeNumber)->SetNodeFDS(minTimeSlot);				//Set the FDS of the node with the min val in the total force matrix
 		this->nodes.at(minNodeNumber)->SetNodeALAP(minTimeSlot);			//Set the ALAP of the node with the min val in the total force matrix 
 		this->nodes.at(minNodeNumber)->SetNodeASAP(minTimeSlot);			//Set the ASAP of the node with the min val in the total force matrix
-		if (!RecalculateASAP(this->nodes.at(minNodeNumber), minTimeSlot)) {
-			cout << "ERROR in RecalculateASAP" << endl;
+
+		if (this->nodes.at(minNodeNumber)->GetConnector()->GetChildVector().size()) {		//If there are no child nodes, don't recalculate ASAP
+			if (!RecalculateASAP(this->nodes.at(minNodeNumber), minTimeSlot)) {
+				cerr << "ERROR in RecalculateASAP" << endl;
+			}
 		}
-		if (!RecalculateALAP(this->nodes.at(minNodeNumber), minTimeSlot)) {
-			cout << "ERROR in RecalculateALAP" << endl;
+		if (this->nodes.at(minNodeNumber)->GetParentNodes().size()) {						//If there are no parent nodes, don't recalculate ALAP
+			if (!RecalculateALAP(this->nodes.at(minNodeNumber), minTimeSlot)) {
+				cerr << "ERROR in RecalculateALAP" << endl;
+			}
 		}
 		
 
