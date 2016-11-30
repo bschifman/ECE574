@@ -740,15 +740,6 @@ bool Netlist::CalculateForcesFDS() {
 		predecessorForces[i].resize(this->latency + 1);
 		totalForces[i].resize(this->latency + 1);
 
-		/*
-		for (j = 1; j < selfForces[i].size(); j++) {									//initialize array values to 0
-				selfForces[i][j] = 0;
-				successorForces[i][j] = 0;
-				predecessorForces[i][j] = 0;
-				totalForces[i][j] = 0;
-			
-		}
-		*/
 	}
 
 	for (i = 0; i < this->nodes.size(); i++) {																		//CALCULATE SELF FORCES
@@ -764,43 +755,51 @@ bool Netlist::CalculateForcesFDS() {
 		else {																										//else if node is anything else use LOGRES that probability for that time frame
 			currentDistribution = this->LOGRESDistribution;
 		}
+		//CALCULATE SELF FORCES
 		for (j = 1; j < selfForces[i].size(); j++) {
 			for (k = 1; k <= this->latency; k++) {
 				if (k == j) {
-					selfForces[i][j] = selfForces[i][j] + currentDistribution[j]*(1- this->nodeProbabilityArray[i][j]);		//calculate the self force if it is in its time slot
+					selfForces[i][j] = selfForces[i][j] + currentDistribution[k] * (1 - this->nodeProbabilityArray[i][k]);		//calculate the self force if it is in its time slot
 				}
 				else {
-					selfForces[i][j] = selfForces[i][j] + currentDistribution[j] * (0 - this->nodeProbabilityArray[i][j]);	//calculate the self forces not in the time slot	
+					selfForces[i][j] = selfForces[i][j] + currentDistribution[k] * (0 - this->nodeProbabilityArray[i][k]);		//calculate the self forces not in the time slot	
 				}
 			}
 		}
-
+	}
+	
+	for (i = 0; i < this->nodes.size(); i++) {
+		
 		//CALCULATE SUCCESSOR FORCES
-		for (j = 1; j < successorForces[i].size() - 1; j++) {
-			tempChildNodes = this->nodes.at(i)->GetConnector()->GetChildVector();
-			if (tempChildNodes.size() != 0) {																			//If you have any immediate children nodes then continue
-				for (k = 0; k < tempChildNodes.size(); k++) {															//Loop through all of the child nodes
-					if ((j + this->nodes.at(i)->GetTypeScheduleDelay()) == tempChildNodes.at(k)->GetNodeALAP()) {		//If child node has an ALAP time equal to the node time + delay then it is forced, add it
-						successorForces[i][j] += selfForces[(FindNodeNumber(tempChildNodes.at(k)))][j + this->nodes.at(i)->GetTypeScheduleDelay()];		//set the succesor forces values
+		if (this->nodes.at(i)->GetNodeALAP() != this->GetLatency()) {														//Shortcut to see if you are one of the last nodes (no successor)
+			for (j = 1; j < successorForces[i].size() - 1; j++) {
+				tempChildNodes = this->nodes.at(i)->GetConnector()->GetChildVector();
+				if (tempChildNodes.size()) {																				//If you have any immediate children nodes then continue
+					for (k = 0; k < tempChildNodes.size(); k++) {															//Loop through all of the child nodes
+						if ((j + this->nodes.at(i)->GetTypeScheduleDelay()) == tempChildNodes.at(k)->GetNodeALAP()) {		//If child node has an ALAP time equal to the node time + delay then it is forced, add it
+							successorForces[i][j] += selfForces[(FindNodeNumber(tempChildNodes.at(k)))][j + this->nodes.at(i)->GetTypeScheduleDelay()];		//set the succesor forces values
+						}
 					}
 				}
 			}
 		}
 		
 		//CALCULATE PREDECESSOR FORCES
-		for (j = 2; j < successorForces[i].size(); j++) {
-			tempParentNodes = this->nodes.at(i)->GetParentNodes();
-			if (tempParentNodes.size() != 0) {																			//If you have any immediate Parent nodes then continue
-				for (k = 0; k < tempParentNodes.size(); k++) {															//Loop through all of the Parent nodes
-					if ((j - this->nodes.at(i)->GetTypeScheduleDelay()) == tempParentNodes.at(k)->GetNodeASAP()) {		//If Parent node has an ASAP time equal to the node time - delay then it is forced, add it
-						predecessorForces[i][j] += selfForces[(FindNodeNumber(tempParentNodes.at(k)))][j - this->nodes.at(i)->GetTypeScheduleDelay()];		//set the predecessor forces values
+		if (this->nodes.at(i)->GetNodeASAP() != 1) {																		//Shortcut to see if you are at one of the beginning nodes (no predecessors)
+			for (j = 2; j < successorForces[i].size(); j++) {
+				tempParentNodes = this->nodes.at(i)->GetParentNodes();
+				if (tempParentNodes.size() != 0) {																			//If you have any immediate Parent nodes then continue
+					for (k = 0; k < tempParentNodes.size(); k++) {															//Loop through all of the Parent nodes
+						if ((j - this->nodes.at(i)->GetTypeScheduleDelay()) == tempParentNodes.at(k)->GetNodeASAP()) {		//If Parent node has an ASAP time equal to the node time - delay then it is forced, add it
+							predecessorForces[i][j] += selfForces[(FindNodeNumber(tempParentNodes.at(k)))][j - this->nodes.at(i)->GetTypeScheduleDelay()];		//set the predecessor forces values
+						}
 					}
 				}
 			}
 		}
 
 		//CALCULATE TOTAL FORCES
-		for (j = 1; j < totalForces.size(); j++) {													//Loop through all of the times
+		for (j = 1; j < totalForces[i].size(); j++) {													//Loop through all of the times
 			totalForces[i][j] = selfForces[i][j] + successorForces[i][j] + predecessorForces[i][j];	//Calculate the total force for each node at each time
 			if ((totalForces[i][j] < minVal) && (this->nodes.at(i)->GetNodeFDS() == 0)) {			//Look for the lowest value in the total forces matrix that doesn't already have a force
 				minVal = totalForces[i][j];				//Keeps track of the minVal of the total forces matrix
@@ -815,6 +814,14 @@ bool Netlist::CalculateForcesFDS() {
 		this->nodes.at(minNodeNumber)->SetNodeFDS(minTimeSlot);				//Set the FDS of the node with the min val in the total force matrix
 		this->nodes.at(minNodeNumber)->SetNodeALAP(minTimeSlot);			//Set the ALAP of the node with the min val in the total force matrix 
 		this->nodes.at(minNodeNumber)->SetNodeASAP(minTimeSlot);			//Set the ASAP of the node with the min val in the total force matrix
+		if (!RecalculateASAP(this->nodes.at(minNodeNumber), minTimeSlot)) {
+			cout << "ERROR in RecalculateASAP" << endl;
+		}
+		if (!RecalculateALAP(this->nodes.at(minNodeNumber), minTimeSlot)) {
+			cout << "ERROR in RecalculateALAP" << endl;
+		}
+		
+
 	}
 	return check;		//might need checks
 }
@@ -843,11 +850,10 @@ bool Netlist::CalculateFDS() {
 
 
 int Netlist::FindNodeNumber(Logic* tempLogic) {
-	int number = 0;
 	int i = 0;
 
 	for (i = 0; i < this->nodes.size(); i++) {
-		if (tempLogic->GetName() == this->nodes.at(i)->GetName()) {
+		if (tempLogic == this->nodes.at(i)) {
 			return i;
 		}
 	}
@@ -974,7 +980,42 @@ string Netlist::outputCaseLine(int nodeNumber) {
 	return outSS.str();
 }
 
+bool Netlist::RecalculateASAP(Logic* inputNode, int minTime) {
+	int i = 0;
+	int j = 0;
+	int k = 0;
+	bool check = true;
+	Logic* tempNode;
 
+	for (i = 0; i < inputNode->GetConnector()->GetChildVector().size(); i++) {				//loop through all of the children of the node that has been locked
+		tempNode = inputNode->GetParentNodes().at(i);										//for ease of typing
+		if (tempNode->GetNodeASAP() <= (minTime + inputNode->GetTypeScheduleDelay() - 1)) {	//If the ASAP time of one of the child nodes is <= end of node duration
+			tempNode->SetNodeASAP(minTime + tempNode->GetTypeScheduleDelay());				//Reassign ASAP time of the parent node
+			this->RecalculateASAP(tempNode, tempNode->GetNodeASAP());						//Recursively call function to act on all children nodes
+		}
+	}
+
+	return check;
+
+}
+
+bool Netlist::RecalculateALAP(Logic* inputNode, int minTime) {
+	int i = 0;
+	int j = 0;
+	int k = 0;
+	bool check = true;
+	Logic* tempNode;
+
+	for (i = 0; i < inputNode->GetParentNodes().size(); i++) {							//loop through all of the parents of the node that has been locked
+		tempNode = inputNode->GetParentNodes().at(i);									//for ease of typing
+		if (tempNode->GetNodeALAP() >= minTime) {										//If the ALAP time of one of the parent nodes is >= minTime
+			tempNode->SetNodeALAP(minTime - tempNode->GetTypeScheduleDelay());			//Reassign ALAP time of the parent node
+			this->RecalculateALAP(tempNode, tempNode->GetNodeALAP());					//Recursively call function to act on all parent nodes
+		}
+	}
+
+	return check;
+}
 
 
 Netlist::Netlist(void) {															//CONSTRUCTOR...
@@ -995,3 +1036,4 @@ Netlist::~Netlist(void) {															//DeSTRUCTOR!!!!!!!!~!~!
 	}
 
 }
+

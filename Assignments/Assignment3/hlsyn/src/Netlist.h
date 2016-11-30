@@ -38,8 +38,10 @@ public:
 	bool CalculateFDS();													//compute force directed scheduling
 	int FindNodeNumber(Logic* tempLogic);									//Finds node number in the netlist node vector of an inputted node
 	bool outputHLSMModule(string outputFilename);							//writes all the parsed data from the input file into a verilog HLSM module 
+	bool RecalculateASAP(Logic* inputNode, int minTime);													//Lots of crap, and for the function below too
+	bool RecalculateALAP(Logic* inputNode, int minTime);													//^
 	string outputCaseLine(int caseNumber);									// outputs a line for a verilog case module in verilog code
-
+	
 
 	//Getters
 	vector<Connector*> GetEdges() { return this->edges; }
