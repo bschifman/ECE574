@@ -10,6 +10,7 @@ File: Netlist.h
 #include <vector>
 #include "Connector.h"
 #include "Logic.h"
+#include "StateCase.h"
 
 using namespace std;
 
@@ -41,7 +42,9 @@ public:
 	bool RecalculateASAP(Logic* inputNode, int minTime);													//Lots of crap, and for the function below too
 	bool RecalculateALAP(Logic* inputNode, int minTime);													//^
 	string outputCaseLine(int caseNumber);									// outputs a line for a verilog case module in verilog code
-	
+	bool CalculateCaseStates();												//compute the case state orders and links
+	bool CheckLatencyLevelComplete(int latencyLevel);						//check if everything in a latency level has been accounted for
+	int CheckLatencyLevelDepth(int latencyLevel);							//check if latency level has an if/else/for depth anywhere
 
 	//Getters
 	vector<Connector*> GetEdges() { return this->edges; }
@@ -60,6 +63,7 @@ public:
 private:
 	vector<Connector*> edges;
 	vector<Logic*> nodes;
+	vector<StateCase*> cases;
 	vector<vector<float> > nodeProbabilityArray;
 	vector<float> ADDSUBDistribution;
 	vector<float> MULDistribution;

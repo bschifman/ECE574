@@ -1017,6 +1017,165 @@ bool Netlist::RecalculateALAP(Logic* inputNode, int minTime) {
 	return check;
 }
 
+bool Netlist::CalculateCaseStates() {
+	int i = 0;
+	int j = 0;
+	int k = 0;
+	int m = 0;
+	int n = 0;
+	int tempNextLatency = 0;
+	bool check = true;
+	bool firstCaseAtLatency = true;
+	bool generatedExtraCase = false;
+	StateCase *tempCase = NULL;
+	StateCase *tempCaseFalse = NULL;
+	int caseCounter = 2;
+
+	tempCase = new StateCase(0, 0);			//create new BEGIN '0' case statement (counter, latency)
+	this->cases.push_back(tempCase);
+	tempCase = new StateCase(1, 1);			//create new '1' case statement
+	this->cases.push_back(tempCase);
+	tempCase->AddParentCase(this->cases.at(0));			//link the 0 and 1 case statements together
+	this->cases.at(0)->AddChildrenCase(tempCase);
+
+	for (i = 0; i < this->nodes.size(); i++) {
+		if (this->nodes.at(i)->GetNodeFDS() == 1) {
+			tempCase->AddNodeToCase(this->nodes.at(i));						//add all nodes that are in case 1 to case 1
+			this->nodes.at(i)->SetScheduled(true);							//mark all nodes in this case as having been scheduled
+		}
+	}
+
+
+
+	for (i = 1; i <= this->GetLatency(); i++) {
+		/*
+		if (this->CheckLatencyLevelDepth(i) > 0) {							//check to see if any case statements will be branches
+		firstCaseAtLatency = false;										//if there are if statement trees in this time slot, all nodes will be part their case statements
+		}
+		else {
+		firstCaseAtLatency = true;										//each new latency will need atleast 1 new case object if something is scheduled
+		}
+		*/
+		firstCaseAtLatency = true;										//each new latency will need atleast 1 new case object if something is scheduled
+
+		for (j = 0; j < this->cases.size(); j++) {
+			if (this->cases.at(j)->GetLatencyLevel() == i) {	//go through cases looking at all the ones with the same latency level as current level(i)
+																//move all nodes that are in the wrong level down
+				for (k = 0; k < this->cases.at(j)->GetCaseNodes().size(); k++) {				//loop through all case nodes
+					if (this->cases.at(j)->GetCaseNodes().at(k)->GetTypeString() == "if") {		//node at 'k' is an if statement
+						firstCaseAtLatency = false;
+						tempCase = new StateCase(caseCounter, i + 1);							//create new 'if(1) child' case statement
+						caseCounter++;
+						this->cases.push_back(tempCase);
+						tempCase->SetTrueFalseCase(true);
+						tempCaseFalse = new StateCase(caseCounter, i + 1);						//create new 'if(0) child' case statement
+						caseCounter++;
+						this->cases.push_back(tempCaseFalse);
+						tempCaseFalse->SetTrueFalseCase(false);
+
+						for (m = 0; m < this->cases.at(j)->GetCaseNodes().at(k)->GetConnector()->GetChildVector().size(); m++) { //look at all of the 'k' 'if' node children and sort them by 'if(1)' and 'if(0)'
+							if (this->cases.at(j)->GetCaseNodes().at(k)->GetConnector()->GetChildVector().at(m)->GetIfLevelOneOrZero() == true) {
+								tempCase->AddNodeToCase(this->cases.at(j)->GetCaseNodes().at(k)->GetConnector()->GetChildVector().at(m));						//add all nodes that are in 'true' case to tempcase
+								this->cases.at(j)->GetCaseNodes().at(k)->GetConnector()->GetChildVector().at(m)->SetScheduled(true);							//mark all nodes in this case as having been scheduled
+								tempCase->SetIfElseDepthMax(this->cases.at(j)->GetCaseNodes().at(k)->GetConnector()->GetChildVector().at(m)->GetIfElseDepth());	//sets the current case ifelse depth to proper depth
+							}
+							else {
+								tempCaseFalse->AddNodeToCase(this->cases.at(j)->GetCaseNodes().at(k)->GetConnector()->GetChildVector().at(m));					//add all nodes that are in 'true' case to tempcase
+								this->cases.at(j)->GetCaseNodes().at(k)->GetConnector()->GetChildVector().at(m)->SetScheduled(true);							//mark all nodes in this case as having been scheduled
+								tempCase->SetIfElseDepthMax(this->cases.at(j)->GetCaseNodes().at(k)->GetConnector()->GetChildVector().at(m)->GetIfElseDepth());	//sets the current case ifelse depth to proper depth
+							}
+						}
+						for (m = 0; m < this->nodes.size(); m++) {		//loop through all nodes and add any that are depth 0, add them to the 'if(1)' and 'if(0)'
+							if ((this->nodes.at(m)->GetNodeFDS() == (i + 1)) && (this->nodes.at(m)->GetIfElseDepth() == 0)) {
+								tempCase->AddNodeToCase(this->nodes.at(m));
+								this->nodes.at(m)->SetScheduled(true);
+								tempCaseFalse->AddNodeToCase(this->nodes.at(m));
+							}
+						}
+					}
+				}
+				generatedExtraCase = false;
+				for (k = 0; k < this->cases.at(j)->GetCaseNodes().size(); k++) {				//loop through all of this case states nodes
+					if ((this->cases.at(j)->GetCaseNodes().at(k)->GetTypeString() != "if") && (this->cases.at(j)->GetCaseNodes().at(k)->GetIfElseDepth() >0)) {		//check if something is teired down if node from above
+						if (generatedExtraCase == false) {											//if this is the first item found
+							tempCase = new StateCase(caseCounter, i + 1);							//create new case statement
+							caseCounter++;
+							this->cases.push_back(tempCase);
+							tempCase->SetTrueFalseCase(true);
+
+							for (m = 0; m < this->cases.at(j)->GetCaseNodes().at(k)->GetConnector()->GetChildVector().size(); m++) {	//loop through all the cases' node's children nodes(ie nodes for the next case layer)
+								if (this->cases.at(j)->GetCaseNodes().at(k)->GetConnector()->GetChildVector().at(m)->GetIfElseDepth() == this->cases.at(j)->GetCaseNodes().at(k)->GetIfElseDepth()) { //if the cases' node component's child node is not the same ifelse depth, it is outside of the depth
+									tempCase->AddNodeToCase(this->cases.at(j)->GetCaseNodes().at(k)->GetConnector()->GetChildVector().at(m));	//add the cases' node's child node to the next downstream case statement
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		if (firstCaseAtLatency == true) {
+
+		}
+
+
+		for (j = 0; j < this->nodes.size(); j++) {							//loop through all nodes
+			if ((this->nodes.at(j)->GetNodeFDS() == i) && (this->nodes.at(j)->GetTypeString() == "if")) {		//if the current node has the same schedule as current time frame and is an if statement
+				firstCaseAtLatency = false;
+				tempCase = new StateCase(caseCounter, i + 1);					//create new 'if(1) child' case statement
+				this->cases.push_back(tempCase);
+				tempCase->SetTrueFalseCase(true);
+				tempCaseFalse = new StateCase(caseCounter, i + 1);			//create new 'if(0) child' case statement
+				this->cases.push_back(tempCaseFalse);
+				tempCaseFalse->SetTrueFalseCase(false);
+
+			}
+		}
+
+		for (j = 0; j < this->nodes.size(); j++) {							//loop through all nodes
+			if (this->nodes.at(j)->GetNodeFDS() == i) {						//if the current node has the same schedule as current time frame
+																			/*				if (firstCaseAtLatency == true) {							//if it is a first case statement of this latency, create a new case object
+																			tempCase = new StateCase(caseCounter, i);				//create new case statement
+																			this->cases.push_back(tempCase);
+																			caseCounter++;
+																			firstCaseAtLatency = false;
+																			}
+																			*/
+
+				if (this->nodes.at(j)->GetTypeString() == "if") {
+					for (k = 0; k < this->nodes.at(j)->GetConnector()->GetChildVector().size(); k++) {	//loop through all the nodes children nodes
+						if (this->nodes.at(j)->GetConnector()->GetChildVector().at(k)->GetIfLevelOneOrZero() == 0) {		//if any nodes children nodes are part of an else statement, create a new case
+							tempCaseFalse = new StateCase(caseCounter, i);			//create new case statement
+							this->cases.push_back(tempCaseFalse);
+							caseCounter++;
+							break;
+						}
+					}
+
+				}
+				else {
+					if (this->CheckLatencyLevelDepth(i) > 0) {		//check to see if any case statements will be branches
+
+					}
+					else {											//if all nodes are at 0th level(no if statement trees in time slot)
+						tempCase->AddNodeToCase(this->nodes.at(j));
+						this->nodes.at(j)->AddCaseState(tempCase->GetCaseNumber());
+						for (k = 0; k < this->nodes.at(j)->GetParents().size(); k++) {
+							for (m = 0; m < this->nodes.at(j)->GetParents().at(k)->GetParent().size(); m++) {
+
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	tempCase = new StateCase(caseCounter, i);			//create new case statement
+	this->cases.push_back(tempCase);
+
+
+	return check;		//might need checks
+}
 
 Netlist::Netlist(void) {															//CONSTRUCTOR...
 	this->ifElseDepth = 0;
@@ -1033,6 +1192,10 @@ Netlist::~Netlist(void) {															//DeSTRUCTOR!!!!!!!!~!~!
 	for (i = this->nodes.size(); i > 0; i--) {
 		delete this->nodes.at(i - 1);
 		this->nodes.pop_back();
+	}
+	for (i = this->cases.size(); i > 0; i--) {
+		delete this->cases.at(i - 1);
+		this->cases.pop_back();
 	}
 
 }
