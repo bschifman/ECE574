@@ -1153,7 +1153,7 @@ bool Netlist::CalculateCaseStates() {
 
 				}
 				else {
-					if (this->CheckLatencyLevelDepth(i) > 0) {		//check to see if any case statements will be branches
+					if ( 0) {		//check to see if any case statements will be branches
 
 					}
 					else {											//if all nodes are at 0th level(no if statement trees in time slot)
