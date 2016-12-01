@@ -984,7 +984,7 @@ string Netlist::outputCaseLine(Logic* caseNode) {
 	}
 	else	{
 
-		outSS << "\t\t\t\t\t" << tempConnector->GetName() << " = ";						//print out the output edge(ie 'b = ')
+		outSS << "\t\t\t\t" << tempConnector->GetName() << " = ";						//print out the output edge(ie 'b = ')
 		if (tempParent0 != NULL) {
 			outSS << tempParent0->GetName() << " ";										//print out to first input edge(ie 'b = c')
 		}
@@ -1232,7 +1232,7 @@ bool Netlist::CalculateCaseStates() {
 				}
 			}
 		}
-		if (firstCaseAtLatency == true) {													//if there were no other if branches made this round
+		if (1) {//firstCaseAtLatency == true) {													//if there were no other if branches made this round
 			for (j = 0; j < this->cases.size(); j++) {
 				if (this->cases.at(j)->GetLatencyLevel() == i) {
 					if (this->cases.at(j)->GetChildCases().size() == 0) {
