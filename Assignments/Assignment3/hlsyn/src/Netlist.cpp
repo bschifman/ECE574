@@ -925,7 +925,7 @@ bool Netlist::outputHLSMModule(string outputFilename) {									//write all curr
 		for (i = 1; i < this->cases.size()-1; i++) {
 			outFS << "\t" << "\t" << "\t" << i << ": begin" << endl;
 			for (j = 0; j < this->cases.at(i)->GetCaseNodes().size(); j++) {
-				outFS << this->outputCaseLine(this->cases.at(i)->GetCaseNodes().at(i)) << endl;
+				outFS << this->outputCaseLine(this->cases.at(i)->GetCaseNodes().at(j)) << endl;
 				if (this->cases.at(i)->GetCaseNodes().at(j)->GetTypeString() == "if") {
 					outFS << "\t" << "\t" << "\t" << "\t" << "\t" << "NextState <= " << this->cases.at(i)->GetChildCases().at(0)->GetCaseNumber() << endl;
 						outFS << "\t" << "\t" << "\t" << "\t" << "else" << endl;
@@ -1062,9 +1062,9 @@ bool Netlist::CalculateCaseStates() {
 	StateCase *tempCaseFalse = NULL;
 	int caseCounter = 2;
 
-	tempCase = new StateCase(0, 0);			//create new BEGIN '0' case statement (counter, latency)
+	tempCase = new StateCase(0, 0);						//create new BEGIN '0' case statement (counter, latency)
 	this->cases.push_back(tempCase);
-	tempCase = new StateCase(1, 1);			//create new '1' case statement
+	tempCase = new StateCase(1, 1);						//create new '1' case statement
 	this->cases.push_back(tempCase);
 	tempCase->AddParentCase(this->cases.at(0));			//link the 0 and 1 case statements together
 	this->cases.at(0)->AddChildrenCase(tempCase);
@@ -1097,13 +1097,13 @@ bool Netlist::CalculateCaseStates() {
 							tempCase->AddParentCase(this->cases.at(j));
 
 							tempCase->AddNodeToCase(this->cases.at(j)->GetCaseNodes().at(k));						//add the unwanted node down to the new case state
-							this->cases.at(j)->RemoveCaseNode(k);	//removes the unwanted node from the current case state
+							this->cases.at(j)->RemoveCaseNode(k);													//removes the unwanted node from the current case state
 							k--;																					//a node was removed, interate back down 1 k value	
 						}
 						else {
-							this->cases.at(j)->GetChildCases().at(0)->AddNodeToCase(this->cases.at(j)->GetCaseNodes().at(k));		//add the unwanted node down to the case state
-							this->cases.at(j)->RemoveCaseNode(k);	//removes the unwanted node from the current case state
-							k--;																					//a node was removed, interate back down 1 k value		
+							this->cases.at(j)->GetChildCases().at(0)->AddNodeToCase(this->cases.at(j)->GetCaseNodes().at(k));	//add the unwanted node down to the case state
+							this->cases.at(j)->RemoveCaseNode(k);																//removes the unwanted node from the current case state
+							k--;																								//a node was removed, interate back down 1 k value		
 						}
 					}
 				}
@@ -1112,14 +1112,14 @@ bool Netlist::CalculateCaseStates() {
 					if (this->cases.at(j)->GetCaseNodes().at(k)->GetTypeString() == "if") {		//node at 'k' is an if statement
 						if (firstCaseAtLatency == false) {
 							firstCaseAtLatency = false;
-							tempCase = new StateCase(caseCounter, i + 1);							//create new 'if(1) child' case statement
+							tempCase = new StateCase(caseCounter, i + 1);						//create new 'if(1) child' case statement
 							caseCounter++;
 							this->cases.push_back(tempCase);
 							tempCase->SetTrueFalseCase(true);
 							this->cases.at(j)->AddChildrenCase(tempCase);
 							tempCase->AddParentCase(this->cases.at(j));
 
-							tempCaseFalse = new StateCase(caseCounter, i + 1);						//create new 'if(0) child' case statement
+							tempCaseFalse = new StateCase(caseCounter, i + 1);					//create new 'if(0) child' case statement
 							caseCounter++;
 							this->cases.push_back(tempCaseFalse);
 							tempCaseFalse->SetTrueFalseCase(false);
@@ -1145,12 +1145,12 @@ bool Netlist::CalculateCaseStates() {
 									tempCaseFalse->AddNodeToCase(this->nodes.at(m));
 								}
 							}
-							tempCase->RemoveDuplicateNodes();					//incase of any overlap of nodes, remove duplicates
+							tempCase->RemoveDuplicateNodes();						//incase of any overlap of nodes, remove duplicates
 						}
 						else {
-							tempCase = this->cases.at(j)->GetChildCases().at(0);					//existing 'if(1)' child case statement
+							tempCase = this->cases.at(j)->GetChildCases().at(0);	//existing 'if(1)' child case statement
 
-							tempCaseFalse = new StateCase(caseCounter, i + 1);						//create new 'if(0) child' case statement
+							tempCaseFalse = new StateCase(caseCounter, i + 1);		//create new 'if(0) child' case statement
 							caseCounter++;
 							this->cases.push_back(tempCaseFalse);
 							tempCaseFalse->SetTrueFalseCase(false);
@@ -1306,7 +1306,7 @@ void Netlist::RemoveAllDuplicateCases() {
 		for (j = this->cases.size() - (int)1; j >= 0; j--) {
 			if (this->cases.at(j)->GetLatencyLevel() == i) {
 
-				for (k = j - (int)1; k >= 0; j--) {
+				for (k = j - (int)1; k >= 0; k--) {
 					if (this->cases.at(k)->GetLatencyLevel() == i) {
 						if (this->cases.at(j)->CheckDuplicateCase(this->cases.at(k)) == true) {							//check if the 2 cases in this latency are the same
 							this->cases.at(j)->AddParentCase(this->cases.at(k)->GetParentCases().at(0));										//branch one of the parents to the other case
