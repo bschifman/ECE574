@@ -1340,7 +1340,7 @@ void Netlist::RemoveAllEmptyCases() {
 	int n = 0;
 	StateCase* tempCase;
 
-	for (i = 1; i < this->cases.size() - 1; i++) {
+	for (i = 1; i < this->cases.size() ; i++) {	// was //for (i = 1; i < this->cases.size() - 1; i++) {
 		if (this->cases.at(i)->GetCaseNodes().size() == 0) {								//if the are any cases without any nodes, connect the parent case and child case of this case and remove it
 			tempCase = this->cases.at(i)->GetChildCases().at(0);
 			tempCase->AddParentCase(this->cases.at(i)->GetParentCases().at(0));
