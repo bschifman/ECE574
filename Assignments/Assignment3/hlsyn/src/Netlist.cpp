@@ -542,6 +542,7 @@ bool Netlist::CalculateASAP() {
 	}
 
 	for (currentLatency = 0; currentLatency <= this->GetLatency(); currentLatency++) {						//cycle through each latency timeframe
+		
 		for (i = 0; i < this->edges.size(); i++) {															//look at all the edges for this time frame
 			if (this->edges.at(i)->GetEdgeASAP() == currentLatency) {										//only evaluate edges active during this time frame
 				for (j = 0; j < this->edges.at(i)->GetChildVector().size(); j++) {							//loop through all the nodes this edge is a parent of
@@ -556,11 +557,7 @@ bool Netlist::CalculateASAP() {
 							this->edges.at(i)->GetChildVector().at(j)->GetConnector()->SetEdgeASAP(currentLatency + tempNodeDelay);	//update the child edge of the current node to a new ASAP value
 						}
 					}
-					for (k = 0; k < this->edges.at(i)->GetParent().size(); k++) {
-						if ((this->edges.at(i)->GetChildVector().at(j)->GetNodeASAP() == currentLatency) && (this->edges.at(i)->GetParent().at(k)->GetTypeString() == "MUL")) {
-
-						}
-					}
+					
 				}
 			}
 		}
@@ -793,8 +790,8 @@ bool Netlist::CalculateForcesFDS() {
 		if (this->nodes.at(i)->GetNodeASAP() != 1) {							//Shortcut to see if you are at one of the beginning nodes (no predecessors)
 			j = this->nodes.at(i)->GetNodeASAP();								//Only will have predecessor force when node is in ASAP
 			tempParentNodes = this->nodes.at(i)->GetParentNodes();
-			if (tempParentNodes.size()) {																			//If you have any immediate Parent nodes then continue
-				for (k = 0; k < tempParentNodes.size(); k++) {															//Loop through all of the Parent nodes
+			if (tempParentNodes.size()) {																					//If you have any immediate Parent nodes then continue
+				for (k = 0; k < tempParentNodes.size(); k++) {																//Loop through all of the Parent nodes
 					if ((j - tempParentNodes.at(k)->GetTypeScheduleDelay()) == tempParentNodes.at(k)->GetNodeASAP()) {		//If Parent node has an ASAP time equal to the schedule time - delay of predecessor then it is forced, add it
 						predecessorForces[i][j] += selfForces[(FindNodeNumber(tempParentNodes.at(k)))][j - tempParentNodes.at(k)->GetTypeScheduleDelay()];		//set the predecessor forces values
 					}
