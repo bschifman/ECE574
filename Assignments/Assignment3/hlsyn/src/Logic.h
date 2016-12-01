@@ -23,7 +23,7 @@ class Logic				//nodes, will probably need their inputs as well to create the ve
 {
 public:
 	Logic(void);																//default constructor
-	Logic(string type, Connector* logicOutput, int dataWidth, bool sign, int depth);		//overload constructor
+	Logic(string type, Connector* logicOutput, int dataWidth, bool sign, int depth, int size);		//overload constructor
 	~Logic(void);																//destructor
 
 	//Setters
@@ -43,6 +43,7 @@ public:
 	void SetIfLevelOneOrZero(bool boolValue) { this->ifLevelOneOrZero = boolValue; }	//set the current if/else bool value of the circuit
 	void SetEasyInputs();																//set that easyInputs string
 	void SetScheduled(bool ifScheduled) { this->scheduled = ifScheduled; }			//sets acknowledgement if this node has been scheduled in a case statement or not
+	void SetNodeNumber(int size) { this->nodeNumber = size; }
 
 	//Getters
 	Connector* GetConnector() { return this->logicOutput; }						//get output(child) edge of this node(ie the output wire)
@@ -78,6 +79,7 @@ private:
 	int type;
 	int dataWidth;
 	int ifElseDepth;						//depth of circuit
+	int nodeNumber;							//Node number in the vector
 	bool sign;
 	bool ifLevelOneOrZero;					//records if the node is part of the if(true) component or the else(false) component
 	bool scheduled;							//records if the node has been scheduled in a case statment or not

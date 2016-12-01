@@ -25,7 +25,7 @@ Logic::Logic(void) {
 
 }
 
-Logic::Logic(string type, Connector *logicOutput, int dataWidth, bool sign, int depth) {	//overload constructor
+Logic::Logic(string type, Connector *logicOutput, int dataWidth, bool sign, int depth, int size) {	//overload constructor
 	this->SetType(type);
 	this->SetDataWidth(dataWidth);
 	this->SetConnector(logicOutput);
@@ -36,6 +36,7 @@ Logic::Logic(string type, Connector *logicOutput, int dataWidth, bool sign, int 
 	this->SetNodeFDS(int(0));
 	this->SetIfElseDepth(depth);
 	this->SetIfLevelOneOrZero(true);
+	this->SetNodeNumber(size);
 }
 
 Logic::~Logic(void) {

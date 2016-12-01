@@ -139,7 +139,7 @@ bool Netlist::parseNode(string inputLine) {
 		tempName << this->GetIfForIncrementer();								//using the orginal outputs name, add 'wire' to the end to distinguish them(ie 'a' to 'awire')
 		tempConnector = new Connector(tempName.str(), "wire", 1, 0);			//name, type, datawidth, sign
 		this->edges.push_back(tempConnector);
-		tempLogic = new Logic("if", tempConnector, tempConnector->GetSize(), sign, this->GetIfElseDepth()-1);			//create new "if" node
+		tempLogic = new Logic("if", tempConnector, tempConnector->GetSize(), sign, this->GetIfElseDepth()-1, this->nodes.size());			//create new "if" node
 		this->nodes.push_back(tempLogic);
 		tempConnector->AddParent(tempLogic);
 		tempLogic->AddParent(tempConnectorUp);									//add the conditional variable as the parent to the "if" node
@@ -149,8 +149,13 @@ bool Netlist::parseNode(string inputLine) {
 			tempLogic->SetIfLevelOneOrZero(this->ifForLevelOneOrZero.at(this->GetIfElseDepth() - (int)1));			//takes the value of whether it is a if(true) or else(false) section
 
 			for (i = 0; i < this->nodes.size(); i++) {
-				if ((this->nodes.at(i)->GetTypeString() == "if") && (this->nodes.at(i)->GetIfElseDepth() == (this->GetIfElseDepth() - (int)1))) {
+				if ((tempLogic->GetTypeString() != "if") && (this->nodes.at(i)->GetTypeString() == "if") && (this->nodes.at(i)->GetIfElseDepth() == (this->GetIfElseDepth() - (int)1))) {
 					tempLogic->AddParent(this->nodes.at(i)->GetConnector());										//add the "if"'s output edge as the parent to this node
+					this->nodes.at(i)->GetConnector()->AddChild(tempLogic);
+				}
+				else if ((tempLogic->GetTypeString() == "if") && (this->nodes.at(i)->GetTypeString() == "if") && (this->nodes.at(i)->GetIfElseDepth() == (this->GetIfElseDepth() - (int)2))) {
+					tempLogic->AddParent(this->nodes.at(i)->GetConnector());
+					this->nodes.at(i)->GetConnector()->AddChild(tempLogic);
 				}
 			}
 		}
@@ -237,11 +242,11 @@ bool Netlist::parseNode(string inputLine) {
 		if ((!variable2.empty()) && (variable2 != "1")) { sign |= this->findEdge(variable2)->GetSign(); }
 		if ((!variable3.empty()) && (variable3 != "1")) { sign |= this->findEdge(variable3)->GetSign(); }
 
-		if (type != "COMP") { tempLogic = new Logic(type, tempConnector, tempConnector->GetSize(), sign, this->GetIfElseDepth()); }	//create the new logic element with its output edge, type and datawidth 
+		if (type != "COMP") { tempLogic = new Logic(type, tempConnector, tempConnector->GetSize(), sign, this->GetIfElseDepth(), this->nodes.size()); }	//create the new logic element with its output edge, type and datawidth 
 		else if (this->findEdge(variable1)->GetSize() > this->findEdge(variable2)->GetSize()) {				//compare the 2 input edges and use the larger datawidth
-			tempLogic = new Logic(type, tempConnector, this->findEdge(variable1)->GetSize(), sign, this->GetIfElseDepth());			//if vector at 0 is bigger, use it
+			tempLogic = new Logic(type, tempConnector, this->findEdge(variable1)->GetSize(), sign, this->GetIfElseDepth(), this->nodes.size());			//if vector at 0 is bigger, use it
 		}
-		else { tempLogic = new Logic(type, tempConnector, this->findEdge(variable2)->GetSize(), sign, this->GetIfElseDepth()); }	//if vector at 1 is bigger, use it
+		else { tempLogic = new Logic(type, tempConnector, this->findEdge(variable2)->GetSize(), sign, this->GetIfElseDepth(), this->nodes.size()); }	//if vector at 1 is bigger, use it
 
 		this->nodes.push_back(tempLogic);																	//create new logic/node and add to vector
 		tempConnector->AddParent(tempLogic);
