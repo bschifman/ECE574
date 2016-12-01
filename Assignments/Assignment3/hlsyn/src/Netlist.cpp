@@ -1093,7 +1093,7 @@ bool Netlist::CalculateCaseStates() {
 							caseCounter++;
 							this->cases.push_back(tempCase);
 							tempCase->SetTrueFalseCase(true);
-							this->cases.at(j)->GetChildCases().push_back(tempCase);
+							this->cases.at(j)->AddChildrenCase(tempCase);
 							tempCase->AddParentCase(this->cases.at(j));
 
 							tempCase->AddNodeToCase(this->cases.at(j)->GetCaseNodes().at(k));						//add the unwanted node down to the new case state
@@ -1116,14 +1116,14 @@ bool Netlist::CalculateCaseStates() {
 							caseCounter++;
 							this->cases.push_back(tempCase);
 							tempCase->SetTrueFalseCase(true);
-							this->cases.at(j)->GetChildCases().push_back(tempCase);
+							this->cases.at(j)->AddChildrenCase(tempCase);
 							tempCase->AddParentCase(this->cases.at(j));
 
 							tempCaseFalse = new StateCase(caseCounter, i + 1);						//create new 'if(0) child' case statement
 							caseCounter++;
 							this->cases.push_back(tempCaseFalse);
 							tempCaseFalse->SetTrueFalseCase(false);
-							this->cases.at(j)->GetChildCases().push_back(tempCaseFalse);
+							this->cases.at(j)->AddChildrenCase(tempCaseFalse);
 							tempCaseFalse->AddParentCase(this->cases.at(j));
 
 							for (m = 0; m < this->cases.at(j)->GetCaseNodes().at(k)->GetConnector()->GetChildVector().size(); m++) { //look at all of the 'k' 'if' node children and sort them by 'if(1)' and 'if(0)'
@@ -1154,12 +1154,12 @@ bool Netlist::CalculateCaseStates() {
 							caseCounter++;
 							this->cases.push_back(tempCaseFalse);
 							tempCaseFalse->SetTrueFalseCase(false);
-							this->cases.at(j)->GetChildCases().push_back(tempCaseFalse);
+							this->cases.at(j)->AddChildrenCase(tempCaseFalse);
 							tempCaseFalse->AddParentCase(this->cases.at(j));
 
 							for (m = 0; m < tempCase->GetCaseNodes().size(); m++) {
 								if (tempCase->GetCaseNodes().at(m)->GetIfLevelOneOrZero() == false) {		//iterate through and move nodes from 'if(1)' branch to if(0) branch if in wrong one
-									tempCaseFalse->GetCaseNodes().push_back(tempCase->GetCaseNodes().at(m));
+									tempCaseFalse->AddNodeToCase(tempCase->GetCaseNodes().at(m));
 									tempCase->GetCaseNodes().erase(tempCase->GetCaseNodes().begin() + m);
 									m--;
 								}
@@ -1199,7 +1199,7 @@ bool Netlist::CalculateCaseStates() {
 							caseCounter++;
 							this->cases.push_back(tempCase);
 							tempCase->SetTrueFalseCase(true);
-							this->cases.at(j)->GetChildCases().push_back(tempCase);
+							this->cases.at(j)->AddChildrenCase(tempCase);
 							tempCase->AddParentCase(this->cases.at(j));
 
 							for (m = 0; m < this->cases.at(j)->GetCaseNodes().at(k)->GetConnector()->GetChildVector().size(); m++) {	//loop through all the cases' node's children nodes(ie nodes for the next case layer)
@@ -1239,7 +1239,7 @@ bool Netlist::CalculateCaseStates() {
 						caseCounter++;
 						this->cases.push_back(tempCase);
 						tempCase->SetTrueFalseCase(true);
-						this->cases.at(j)->GetChildCases().push_back(tempCase);
+						this->cases.at(j)->AddChildrenCase(tempCase);
 						tempCase->AddParentCase(this->cases.at(j));
 						//////there are no imbeded if cases, everything above this should point to this tempCase?
 
@@ -1275,7 +1275,7 @@ bool Netlist::CalculateCaseStates() {
 
 	for (i = 0; i < this->cases.size() - 1; i++) {
 		if (this->cases.at(i)->GetChildCases().size() == 0) {								//if the are any cases floating without downstream cases, connect them to the 'end' case
-			this->cases.at(i)->GetChildCases().push_back(tempCase);
+			this->cases.at(i)->AddChildrenCase(tempCase);
 		}
 	}
 
