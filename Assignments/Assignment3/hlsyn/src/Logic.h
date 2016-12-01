@@ -69,7 +69,6 @@ private:
 	vector <Connector*> logicInputs;		//edge inputs for the logic object
 	vector <int> nodeCaseNumbers;			//list of all cases this node belongs too
 	string typeName;
-	string name;
 	string outType;							//specifically for the comparator module
 	string easyInputs;						//specifically for ease of reading debugging
 	int asapt;								//sets the ASAP time
@@ -82,7 +81,8 @@ private:
 	bool sign;
 	bool ifLevelOneOrZero;					//records if the node is part of the if(true) component or the else(false) component
 	bool scheduled;							//records if the node has been scheduled in a case statment or not
-			
+	string name;
+
 };
 
 
