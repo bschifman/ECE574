@@ -73,3 +73,4 @@ bool StateCase::CheckDuplicateCase(StateCase* caseToCheck) {											//check i
 	}
 
 }
+

@@ -950,7 +950,7 @@ bool Netlist::outputHLSMModule(string outputFilename) {									//write all curr
 		outFS << "endmodule" << endl;
 	}
 
-
+	cout << "done?";
 	outFS.close();		//close the output file
 	return true;
 }
@@ -1097,12 +1097,12 @@ bool Netlist::CalculateCaseStates() {
 							tempCase->AddParentCase(this->cases.at(j));
 
 							tempCase->AddNodeToCase(this->cases.at(j)->GetCaseNodes().at(k));						//add the unwanted node down to the new case state
-							this->cases.at(j)->GetCaseNodes().erase(this->cases.at(j)->GetCaseNodes().begin()+k);	//removes the unwanted node from the current case state
+							this->cases.at(j)->RemoveCaseNode(k);	//removes the unwanted node from the current case state
 							k--;																					//a node was removed, interate back down 1 k value	
 						}
 						else {
 							this->cases.at(j)->GetChildCases().at(0)->AddNodeToCase(this->cases.at(j)->GetCaseNodes().at(k));		//add the unwanted node down to the case state
-							this->cases.at(j)->GetCaseNodes().erase(this->cases.at(j)->GetCaseNodes().begin() + k);	//removes the unwanted node from the current case state
+							this->cases.at(j)->RemoveCaseNode(k);	//removes the unwanted node from the current case state
 							k--;																					//a node was removed, interate back down 1 k value		
 						}
 					}
@@ -1160,7 +1160,7 @@ bool Netlist::CalculateCaseStates() {
 							for (m = 0; m < tempCase->GetCaseNodes().size(); m++) {
 								if (tempCase->GetCaseNodes().at(m)->GetIfLevelOneOrZero() == false) {		//iterate through and move nodes from 'if(1)' branch to if(0) branch if in wrong one
 									tempCaseFalse->AddNodeToCase(tempCase->GetCaseNodes().at(m));
-									tempCase->GetCaseNodes().erase(tempCase->GetCaseNodes().begin() + m);
+									tempCase->RemoveCaseNode(m);
 									m--;
 								}
 							}
@@ -1314,7 +1314,7 @@ void Netlist::RemoveAllDuplicateCases() {
 							this->cases.at(j)->GetParentCases().at(this->cases.at(j)->GetParentCases().size() - 1)->AddChildrenCase(this->cases.at(j));	//add the case to keep to the other cases parent child vector
 							for (m = 0; m < this->cases.at(k)->GetChildCases().at(0)->GetParentCases().size(); m++) {							//loop through the case to discards child parents until it locates itself
 								if (this->cases.at(k)->GetChildCases().at(0)->GetParentCases().at(m) == this->cases.at(k)) {
-									this->cases.at(k)->GetChildCases().at(0)->GetParentCases().erase(this->cases.at(k)->GetChildCases().at(0)->GetParentCases().begin() + m);	//once the case has located itself from its child's parent list, remove it
+									this->cases.at(k)->GetChildCases().at(0)->RemoveParentCase( m);	//once the case has located itself from its child's parent list, remove it
 									break;
 								}
 							}
@@ -1343,7 +1343,7 @@ void Netlist::RemoveAllEmptyCases() {
 			tempCase->AddParentCase(this->cases.at(i)->GetParentCases().at(0));
 			for (j = 0; j < tempCase->GetParentCases().size(); j++) {
 				if (tempCase->GetParentCases().at(j) == this->cases.at(i)) {
-					tempCase->GetParentCases().erase(tempCase->GetParentCases().begin() + j);
+					tempCase->RemoveParentCase( j);
 					break;
 				}
 			}
@@ -1351,7 +1351,7 @@ void Netlist::RemoveAllEmptyCases() {
 			tempCase->AddChildrenCase(this->cases.at(i)->GetChildCases().at(0));
 			for (j = 0; j < tempCase->GetChildCases().size(); j++) {
 				if (tempCase->GetChildCases().at(j) == this->cases.at(i)) {
-					tempCase->GetChildCases().erase(tempCase->GetChildCases().begin() + j);
+					tempCase->RemoveChildCase( j);
 					break;
 				}
 			}
