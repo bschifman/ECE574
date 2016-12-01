@@ -139,7 +139,7 @@ bool Netlist::parseNode(string inputLine) {
 		tempName << this->GetIfForIncrementer();								//using the orginal outputs name, add 'wire' to the end to distinguish them(ie 'a' to 'awire')
 		tempConnector = new Connector(tempName.str(), "wire", 1, 0);			//name, type, datawidth, sign
 		this->edges.push_back(tempConnector);
-		tempLogic = new Logic("if", tempConnector, tempConnector->GetSize(), sign, this->GetIfElseDepth());			//create new "if" node
+		tempLogic = new Logic("if", tempConnector, tempConnector->GetSize(), sign, this->GetIfElseDepth()-1);			//create new "if" node
 		this->nodes.push_back(tempLogic);
 		tempConnector->AddParent(tempLogic);
 		tempLogic->AddParent(tempConnectorUp);									//add the conditional variable as the parent to the "if" node
@@ -263,7 +263,7 @@ bool Netlist::parseNode(string inputLine) {
 			tempLogic->SetIfLevelOneOrZero(this->ifForLevelOneOrZero.at(this->GetIfElseDepth() - int(1)));			//takes the value of whether it is a if(true) or else(false) section
 
 			for (i = 0; i < this->nodes.size(); i++) {
-				if ((this->nodes.at(i)->GetTypeString() == "if") && (this->nodes.at(i)->GetIfElseDepth() == this->GetIfElseDepth())) {
+				if ((this->nodes.at(i)->GetTypeString() == "if") && (this->nodes.at(i)->GetIfElseDepth() == (this->GetIfElseDepth()-1))) {
 					//this is same level as the "if" statement at this point, bind it as an input
 
 					tempLogic->AddParent(this->nodes.at(i)->GetConnector());								//add the "if"'s output edge as the parent to this node
@@ -981,7 +981,7 @@ string Netlist::outputCaseLine(Logic* caseNode) {
 	}
 	else	{
 
-		outSS << "\t\t\t\t\t" << tempConnector->GetName() << " = ";						//print out the output edge(ie 'b = ')
+		outSS << "\t\t\t\t" << tempConnector->GetName() << " = ";						//print out the output edge(ie 'b = ')
 		if (tempParent0 != NULL) {
 			outSS << tempParent0->GetName() << " ";										//print out to first input edge(ie 'b = c')
 		}
@@ -1107,7 +1107,7 @@ bool Netlist::CalculateCaseStates() {
 
 				for (k = 0; k < this->cases.at(j)->GetCaseNodes().size(); k++) {				//loop through all case nodes
 					if (this->cases.at(j)->GetCaseNodes().at(k)->GetTypeString() == "if") {		//node at 'k' is an if statement
-						if (firstCaseAtLatency == false) {
+						if (firstCaseAtLatency == true) {
 							firstCaseAtLatency = false;
 							tempCase = new StateCase(caseCounter, i + 1);						//create new 'if(1) child' case statement
 							caseCounter++;
@@ -1198,6 +1198,7 @@ bool Netlist::CalculateCaseStates() {
 							tempCase->SetTrueFalseCase(true);
 							this->cases.at(j)->AddChildrenCase(tempCase);
 							tempCase->AddParentCase(this->cases.at(j));
+							generatedExtraCase = true;
 
 							for (m = 0; m < this->cases.at(j)->GetCaseNodes().at(k)->GetConnector()->GetChildVector().size(); m++) {	//loop through all the cases' node's children nodes(ie nodes for the next case layer)
 								if (this->cases.at(j)->GetCaseNodes().at(k)->GetConnector()->GetChildVector().at(m)->GetIfElseDepth() == this->cases.at(j)->GetCaseNodes().at(k)->GetIfElseDepth()) { //if the cases' node component's child node is not the same ifelse depth, it is outside of the depth
@@ -1228,7 +1229,7 @@ bool Netlist::CalculateCaseStates() {
 				}
 			}
 		}
-		if (firstCaseAtLatency == true) {													//if there were no other if branches made this round
+		if (1) {//firstCaseAtLatency == true) {													//if there were no other if branches made this round
 			for (j = 0; j < this->cases.size(); j++) {
 				if (this->cases.at(j)->GetLatencyLevel() == i) {
 					if (this->cases.at(j)->GetChildCases().size() == 0) {
