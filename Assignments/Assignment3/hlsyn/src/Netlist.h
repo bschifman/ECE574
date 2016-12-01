@@ -41,10 +41,13 @@ public:
 	bool outputHLSMModule(string outputFilename);							//writes all the parsed data from the input file into a verilog HLSM module 
 	bool RecalculateASAP(Logic* inputNode, int minTime);													//Lots of crap, and for the function below too
 	bool RecalculateALAP(Logic* inputNode, int minTime);													//^
-	string outputCaseLine(int caseNumber);									// outputs a line for a verilog case module in verilog code
+	string outputCaseLine(Logic* caseNode);									// outputs a line for a verilog case module in verilog code
 	bool CalculateCaseStates();												//compute the case state orders and links
-	bool CheckLatencyLevelComplete(int latencyLevel);						//check if everything in a latency level has been accounted for
-	int CheckLatencyLevelDepth(int latencyLevel);							//check if latency level has an if/else/for depth anywhere
+//	bool CheckLatencyLevelComplete(int latencyLevel);						//check if everything in a latency level has been accounted for //this got deleted in the merge
+//	int CheckLatencyLevelDepth(int latencyLevel);							//check if latency level has an if/else/for depth anywhere		//this got deleted in the merge
+	void RemoveAllDuplicateCases();											//iterates back to front through all cases and checks for duplicates, removing any if found
+	void RemoveAllEmptyCases();											//iterates back to front through all cases and checks for duplicates, removing any if found
+
 
 	//Getters
 	vector<Connector*> GetEdges() { return this->edges; }
