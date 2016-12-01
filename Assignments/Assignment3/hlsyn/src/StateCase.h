@@ -27,6 +27,10 @@ public:
 	StateCase(int caseNumber, int latencyLevel);														//overload constructor
 	~StateCase(void);																//destructor
 
+
+	void RemoveDuplicateNodes();																//remove node duclicates in a case statement
+	bool CheckDuplicateCase(StateCase* caseToCheck);											//check if case is a duclicate of another case statement
+
 	void AddParentCase(StateCase* parentToAdd) { this->caseParents.push_back(parentToAdd); }	//add a parent case to this case statement (ie an input to the module)
 	void AddChildrenCase(StateCase* childToAdd) { this->caseChildren.push_back(childToAdd); }	//add a child case to this case statement (ie an output to the module)
 	void AddNodeToCase(Logic* nodeToAdd) { this->caseNodes.push_back(nodeToAdd); }				//add a node to this case statement (ie an 'b = a + c' to the module)
