@@ -61,13 +61,19 @@ bool Netlist::parseFile(string filename, string latency) {
 		inFile.close();//close the input file
 		return false;
 	}
+	inFile.close();//close the input file
 	//this->outputToReg();			//I dont think we need output to register for assignment 3
 	this->SetLatency(latency);
-	this->CalculateFDS();
-	this->CalculateCaseStates();
+	if (this->CalculateFDS()) {
+		this->CalculateCaseStates();
+		
+	}
+	else {
+		return false;
+	}
 
 
-	inFile.close();//close the input file
+	
 	return true;
 }
 
@@ -567,7 +573,7 @@ bool Netlist::CalculateASAP() {
 		}
 	}
 	if (this->CheckIfASAPDone() == false) {
-		cout << "Error is computing ASAP schedule" << endl;		//there is something terribly wrong with the graph if this fails
+		cout << "Error in computing ASAP schedule, possible latency too short." << endl;		//there is something terribly wrong with the graph if this fails
 		return false;
 	}
 
@@ -580,14 +586,14 @@ bool Netlist::CheckIfASAPDone() {
 
 	for (i = 0; i < this->edges.size(); i++) {
 		if (this->edges.at(i)->GetEdgeASAP() == (-9)) {		//this means one of the edges didnt get checked during the schedule
-			cerr << "ERROR: ASAP edges not all calculated.";
+			cerr << "ERROR: ASAP edges not all calculated." << endl;
 			return false;
 		}
 	}
 
 	for (i = 0; i < this->nodes.size(); i++) {
 		if (this->nodes.at(i)->GetNodeASAP() == (-9)) {		//this means one of the nodes didnt get checked during the schedule
-			cerr << "ERROR: ASAP nodes not all calculated.";
+			cerr << "ERROR: ASAP nodes not all calculated." << endl;
 			return false;
 		}
 	}
@@ -649,14 +655,14 @@ bool Netlist::CheckIfALAPDone() {
 
 	for (i = 0; i < this->edges.size(); i++) {
 		if (this->edges.at(i)->GetEdgeALAP() == ((this->GetLatency()) + 1)) {	//this means one of the edges didnt get checked during the schedule
-			cerr << "ERROR: ALAP edges not all calculated.";
+			cerr << "ERROR: ALAP edges not all calculated." << endl;
 			return false;
 		}
 	}
 
 	for (i = 0; i < this->nodes.size(); i++) {
 		if (this->nodes.at(i)->GetNodeALAP() == ((this->GetLatency()) + 1)) {	//this means one of the nodes didnt get checked during the schedule
-			cerr << "ERROR: ALAP nodes not all calculated.";
+			cerr << "ERROR: ALAP nodes not all calculated." << endl;
 			return false;
 		}
 	}
@@ -848,8 +854,12 @@ bool Netlist::CalculateFDS() {
 		this->nodes.at(i)->SetEasyInputs();
 	}
 
-	this->CalculateASAP();
-	this->CalculateALAP();
+	if (!(this->CalculateASAP())) {
+		return false;
+	}
+	if (!(this->CalculateALAP())) {
+		return false;
+	}
 
 	for (i = 0; i < this->nodes.size(); i++) {		//Calculate the FDS for all of the nodes
 		if (!CalculateForcesFDS()) {				//If you screwed up...
@@ -946,7 +956,7 @@ bool Netlist::outputHLSMModule(string outputFilename) {									//write all curr
 			}
 			outFS << "\t" << "\t" << "\t" << "end" << endl;
 		}
-		outFS << "\t" << "\t" << "\t" << this->cases.size() << ": begin" << endl;
+		outFS << "\t" << "\t" << "\t" << (this->cases.size() - (int)1) << ": begin" << endl;
 		outFS << "\t" << "\t" << "\t" << "\t" << "Done <= 1;" << endl;
 		outFS << "\t" << "\t" << "\t" << "\t" << "NextState <= 0;" << endl;
 		outFS << "\t" << "\t" << "\t" << "end" << endl;
@@ -969,7 +979,7 @@ bool Netlist::outputHLSMModule(string outputFilename) {									//write all curr
 		outFS << "endmodule" << endl;
 	}
 
-	cout << "done?";
+	cout << "done? this cout is at the end of the output module btw if you're looking for it, if not, well fuck off then" << endl;
 	outFS.close();		//close the output file
 	return true;
 }
@@ -999,11 +1009,11 @@ string Netlist::outputCaseLine(Logic* caseNode) {
 
 	if (caseNode->GetTypeString() == "if") {
 
-		outSS << "\t\t\t\t" << "if (" << caseNode->GetParents().at(0)->GetName() << " == 1)" ;		//puts the if statement parent edge name in
+		outSS << "\t\t\t\t" << "if (" << caseNode->GetParents().at(0)->GetName() << " != 0)" ;		//puts the if statement parent edge name in
 	}
 	else	{
 
-		outSS << "\t\t\t\t" << tempConnector->GetName() << " = ";						//print out the output edge(ie 'b = ')
+		outSS << "\t\t\t\t" << tempConnector->GetName() << " <= ";						//print out the output edge(ie 'b = ')
 		if (tempParent0 != NULL) {
 			outSS << tempParent0->GetName() << " ";										//print out to first input edge(ie 'b = c')
 		}
@@ -1207,7 +1217,7 @@ bool Netlist::CalculateCaseStates() {
 				}
 				generatedExtraCase = false;
 				for (k = 0; k < this->cases.at(j)->GetCaseNodes().size(); k++) {				//loop through all of this case states nodes
-					if ((this->cases.at(j)->GetCaseNodes().at(k)->GetTypeString() != "if") && (this->cases.at(j)->GetCaseNodes().at(k)->GetIfElseDepth() >0)) {		//check if something is teired down if node from above
+					if ((this->cases.at(j)->GetCaseNodes().at(k)->GetTypeString() != "if") && (this->cases.at(j)->GetCaseNodes().at(k)->GetIfElseDepth() >0) && !(this->cases.at(j)->GetCaseNodes().size() > 1)) {		//check if something is teired down if node from above
 						if (generatedExtraCase == false) {											//if this is the first item found
 							firstCaseAtLatency = false;
 							tempCase = new StateCase(caseCounter, (int)i + 1);							//create new case statement
@@ -1313,9 +1323,9 @@ bool Netlist::CalculateCaseStates() {
 }
 
 bool Netlist::RemoveAllDuplicateCases() {
-	unsigned int i = 0;
-	unsigned int j = 0;
-	unsigned int k = 0;
+	int i = 0;
+	int j = 0;
+	int k = 0;
 	unsigned int m= 0;
 	int firstCaseNodeCounter = 0;
 	int secondCaseNodeCounter = 0;
@@ -1327,7 +1337,7 @@ bool Netlist::RemoveAllDuplicateCases() {
 					if (this->cases.at(k)->GetLatencyLevel() == (int)i) {
 						if (this->cases.at(j)->CheckDuplicateCase(this->cases.at(k)) == true) {							//check if the 2 cases in this latency are the same
 							this->cases.at(j)->AddParentCase(this->cases.at(k)->GetParentCases().at(0));										//branch one of the parents to the other case
-							this->cases.at(j)->GetParentCases().at(this->cases.at(j)->GetParentCases().size() - 1)->GetChildCases().pop_back();	//remove the parent's child of the case to be discarded
+							this->cases.at(j)->GetParentCases().at(this->cases.at(j)->GetParentCases().size() - 1)->RemoveChildCase(0);	//remove the parent's child of the case to be discarded
 							this->cases.at(j)->GetParentCases().at(this->cases.at(j)->GetParentCases().size() - 1)->AddChildrenCase(this->cases.at(j));	//add the case to keep to the other cases parent child vector
 							for (m = 0; m < this->cases.at(k)->GetChildCases().at(0)->GetParentCases().size(); m++) {							//loop through the case to discards child parents until it locates itself
 								if (this->cases.at(k)->GetChildCases().at(0)->GetParentCases().at(m) == this->cases.at(k)) {
