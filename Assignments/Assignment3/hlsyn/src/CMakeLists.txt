@@ -1,10 +1,10 @@
 # Authors: Kevin Curtis, Ben Schifman
 # NetIDs: kevincurtis, bschifman
-# Date: 14 November 2016
+# Date: 2 December 2016
 # Assignment: 3
 
 
-set( CMAKE_CXX_FLAGS "-Wall -g" )
+set( CMAKE_CXX_FLAGS "-std=c++11" )
 
 file( GLOB SRCS *.cpp *.h )
 

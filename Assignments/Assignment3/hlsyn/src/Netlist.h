@@ -57,7 +57,7 @@ public:
 	int GetIfForIncrementer() { return this->ifForIncrementer; }			//get the current incremented # of if/for variables in the circuit
 
 	//Setters
-	void SetLatency(string latency) { this->latency = stoi(latency); }		//set the int latency value for the circuit
+	void SetLatency(string stringLatency);									//set the int latency value for the circuit. F*** stoi
 	void SetIfElseDepth(int depth) { this->ifElseDepth = depth; }			//set the current int depth value for the circuit
 	void SetIfForIncrementer(int newIncrement) { this->ifForIncrementer = newIncrement; }			//set the current incremented # of if/for variables in the circuit
 	void SetIfForLevelOneOrZero(int level, bool boolValue) { this->ifForLevelOneOrZero[level] = boolValue; }			//set the current incremented # of if/for variables in the circuit
@@ -67,15 +67,15 @@ private:
 	vector<Connector*> edges;
 	vector<Logic*> nodes;
 	vector<StateCase*> cases;
-	vector<vector<float> > nodeProbabilityArray;
+	vector< vector<float> > nodeProbabilityArray;
 	vector<float> ADDSUBDistribution;
 	vector<float> MULDistribution;
 	vector<float> LOGRESDistribution;
 	vector<float> DIVMODDistribution;
 	vector<bool> ifForLevelOneOrZero;
 	int latency;
-	int ifElseDepth;
-	int ifForIncrementer;
+	unsigned int ifElseDepth;
+	unsigned int ifForIncrementer;
 
 };
 

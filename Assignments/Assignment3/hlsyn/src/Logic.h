@@ -70,11 +70,11 @@ private:
 	vector <Connector*> logicInputs;		//edge inputs for the logic object
 	vector <int> nodeCaseNumbers;			//list of all cases this node belongs too
 	string typeName;
-	string outType;							//specifically for the comparator module
-	string easyInputs;						//specifically for ease of reading debugging
+	string outType;									//specifically for the comparator module
+	string easyInputs;								//specifically for ease of reading debugging
 	int asapt;								//sets the ASAP time
 	int alapt;								//sets the ALAP time
-	int fdst;								//sets the FDS time
+	int fdst;										//sets the FDS time
 	int scheduleDelayValue;
 	int type;
 	int dataWidth;

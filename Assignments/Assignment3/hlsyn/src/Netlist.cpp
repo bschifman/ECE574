@@ -119,7 +119,7 @@ bool Netlist::parseNode(string inputLine) {
 	string variable3 = "";
 //	string tempName = "";
 	bool sign = false;
-	int i = 0;
+	unsigned int i = 0;
 
 
 	inSS >> outputEdge;										//records output edge (variable name)of this Node/Logic
@@ -527,9 +527,8 @@ string Netlist::CreateCOMPInputName(Connector * tempParent0, Connector * tempPar
 }
 
 bool Netlist::CalculateASAP() {
-	int i = 0;
-	int j = 0;
-	int k = 0;
+	unsigned int i = 0;
+	unsigned int j = 0;
 	int currentLatency = 0;
 	int tempNodeDelay = 0;
 
@@ -576,7 +575,7 @@ bool Netlist::CalculateASAP() {
 }
 
 bool Netlist::CheckIfASAPDone() {
-	int i = 0;
+	unsigned int i = 0;
 	bool check = true;
 
 	for (i = 0; i < this->edges.size(); i++) {
@@ -599,11 +598,11 @@ bool Netlist::CheckIfASAPDone() {
 
 
 bool Netlist::CalculateALAP() {
-	int i = 0;
-	int j = 0;
-	int k = 0;
-	int currentLatency = 0;
-	int tempNodeDelay = 0;
+	unsigned int i = 0;
+	unsigned int j = 0;
+	unsigned int k = 0;
+	unsigned int currentLatency = 0;
+	unsigned int tempNodeDelay = 0;
 
 	for (i = 0; i < this->edges.size(); i++) {
 		this->edges.at(i)->SetEdgeALAP((this->GetLatency()) + 1);			// setting all unscheduled edges to larger than the largest possible latency
@@ -645,7 +644,7 @@ bool Netlist::CalculateALAP() {
 }
 
 bool Netlist::CheckIfALAPDone() {
-	int i = 0;
+	unsigned int i = 0;
 	bool check = true;
 
 	for (i = 0; i < this->edges.size(); i++) {
@@ -668,8 +667,8 @@ bool Netlist::CheckIfALAPDone() {
 
 
 bool Netlist::CalculateProbabilityFDS() {
-	int i = 0;
-	int j = 0;
+	unsigned int i = 0;
+	unsigned int j = 0;
 	bool check = true;
 
 	this->nodeProbabilityArray.resize(this->nodes.size());												//DISTRIBUTION ARRAY expanding the array to [#of nodes][#of time slots]
@@ -678,7 +677,7 @@ bool Netlist::CalculateProbabilityFDS() {
 
 		this->nodeProbabilityArray[i][0] = 0;															//this is an unused filler value to make calculation easier(ie start at 1 not 0)
 		for (j = 1; j < this->nodeProbabilityArray[i].size(); j++) {									//initialize array values to 0
-			if ((this->nodes.at(i)->GetNodeASAP() <= j) && (j <= this->nodes.at(i)->GetNodeALAP())) {	//check if current timeframe is in node mobility
+			if ((this->nodes.at(i)->GetNodeASAP() <= (int)j) && ((int)j <= this->nodes.at(i)->GetNodeALAP())) {	//check if current timeframe is in node mobility
 				this->nodeProbabilityArray[i][j] = 1/((float)this->nodes.at(i)->GetNodeALAP() - (float)this->nodes.at(i)->GetNodeASAP() + 1);
 			}
 			else {
@@ -719,18 +718,18 @@ bool Netlist::CalculateProbabilityFDS() {
 
 
 bool Netlist::CalculateForcesFDS() {
-	int i = 0;
-	int j = 0;
-	int k = 0;
+	unsigned int i = 0;
+	unsigned int j = 0;
+	unsigned int k = 0;
 	int minNodeNumber = -1;
 	int minTimeSlot = -1;
 	float minVal = 100;
 	bool check = true;
 	vector<float> currentDistribution;
-	vector<vector<float>> selfForces;													//create vectors to become arrays of the forces
-	vector<vector<float>> successorForces;
-	vector<vector<float>> predecessorForces;
-	vector<vector<float>> totalForces;
+	vector< vector<float> > selfForces;													//create vectors to become arrays of the forces
+	vector< vector<float> > successorForces;
+	vector< vector<float> > predecessorForces;
+	vector< vector<float> > totalForces;
 	vector<Logic*> tempChildNodes;
 	vector<Logic*> tempParentNodes;
 
@@ -763,7 +762,7 @@ bool Netlist::CalculateForcesFDS() {
 			currentDistribution = this->LOGRESDistribution;
 		}
 		//CALCULATE SELF FORCES
-		for (j = this->nodes.at(i)->GetNodeASAP(); j <= this->nodes.at(i)->GetNodeALAP(); j++) {
+		for (j = this->nodes.at(i)->GetNodeASAP(); (int)j <= this->nodes.at(i)->GetNodeALAP(); j++) {
 			for (k = 1; k <= this->latency; k++) {
 				if (k == j) {
 					selfForces[i][j] = selfForces[i][j] + currentDistribution[k] * (1 - this->nodeProbabilityArray[i][k]);		//calculate the self force if it is in its time slot
@@ -783,7 +782,7 @@ bool Netlist::CalculateForcesFDS() {
 			tempChildNodes = this->nodes.at(i)->GetConnector()->GetChildVector();
 			if (tempChildNodes.size()) {																				//If you have any immediate children nodes then continue
 				for (k = 0; k < tempChildNodes.size(); k++) {															//Loop through all of the child nodes
-					if ((j + this->nodes.at(i)->GetTypeScheduleDelay()) == tempChildNodes.at(k)->GetNodeALAP()) {		//If child node has an ALAP time equal to the node time + delay then it is forced, add it
+					if (((int)j + this->nodes.at(i)->GetTypeScheduleDelay()) == tempChildNodes.at(k)->GetNodeALAP()) {		//If child node has an ALAP time equal to the node time + delay then it is forced, add it
 						successorForces[i][j] += selfForces[(FindNodeNumber(tempChildNodes.at(k)))][j + this->nodes.at(i)->GetTypeScheduleDelay()];		//set the succesor forces values
 					}
 				}
@@ -797,7 +796,7 @@ bool Netlist::CalculateForcesFDS() {
 			tempParentNodes = this->nodes.at(i)->GetParentNodes();
 			if (tempParentNodes.size()) {																					//If you have any immediate Parent nodes then continue
 				for (k = 0; k < tempParentNodes.size(); k++) {																//Loop through all of the Parent nodes
-					if ((j - tempParentNodes.at(k)->GetTypeScheduleDelay()) == tempParentNodes.at(k)->GetNodeASAP()) {		//If Parent node has an ASAP time equal to the schedule time - delay of predecessor then it is forced, add it
+					if (((int)j - tempParentNodes.at(k)->GetTypeScheduleDelay()) == tempParentNodes.at(k)->GetNodeASAP()) {		//If Parent node has an ASAP time equal to the schedule time - delay of predecessor then it is forced, add it
 						predecessorForces[i][j] += selfForces[(FindNodeNumber(tempParentNodes.at(k)))][j - tempParentNodes.at(k)->GetTypeScheduleDelay()];		//set the predecessor forces values
 					}
 				}
@@ -806,7 +805,7 @@ bool Netlist::CalculateForcesFDS() {
 		}
 
 		//CALCULATE TOTAL FORCES
-		for (j = this->nodes.at(i)->GetNodeASAP(); j <= this->nodes.at(i)->GetNodeALAP(); j++) {			//Loop through all possible time frames
+		for (j = this->nodes.at(i)->GetNodeASAP(); (int)j <= this->nodes.at(i)->GetNodeALAP(); j++) {			//Loop through all possible time frames
 			totalForces[i][j] = selfForces[i][j] + successorForces[i][j] + predecessorForces[i][j];			//Calculate the total force for each node at each time
 			if ((totalForces[i][j] <= minVal) && (this->nodes.at(i)->GetNodeFDS() == 0)) {					//Look for the lowest value in the total forces matrix that doesn't already have a force
 				minVal = totalForces[i][j];				//Keeps track of the minVal of the total forces matrix
@@ -842,7 +841,7 @@ bool Netlist::CalculateForcesFDS() {
 
 
 bool Netlist::CalculateFDS() {
-	int i = 0;
+	unsigned int i = 0;
 	bool check = true;
 
 	for (i = 0; i < this->nodes.size(); i++) {		//Make it easier to read
@@ -863,7 +862,7 @@ bool Netlist::CalculateFDS() {
 
 
 int Netlist::FindNodeNumber(Logic* tempLogic) {
-	int i = 0;
+	unsigned int i = 0;
 
 	for (i = 0; i < this->nodes.size(); i++) {
 		if (tempLogic == this->nodes.at(i)) {
@@ -1014,9 +1013,7 @@ string Netlist::outputCaseLine(Logic* caseNode) {
 }
 
 bool Netlist::RecalculateASAP(Logic* inputNode, int minTime) {
-	int i = 0;
-	int j = 0;
-	int k = 0;
+	unsigned int i = 0;
 	bool check = true;
 	Logic* tempNode;
 
@@ -1033,9 +1030,7 @@ bool Netlist::RecalculateASAP(Logic* inputNode, int minTime) {
 }
 
 bool Netlist::RecalculateALAP(Logic* inputNode, int minTime) {
-	int i = 0;
-	int j = 0;
-	int k = 0;
+	unsigned int i = 0;
 	bool check = true;
 	Logic* tempNode;
 
@@ -1051,11 +1046,11 @@ bool Netlist::RecalculateALAP(Logic* inputNode, int minTime) {
 }
 
 bool Netlist::CalculateCaseStates() {
-	int i = 0;
-	int j = 0;
-	int k = 0;
-	int m = 0;
-	int n = 0;
+	unsigned int i = 0;
+	unsigned int j = 0;
+	unsigned int k = 0;
+	unsigned int m= 0;
+	unsigned int n = 0;
 	int tempNextLatency = 0;
 	bool check = true;
 	bool firstCaseAtLatency = true;
@@ -1084,14 +1079,14 @@ bool Netlist::CalculateCaseStates() {
 		firstCaseAtLatency = true;										//each new latency will need atleast 1 new case object if something is scheduled
 
 		for (j = 0; j < this->cases.size(); j++) {
-			if (this->cases.at(j)->GetLatencyLevel() == i) {			//go through cases looking at all the ones with the same latency level as current level(i)
+			if (this->cases.at(j)->GetLatencyLevel() == (int)i) {			//go through cases looking at all the ones with the same latency level as current level(i)
 																
 				for (k = 0; k < this->cases.at(j)->GetCaseNodes().size(); k++) {					//move all nodes that are in the wrong level down a level
-					if (this->cases.at(j)->GetCaseNodes().at(k)->GetNodeFDS() != i) {				//if this case has a node with a different(downsteam) latency level, shove it downstream to the next/a new case state
+					if (this->cases.at(j)->GetCaseNodes().at(k)->GetNodeFDS() != (int)i) {				//if this case has a node with a different(downsteam) latency level, shove it downstream to the next/a new case state
 
 						if (this->cases.at(j)->GetChildCases().size() == 0) {						//if there isnt currently a child case to this current case, create one, else shove the unwanted higher latency nodes down it
 							firstCaseAtLatency = false;
-							tempCase = new StateCase(caseCounter, i + 1);							//create new 'child' case statement
+							tempCase = new StateCase(caseCounter, (int)i + 1);							//create new 'child' case statement
 							caseCounter++;
 							this->cases.push_back(tempCase);
 							tempCase->SetTrueFalseCase(true);
@@ -1114,14 +1109,14 @@ bool Netlist::CalculateCaseStates() {
 					if (this->cases.at(j)->GetCaseNodes().at(k)->GetTypeString() == "if") {		//node at 'k' is an if statement
 						if (firstCaseAtLatency == true) {
 							firstCaseAtLatency = false;
-							tempCase = new StateCase(caseCounter, i + 1);						//create new 'if(1) child' case statement
+							tempCase = new StateCase(caseCounter, (int)i + 1);						//create new 'if(1) child' case statement
 							caseCounter++;
 							this->cases.push_back(tempCase);
 							tempCase->SetTrueFalseCase(true);
 							this->cases.at(j)->AddChildrenCase(tempCase);
 							tempCase->AddParentCase(this->cases.at(j));
 
-							tempCaseFalse = new StateCase(caseCounter, i + 1);					//create new 'if(0) child' case statement
+							tempCaseFalse = new StateCase(caseCounter, (int)i + 1);					//create new 'if(0) child' case statement
 							caseCounter++;
 							this->cases.push_back(tempCaseFalse);
 							tempCaseFalse->SetTrueFalseCase(false);
@@ -1141,7 +1136,7 @@ bool Netlist::CalculateCaseStates() {
 								}
 							}
 							for (m = 0; m < this->nodes.size(); m++) {		//loop through all nodes and add any that are depth 0, add them to the 'if(1)' and 'if(0)'
-								if ((this->nodes.at(m)->GetNodeFDS() == (i + 1)) && (this->nodes.at(m)->GetIfElseDepth() == 0)) {
+								if ((this->nodes.at(m)->GetNodeFDS() == ((int)i + 1)) && (this->nodes.at(m)->GetIfElseDepth() == 0)) {
 									tempCase->AddNodeToCase(this->nodes.at(m));
 									this->nodes.at(m)->SetScheduled(true);
 									tempCaseFalse->AddNodeToCase(this->nodes.at(m));
@@ -1152,7 +1147,7 @@ bool Netlist::CalculateCaseStates() {
 						else {
 							tempCase = this->cases.at(j)->GetChildCases().at(0);	//existing 'if(1)' child case statement
 
-							tempCaseFalse = new StateCase(caseCounter, i + 1);		//create new 'if(0) child' case statement
+							tempCaseFalse = new StateCase(caseCounter, (int)i + 1);		//create new 'if(0) child' case statement
 							caseCounter++;
 							this->cases.push_back(tempCaseFalse);
 							tempCaseFalse->SetTrueFalseCase(false);
@@ -1180,7 +1175,7 @@ bool Netlist::CalculateCaseStates() {
 								}
 							}
 							for (m = 0; m < this->nodes.size(); m++) {		//loop through all nodes and add any that are depth 0, add them to the 'if(1)' and 'if(0)'
-								if ((this->nodes.at(m)->GetNodeFDS() == (i + 1)) && (this->nodes.at(m)->GetIfElseDepth() == 0)) {
+								if ((this->nodes.at(m)->GetNodeFDS() == ((int)i + 1)) && (this->nodes.at(m)->GetIfElseDepth() == 0)) {
 									tempCase->AddNodeToCase(this->nodes.at(m));
 									this->nodes.at(m)->SetScheduled(true);
 									tempCaseFalse->AddNodeToCase(this->nodes.at(m));
@@ -1197,7 +1192,7 @@ bool Netlist::CalculateCaseStates() {
 					if ((this->cases.at(j)->GetCaseNodes().at(k)->GetTypeString() != "if") && (this->cases.at(j)->GetCaseNodes().at(k)->GetIfElseDepth() >0)) {		//check if something is teired down if node from above
 						if (generatedExtraCase == false) {											//if this is the first item found
 							firstCaseAtLatency = false;
-							tempCase = new StateCase(caseCounter, i + 1);							//create new case statement
+							tempCase = new StateCase(caseCounter, (int)i + 1);							//create new case statement
 							caseCounter++;
 							this->cases.push_back(tempCase);
 							tempCase->SetTrueFalseCase(true);
@@ -1237,8 +1232,8 @@ bool Netlist::CalculateCaseStates() {
 		if (1) {//firstCaseAtLatency == true) {													//if there were no other if branches made this round
 			for (j = 0; j < this->cases.size(); j++) {
 				if ((this->cases.at(j)->GetLatencyLevel() == i)) {	//added latency check to final latency
-					if ((this->cases.at(j)->GetChildCases().size() == 0) && (this->GetLatency() != i)) {
-						tempCase = new StateCase(caseCounter, i + 1);							//create new case statement
+					if ((this->cases.at(j)->GetChildCases().size() == 0) && (this->GetLatency() != (int)i)) {
+						tempCase = new StateCase(caseCounter, (int)i + 1);							//create new case statement
 						caseCounter++;
 						this->cases.push_back(tempCase);
 						tempCase->SetTrueFalseCase(true);
@@ -1247,7 +1242,7 @@ bool Netlist::CalculateCaseStates() {
 						//////there are no imbeded if cases, everything above this should point to this tempCase?
 
 						for (k = 0; k < this->nodes.size(); k++) {		//loop through all nodes and add any that are depth 0, add them to this case state
-							if ((this->nodes.at(k)->GetNodeFDS() == (i + 1)) && (this->nodes.at(k)->GetIfElseDepth() == 0)) {
+							if ((this->nodes.at(k)->GetNodeFDS() == ((int)i + 1)) && (this->nodes.at(k)->GetIfElseDepth() == (unsigned int)0)) {
 								tempCase->AddNodeToCase(this->nodes.at(k));
 								this->nodes.at(k)->SetScheduled(true);
 							}
@@ -1256,7 +1251,7 @@ bool Netlist::CalculateCaseStates() {
 					else if(this->GetLatency() != i){
 						tempCase = this->cases.at(j)->GetChildCases().at(0);					//existing child case statement
 						for (k = 0; k < this->nodes.size(); k++) {		//loop through all nodes and add any that are depth 0, add them to this case state
-							if ((this->nodes.at(k)->GetNodeFDS() == (i + 1)) && (this->nodes.at(k)->GetIfElseDepth() == 0)) {
+							if ((this->nodes.at(k)->GetNodeFDS() == ((int)i + 1)) && (this->nodes.at(k)->GetIfElseDepth() == (unsigned int)0)) {
 								tempCase->AddNodeToCase(this->nodes.at(k));
 								this->nodes.at(k)->SetScheduled(true);
 							}
@@ -1299,18 +1294,18 @@ bool Netlist::CalculateCaseStates() {
 }
 
 void Netlist::RemoveAllDuplicateCases() {
-	int i = 0;
-	int j = 0;
-	int k = 0;
-	int m = 0;
+	unsigned int i = 0;
+	unsigned int j = 0;
+	unsigned int k = 0;
+	unsigned int m= 0;
 	int firstCaseNodeCounter = 0;
 	int secondCaseNodeCounter = 0;
 	for (i = this->GetLatency(); i >1; i--) {
 		for (j = this->cases.size() - (int)1; j >= 0; j--) {
-			if (this->cases.at(j)->GetLatencyLevel() == i) {
+			if (this->cases.at(j)->GetLatencyLevel() == (int)i) {
 
 				for (k = j - (int)1; k >= 0; k--) {
-					if (this->cases.at(k)->GetLatencyLevel() == i) {
+					if (this->cases.at(k)->GetLatencyLevel() == (int)i) {
 						if (this->cases.at(j)->CheckDuplicateCase(this->cases.at(k)) == true) {							//check if the 2 cases in this latency are the same
 							this->cases.at(j)->AddParentCase(this->cases.at(k)->GetParentCases().at(0));										//branch one of the parents to the other case
 							this->cases.at(j)->GetParentCases().at(this->cases.at(j)->GetParentCases().size() - 1)->GetChildCases().pop_back();	//remove the parent's child of the case to be discarded
@@ -1333,10 +1328,10 @@ void Netlist::RemoveAllDuplicateCases() {
 }
 
 void Netlist::RemoveAllEmptyCases() {
-	int i = 0;
-	int j = 0;
-	int k = 0;
-	int m = 0;
+	unsigned int i = 0;
+	unsigned int j = 0;
+	unsigned int k = 0;
+	unsigned int m= 0;
 	int n = 0;
 	StateCase* tempCase;
 
@@ -1363,6 +1358,14 @@ void Netlist::RemoveAllEmptyCases() {
 		}
 	}
 
+}
+
+void Netlist::SetLatency(string stringLatency) {
+	istringstream inSS(stringLatency);
+
+	inSS >> this->latency;
+
+	return;	
 }
 
 Netlist::Netlist(void) {															//CONSTRUCTOR...

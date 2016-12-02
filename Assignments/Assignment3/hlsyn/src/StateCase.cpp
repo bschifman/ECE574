@@ -31,8 +31,8 @@ StateCase::~StateCase(void) {
 }
 
 void StateCase::RemoveDuplicateNodes() {	//remove node duclicates in a case statement
-	int i = 0;
-	int j = 0;
+	unsigned int i = 0;
+	unsigned int j = 0;
 
 	for (i = 0; i < this->GetCaseNodes().size(); i++) {
 		for (j = i + 1; j < this->GetCaseNodes().size(); j++) {
@@ -47,9 +47,9 @@ void StateCase::RemoveDuplicateNodes() {	//remove node duclicates in a case stat
 
 
 bool StateCase::CheckDuplicateCase(StateCase* caseToCheck) {											//check if case is a duclicate of another case statement
-	int i = 0;
-	int j = 0;
-	int counterCheck = 0;
+	unsigned int i = 0;
+	unsigned int j = 0;
+	unsigned int counterCheck = 0;
 	if (this->caseNodes.size() != caseToCheck->caseNodes.size()) {			//not the same nodes, not a duplicate
 		return false;
 	}

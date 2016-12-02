@@ -114,8 +114,8 @@ int Logic::GetDataWidth() {							//returns true data width from the stored sequ
 vector <Logic*> Logic::GetParentNodes() {
 	vector<Connector*> tempConnectors;
 	vector<Logic*> tempParentNodes;
-	int i = 0;
-	int j = 0;
+	unsigned int i = 0;
+	unsigned int j = 0;
 
 	tempConnectors = this->GetParents();
 	for (i = 0; i < tempConnectors.size(); i++) {
@@ -128,7 +128,7 @@ vector <Logic*> Logic::GetParentNodes() {
 }
 
 void Logic::SetEasyInputs() {
-	int i = 0;
+	unsigned int i = 0;
 
 	for (i = 0; i < this->GetParents().size(); i++) {
 		this->easyInputs = this->easyInputs + this->GetParents().at(i)->GetName() + ' ';
