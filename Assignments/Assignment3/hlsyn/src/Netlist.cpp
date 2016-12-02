@@ -1313,9 +1313,9 @@ bool Netlist::CalculateCaseStates() {
 }
 
 bool Netlist::RemoveAllDuplicateCases() {
-	unsigned int i = 0;
-	unsigned int j = 0;
-	unsigned int k = 0;
+	int i = 0;
+	int j = 0;
+	int k = 0;
 	unsigned int m= 0;
 	int firstCaseNodeCounter = 0;
 	int secondCaseNodeCounter = 0;
@@ -1371,7 +1371,7 @@ bool Netlist::RemoveAllEmptyCases() {
 			tempCase->AddChildrenCase(this->cases.at(i)->GetChildCases().at(0));
 			for (j = 0; j < tempCase->GetChildCases().size(); j++) {
 				if (tempCase->GetChildCases().at(j) == this->cases.at(i)) {
-					tempCase->RemoveChildCase( j);
+					tempCase->RemoveChildCase(j);
 					break;
 				}
 			}
