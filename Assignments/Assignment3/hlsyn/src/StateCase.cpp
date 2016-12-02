@@ -37,7 +37,7 @@ void StateCase::RemoveDuplicateNodes() {	//remove node duclicates in a case stat
 	for (i = 0; i < this->GetCaseNodes().size(); i++) {
 		for (j = i + 1; j < this->GetCaseNodes().size(); j++) {
 			if (this->GetCaseNodes().at(i) == this->GetCaseNodes().at(j)) {
-				this->GetCaseNodes().erase(this->GetCaseNodes().begin() + j);
+				this->RemoveCaseNode(j); //GetCaseNodes().erase(this->GetCaseNodes().begin() + j);
 				j--;
 			}
 		}
@@ -73,4 +73,6 @@ bool StateCase::CheckDuplicateCase(StateCase* caseToCheck) {											//check i
 	}
 
 }
+
+
 

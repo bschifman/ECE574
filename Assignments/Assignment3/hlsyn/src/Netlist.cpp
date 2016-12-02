@@ -141,8 +141,8 @@ bool Netlist::parseNode(string inputLine) {
 		tempConnectorUp = this->findEdge(variable1);							//identify which vector edge is associated with the variable
 		sign |= tempConnectorUp->GetSign();
 
-		tempName << "if ";
-		tempName << this->GetIfForIncrementer();								//using the orginal outputs name, add 'wire' to the end to distinguish them(ie 'a' to 'awire')
+		tempName << "if";
+		//tempName << this->GetIfForIncrementer();								//using the orginal outputs name, add 'wire' to the end to distinguish them(ie 'a' to 'awire')
 		tempConnector = new Connector(tempName.str(), "wire", 1, 0);			//name, type, datawidth, sign
 		this->edges.push_back(tempConnector);
 		tempLogic = new Logic("if", tempConnector, tempConnector->GetSize(), sign, this->GetIfElseDepth()-1, this->nodes.size());			//create new "if" node
@@ -365,13 +365,18 @@ string Netlist::outputEdgeLine(string type, unsigned int datawidth) {	//formats 
 
 	checked = false;
 	for (i = 0; i < this->edges.size(); i++) {							//lists all of the inputs into the module prototype
-		if ((this->edges.at(i)->GetType() == type) && ((unsigned int)this->edges.at(i)->GetSize() == datawidth)) {
+		if (!(this->edges.at(i)->GetName().compare("if"))) {
+
+		}
+		else if ((this->edges.at(i)->GetType() == type) && ((unsigned int)this->edges.at(i)->GetSize() == datawidth)) {
 			if (checked == false) {
 				outSS << "\t";
 				if ((outType == "output") || (outType == "variable")) {	//if the edge is an "output" or a "variable", turn it into a "reg" as well
 					outSS << "reg ";
 				}
-				outSS << outType << " ";
+				if (!(outType == "variable")) {
+					outSS << outType << " ";
+				}
 				if (datawidth > 1) {
 					outSS << "[" << (datawidth - 1) << ":0] ";			//declare the datawidth array
 				}
@@ -934,7 +939,7 @@ bool Netlist::outputHLSMModule(string outputFilename) {									//write all curr
 		outFS << "\t" << "always @(State) begin" << endl;
 		outFS << "\t" << "\t" << "case (State)" << endl;
 		outFS << "\t" << "\t" << "\t" << "0: begin" << endl;
-		outFS << "\t" << "\t" << "\t" << "\t" << "Done <= 0" << endl;
+		outFS << "\t" << "\t" << "\t" << "\t" << "Done <= 0;" << endl;
 		outFS << "\t" << "\t" << "\t" << "\t" << "if (Start != 0)" << endl;
 		outFS << "\t" << "\t" << "\t" << "\t" << "\t" << "NextState <= 1;" << endl;
 		outFS << "\t" << "\t" << "\t" << "\t" << "else" << endl;
@@ -965,7 +970,7 @@ bool Netlist::outputHLSMModule(string outputFilename) {									//write all curr
 		outFS << "\t" << "end" << endl << endl;
 
 		outFS << "\t" << "always @(posedge Clk) begin" << endl;
-		outFS << "\t" << "\t" << "if (Rst == 1 )" << endl;
+		outFS << "\t" << "\t" << "if (Rst == 1)" << endl;
 		for (i = 0; i < this->edges.size(); i++) {
 			if (this->edges.at(i)->GetType() == "variable") {
 				outFS << "\t" << "\t" << "\t" << this->edges.at(i)->GetName() << " <= 0;" << endl;
@@ -1135,7 +1140,8 @@ bool Netlist::CalculateCaseStates() {
 
 				for (k = 0; k < this->cases.at(j)->GetCaseNodes().size(); k++) {				//loop through all case nodes
 					if (this->cases.at(j)->GetCaseNodes().at(k)->GetTypeString() == "if") {		//node at 'k' is an if statement
-						if (firstCaseAtLatency == true) {
+						//if (firstCaseAtLatency == true) {
+						if (this->cases.at(j)->GetChildCases().size() == 0) {					//changed checking from firstCaseAtLatency to checking the child vector size
 							firstCaseAtLatency = false;
 							tempCase = new StateCase(caseCounter, (int)i + 1);						//create new 'if(1) child' case statement
 							caseCounter++;
@@ -1163,24 +1169,30 @@ bool Netlist::CalculateCaseStates() {
 									tempCase->SetIfElseDepthMax(this->cases.at(j)->GetCaseNodes().at(k)->GetConnector()->GetChildVector().at(m)->GetIfElseDepth());	//sets the current case ifelse depth to proper depth
 								}
 							}
-							for (m = 0; m < this->nodes.size(); m++) {		//loop through all nodes and add any that are depth 0, add them to the 'if(1)' and 'if(0)'
+							this->UpdateCaseNodesAtLatency(tempCase, i);
+							this->UpdateCaseNodesAtLatency(tempCaseFalse, i);
+							/*for (m = 0; m < this->nodes.size(); m++) {		//loop through all nodes and add any that are depth 0, add them to the 'if(1)' and 'if(0)'
 								if ((this->nodes.at(m)->GetNodeFDS() == ((int)i + 1)) ) {
 									if ((this->nodes.at(m)->GetIfElseDepth() == 0)) {
 										tempCase->AddNodeToCase(this->nodes.at(m));
 										this->nodes.at(m)->SetScheduled(true);
 										tempCaseFalse->AddNodeToCase(this->nodes.at(m));
 									}
-									else if (this->nodes.at(m)->UpperIfExists() == true) {
-										if (this->nodes.at(m)->FindUpperIfDepth() == 0) {
+									else if (this->nodes.at(m)->UpperIfExists() == true) {		//scan and find nodes that are dependent on an if above this if
+										if (this->nodes.at(m)->FindUpperIfDepth() <= tempCase->GetIfElseDepthMax()) {
+											tempCase->AddNodeToCase(this->nodes.at(m));
+											this->nodes.at(m)->SetScheduled(true);
+											tempCaseFalse->AddNodeToCase(this->nodes.at(m));
 
 										}
 									}
-									//scan and find nodes that are dependent on an if above this if
 								}
+								
 							}
+						*/
 							tempCase->RemoveDuplicateNodes();						//incase of any overlap of nodes, remove duplicates
 						}
-						else {
+						else if(this->cases.at(j)->GetChildCases().size() == 1){
 							tempCase = this->cases.at(j)->GetChildCases().at(0);	//existing 'if(1)' child case statement
 
 							tempCaseFalse = new StateCase(caseCounter, (int)i + 1);		//create new 'if(0) child' case statement
@@ -1210,13 +1222,8 @@ bool Netlist::CalculateCaseStates() {
 									tempCase->SetIfElseDepthMax(this->cases.at(j)->GetCaseNodes().at(k)->GetConnector()->GetChildVector().at(m)->GetIfElseDepth());	//sets the current case ifelse depth to proper depth
 								}
 							}
-							for (m = 0; m < this->nodes.size(); m++) {		//loop through all nodes and add any that are depth 0, add them to the 'if(1)' and 'if(0)'
-								if ((this->nodes.at(m)->GetNodeFDS() == ((int)i + 1)) && (this->nodes.at(m)->GetIfElseDepth() == 0)) {
-									tempCase->AddNodeToCase(this->nodes.at(m));
-									this->nodes.at(m)->SetScheduled(true);
-									tempCaseFalse->AddNodeToCase(this->nodes.at(m));
-								}
-							}
+							this->UpdateCaseNodesAtLatency(tempCase, i);
+							this->UpdateCaseNodesAtLatency(tempCaseFalse, i);
 							////remove duplicate nodes
 							tempCase->RemoveDuplicateNodes();					//incase of any overlap of nodes, remove duplicates
 							tempCaseFalse->RemoveDuplicateNodes();				//incase of any overlap of nodes, remove duplicates
@@ -1453,6 +1460,28 @@ void Netlist::SetLatency(string stringLatency) {
 
 	return;	
 }
+
+
+void Netlist::UpdateCaseNodesAtLatency(StateCase* caseToUpdate, int currentLatency) {											//check if case is a duclicate of another case statement
+	unsigned int i = 0;
+
+	for (i = 0; i < this->nodes.size(); i++) {		//loop through all nodes and add any that are depth 0, add them to the 'if(1)' and 'if(0)'
+		if ((this->nodes.at(i)->GetNodeFDS() == (currentLatency + 1))) {
+			if ((this->nodes.at(i)->GetIfElseDepth() == 0)) {
+				caseToUpdate->AddNodeToCase(this->nodes.at(i));
+				this->nodes.at(i)->SetScheduled(true);
+			}
+			else if (this->nodes.at(i)->UpperIfExists() == true) {		//scan and find nodes that are dependent on an if above this if
+				if (this->nodes.at(i)->FindUpperIfDepth() <= caseToUpdate->GetIfElseDepthMax()) {
+					caseToUpdate->AddNodeToCase(this->nodes.at(i));
+					this->nodes.at(i)->SetScheduled(true);
+
+				}
+			}
+		}
+	}
+}
+
 
 Netlist::Netlist(void) {															//CONSTRUCTOR...
 	this->ifElseDepth = 0;

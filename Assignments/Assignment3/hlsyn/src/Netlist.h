@@ -47,6 +47,7 @@ public:
 //	int CheckLatencyLevelDepth(int latencyLevel);							//check if latency level has an if/else/for depth anywhere		//this got deleted in the merge
 	bool RemoveAllDuplicateCases();											//iterates back to front through all cases and checks for duplicates, removing any if found
 	bool RemoveAllEmptyCases();											//iterates back to front through all cases and checks for duplicates, removing any if found
+	void UpdateCaseNodesAtLatency(StateCase* caseToUpdate, int currentLatency);	//adds all nodes at 0 depth and other parrellel braches of if statements
 
 
 	//Getters
