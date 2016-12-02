@@ -191,3 +191,44 @@ void Logic::SetInherentDelay() {
 
 	return;
 }
+
+
+
+int Logic::FindUpperIfDepth() {
+	unsigned int i = 0;
+	int returnDepth = 0;
+
+	for (i = 0; i < this->GetParentNodes().size(); i++) {
+		if ((this->GetParentNodes().at(i)->GetTypeString() == "if") && (this->GetParentNodes().at(i)->GetIfElseDepth() < this->GetIfElseDepth())) {
+			returnDepth = this->GetParentNodes().at(i)->GetIfElseDepth();
+			break;
+		}
+		else if ((this->GetParentNodes().at(i)->GetIfElseDepth() == this->GetIfElseDepth()) && (this->GetParentNodes().at(i)->UpperIfExists() == true)) {
+			returnDepth = this->GetParentNodes().at(i)->FindUpperIfDepth();
+			break;
+		}
+
+	}
+
+	return returnDepth;
+}
+
+bool Logic::UpperIfExists() {
+	unsigned int i = 0;
+	bool check = false;
+
+	for (i = 0; i < this->GetParentNodes().size(); i++) {
+		if ((this->GetParentNodes().at(i)->GetTypeString() == "if") && (this->GetParentNodes().at(i)->GetIfElseDepth() < this->GetIfElseDepth())) {
+			check = true;
+			break;
+		}
+		else if (this->GetParentNodes().at(i)->GetIfElseDepth() == this->GetIfElseDepth()) {
+			check = this->GetParentNodes().at(i)->UpperIfExists();
+			if (check == true) {
+				break;
+			}
+		}
+	}
+
+	return check;
+}

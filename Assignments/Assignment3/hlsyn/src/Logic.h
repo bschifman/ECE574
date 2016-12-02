@@ -63,6 +63,8 @@ public:
 	int GetIfElseDepth() { return this->ifElseDepth; }							//get if else circuit depth this node type
 	bool GetIfLevelOneOrZero() { return this->ifLevelOneOrZero; }				//get the current if/else bool value of the circuit
 	bool GetScheduled() { return this->scheduled; }								//get acknowledgement if this node has been scheduled in a case statement or not
+	int FindUpperIfDepth();													//goes through a Nodes parents recursively until it finds an 'if' node and returns it's depth
+	bool UpperIfExists();													//goes through a Nodes parents recursively until it finds an 'if' node
 		
 private:
 

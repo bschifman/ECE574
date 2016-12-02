@@ -1164,10 +1164,18 @@ bool Netlist::CalculateCaseStates() {
 								}
 							}
 							for (m = 0; m < this->nodes.size(); m++) {		//loop through all nodes and add any that are depth 0, add them to the 'if(1)' and 'if(0)'
-								if ((this->nodes.at(m)->GetNodeFDS() == ((int)i + 1)) && (this->nodes.at(m)->GetIfElseDepth() == 0)) {
-									tempCase->AddNodeToCase(this->nodes.at(m));
-									this->nodes.at(m)->SetScheduled(true);
-									tempCaseFalse->AddNodeToCase(this->nodes.at(m));
+								if ((this->nodes.at(m)->GetNodeFDS() == ((int)i + 1)) ) {
+									if ((this->nodes.at(m)->GetIfElseDepth() == 0)) {
+										tempCase->AddNodeToCase(this->nodes.at(m));
+										this->nodes.at(m)->SetScheduled(true);
+										tempCaseFalse->AddNodeToCase(this->nodes.at(m));
+									}
+									else if (this->nodes.at(m)->UpperIfExists() == true) {
+										if (this->nodes.at(m)->FindUpperIfDepth() == 0) {
+
+										}
+									}
+									//scan and find nodes that are dependent on an if above this if
 								}
 							}
 							tempCase->RemoveDuplicateNodes();						//incase of any overlap of nodes, remove duplicates
@@ -1328,8 +1336,11 @@ bool Netlist::RemoveAllDuplicateCases() {
 	int k = 0;
 	unsigned int parent = 0;	//test
 	unsigned int child = 0;		//test
+	unsigned int tempParentsChildNum = 0;		
 	vector<StateCase*> tempCases;
+	StateCase* tempParentCase;
 	unsigned int m= 0;
+	unsigned int n = 0;
 	int firstCaseNodeCounter = 0;
 	int secondCaseNodeCounter = 0;
 
@@ -1345,9 +1356,22 @@ bool Netlist::RemoveAllDuplicateCases() {
 				for (k = j - (int)1; k >= 0; k--) {
 					if (this->cases.at(k)->GetLatencyLevel() == (int)i) {
 						if (this->cases.at(j)->CheckDuplicateCase(this->cases.at(k)) == true) {											//check if the 2 cases in this latency are the same
-							this->cases.at(j)->AddParentCase(this->cases.at(k)->GetParentCases().at(0));								//branch one of the parents to the other case
-							this->cases.at(j)->GetParentCases().at(this->cases.at(j)->GetParentCases().size() - 1)->RemoveChildCase(0);	//remove the parent's child of the case to be discarded
-							this->cases.at(j)->GetParentCases().at(this->cases.at(j)->GetParentCases().size() - 1)->AddChildrenCase(this->cases.at(j));	//add the case to keep to the other cases parent child vector
+							for (m = 0; m < this->cases.at(k)->GetParentCases().size(); m++) {
+								for (n = 0; n < this->cases.at(k)->GetParentCases().at(m)->GetChildCases().size(); n++) {
+									if (this->cases.at(k)->GetParentCases().at(m)->GetChildCases().at(n) == this->cases.at(k)) {									//identify the parents child 'index case' that is this 'case'
+										tempParentCase = this->cases.at(k)->GetParentCases().at(m);
+										tempParentsChildNum = n;
+										break;
+									}
+									else {
+										tempParentCase = this->cases.at(k)->GetParentCases().at(0);
+									}
+								}
+							}
+							this->cases.at(j)->AddParentCase(tempParentCase);								//branch one of the parents to the other case
+							
+							tempParentCase->RemoveChildCase(tempParentsChildNum);	//remove the parent's child of the case to be discarded
+							tempParentCase->AddChildrenCase(this->cases.at(j));	//add the case to keep to the other cases parent child vector
 							for (m = 0; m < this->cases.at(k)->GetChildCases().at(0)->GetParentCases().size(); m++) {					//loop through the case to discards child parents until it locates itself
 								if (this->cases.at(k)->GetChildCases().at(0)->GetParentCases().at(m) == this->cases.at(k)) {
 									this->cases.at(k)->GetChildCases().at(0)->RemoveParentCase(m);										//once the case has located itself from its child's parent list, remove it
@@ -1357,6 +1381,7 @@ bool Netlist::RemoveAllDuplicateCases() {
 							
 							///////////////////////////////////////////////////////////////////////
 							//Some bullshit that I'm trying to do
+							/*
 							for (parent = 0; parent < this->cases.size(); parent++) {
 								this->cases.at(parent)->SetCaseNumber((int)parent);
 							}
@@ -1370,6 +1395,7 @@ bool Netlist::RemoveAllDuplicateCases() {
 									}
 								}
 							}
+							*/
 							////////////////////////////////////////////////////////////////////////////////////////////
 							
 							delete this->cases.at(k);																	//free this case statement memory
