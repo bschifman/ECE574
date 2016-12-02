@@ -1236,8 +1236,8 @@ bool Netlist::CalculateCaseStates() {
 		}
 		if (1) {//firstCaseAtLatency == true) {													//if there were no other if branches made this round
 			for (j = 0; j < this->cases.size(); j++) {
-				if (this->cases.at(j)->GetLatencyLevel() == i) {
-					if (this->cases.at(j)->GetChildCases().size() == 0) {
+				if ((this->cases.at(j)->GetLatencyLevel() == i)) {	//added latency check to final latency
+					if ((this->cases.at(j)->GetChildCases().size() == 0) && (this->GetLatency() != i)) {
 						tempCase = new StateCase(caseCounter, i + 1);							//create new case statement
 						caseCounter++;
 						this->cases.push_back(tempCase);
@@ -1253,7 +1253,7 @@ bool Netlist::CalculateCaseStates() {
 							}
 						}
 					}
-					else {
+					else if(this->GetLatency() != i){
 						tempCase = this->cases.at(j)->GetChildCases().at(0);					//existing child case statement
 						for (k = 0; k < this->nodes.size(); k++) {		//loop through all nodes and add any that are depth 0, add them to this case state
 							if ((this->nodes.at(k)->GetNodeFDS() == (i + 1)) && (this->nodes.at(k)->GetIfElseDepth() == 0)) {
@@ -1340,7 +1340,7 @@ void Netlist::RemoveAllEmptyCases() {
 	int n = 0;
 	StateCase* tempCase;
 
-	for (i = 1; i < this->cases.size() ; i++) {	// was //for (i = 1; i < this->cases.size() - 1; i++) {
+	for (i = 1; i < this->cases.size() - 1 ; i++) {	// was //for (i = 1; i < this->cases.size() - 1; i++) {
 		if (this->cases.at(i)->GetCaseNodes().size() == 0) {								//if the are any cases without any nodes, connect the parent case and child case of this case and remove it
 			tempCase = this->cases.at(i)->GetChildCases().at(0);
 			tempCase->AddParentCase(this->cases.at(i)->GetParentCases().at(0));
