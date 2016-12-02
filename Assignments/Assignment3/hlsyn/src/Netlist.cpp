@@ -371,11 +371,11 @@ string Netlist::outputEdgeLine(string type, unsigned int datawidth) {	//formats 
 		else if ((this->edges.at(i)->GetType() == type) && ((unsigned int)this->edges.at(i)->GetSize() == datawidth)) {
 			if (checked == false) {
 				outSS << "\t";
-				if ((outType == "output") || (outType == "variable")) {	//if the edge is an "output" or a "variable", turn it into a "reg" as well
-					outSS << "reg ";
-				}
 				if (!(outType == "variable")) {
 					outSS << outType << " ";
+				}
+				if ((outType == "output") || (outType == "variable")) {	//if the edge is an "output" or a "variable", turn it into a "reg" as well
+					outSS << "reg ";
 				}
 				if (datawidth > 1) {
 					outSS << "[" << (datawidth - 1) << ":0] ";			//declare the datawidth array
@@ -929,11 +929,13 @@ bool Netlist::outputHLSMModule(string outputFilename) {									//write all curr
 		
 		outFS << "\t" << "reg State, NextState;" << endl;												//might need a bit width for State...probably use
 		outFS << endl;
+		outFS << "\t" << "initial begin" << endl;
 		for (i = 0; i < this->edges.size(); i++) {
 			if (this->edges.at(i)->GetType() == "variable") {
-				outFS << "\t" << this->edges.at(i)->GetName() << " <= 0;" << endl;
+				outFS << "\t\t" << this->edges.at(i)->GetName() << " <= 0;" << endl;
 			}
 		}
+		outFS << "\t" << "end" << endl;
 
 		outFS << endl;
 		outFS << "\t" << "always @(State) begin" << endl;
@@ -970,7 +972,7 @@ bool Netlist::outputHLSMModule(string outputFilename) {									//write all curr
 		outFS << "\t" << "end" << endl << endl;
 
 		outFS << "\t" << "always @(posedge Clk) begin" << endl;
-		outFS << "\t" << "\t" << "if (Rst == 1)" << endl;
+		outFS << "\t" << "\t" << "if (Rst == 1) begin" << endl;
 		for (i = 0; i < this->edges.size(); i++) {
 			if (this->edges.at(i)->GetType() == "variable") {
 				outFS << "\t" << "\t" << "\t" << this->edges.at(i)->GetName() << " <= 0;" << endl;
@@ -978,6 +980,7 @@ bool Netlist::outputHLSMModule(string outputFilename) {									//write all curr
 		}
 
 		outFS << "\t" << "\t" << "\t" << "State <= 0;" << endl;											//state 0 is wait state
+		outFS << "\t" << "\t" << "\t" << "end" << endl << endl;
 		outFS << "\t" << "\t" << "else" << endl;
 		outFS << "\t" << "\t" << "\t" << "State <= NextState;" << endl;
 		outFS << "\t" << "end" << endl;
@@ -1465,13 +1468,15 @@ void Netlist::SetLatency(string stringLatency) {
 void Netlist::UpdateCaseNodesAtLatency(StateCase* caseToUpdate, int currentLatency) {											//check if case is a duclicate of another case statement
 	unsigned int i = 0;
 
+	//NEED TO MAKE SURE IT DOESNT INCLUDE IF STATEMENTS FROM THE WRONG BRANCH
+
 	for (i = 0; i < this->nodes.size(); i++) {		//loop through all nodes and add any that are depth 0, add them to the 'if(1)' and 'if(0)'
 		if ((this->nodes.at(i)->GetNodeFDS() == (currentLatency + 1))) {
 			if ((this->nodes.at(i)->GetIfElseDepth() == 0)) {
 				caseToUpdate->AddNodeToCase(this->nodes.at(i));
 				this->nodes.at(i)->SetScheduled(true);
 			}
-			else if (this->nodes.at(i)->UpperIfExists() == true) {		//scan and find nodes that are dependent on an if above this if
+			else if ((this->nodes.at(i)->UpperIfExists() == true) && (this->nodes.at(i)->GetTypeString() !="if")) {		//scan and find nodes that are dependent on an if above this if
 				if (this->nodes.at(i)->FindUpperIfDepth() <= caseToUpdate->GetIfElseDepthMax()) {
 					caseToUpdate->AddNodeToCase(this->nodes.at(i));
 					this->nodes.at(i)->SetScheduled(true);
