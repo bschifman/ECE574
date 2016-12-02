@@ -1326,25 +1326,52 @@ bool Netlist::RemoveAllDuplicateCases() {
 	int i = 0;
 	int j = 0;
 	int k = 0;
+	unsigned int parent = 0;	//test
+	unsigned int child = 0;		//test
+	vector<StateCase*> tempCases;
 	unsigned int m= 0;
 	int firstCaseNodeCounter = 0;
 	int secondCaseNodeCounter = 0;
+
+	/////////////////////////////////////////////////////
+	for (i = 0; i < this->cases.size(); i++) {
+		this->cases.at(i)->SetCaseNumber(i);
+	}
+	/////////////////////////////////////////////////////
 	for (i = this->GetLatency(); i >1; i--) {
 		for (j = this->cases.size() - (int)1; j >= 0; j--) {
 			if (this->cases.at(j)->GetLatencyLevel() == (int)i) {
 
 				for (k = j - (int)1; k >= 0; k--) {
 					if (this->cases.at(k)->GetLatencyLevel() == (int)i) {
-						if (this->cases.at(j)->CheckDuplicateCase(this->cases.at(k)) == true) {							//check if the 2 cases in this latency are the same
-							this->cases.at(j)->AddParentCase(this->cases.at(k)->GetParentCases().at(0));										//branch one of the parents to the other case
+						if (this->cases.at(j)->CheckDuplicateCase(this->cases.at(k)) == true) {											//check if the 2 cases in this latency are the same
+							this->cases.at(j)->AddParentCase(this->cases.at(k)->GetParentCases().at(0));								//branch one of the parents to the other case
 							this->cases.at(j)->GetParentCases().at(this->cases.at(j)->GetParentCases().size() - 1)->RemoveChildCase(0);	//remove the parent's child of the case to be discarded
 							this->cases.at(j)->GetParentCases().at(this->cases.at(j)->GetParentCases().size() - 1)->AddChildrenCase(this->cases.at(j));	//add the case to keep to the other cases parent child vector
-							for (m = 0; m < this->cases.at(k)->GetChildCases().at(0)->GetParentCases().size(); m++) {							//loop through the case to discards child parents until it locates itself
+							for (m = 0; m < this->cases.at(k)->GetChildCases().at(0)->GetParentCases().size(); m++) {					//loop through the case to discards child parents until it locates itself
 								if (this->cases.at(k)->GetChildCases().at(0)->GetParentCases().at(m) == this->cases.at(k)) {
-									this->cases.at(k)->GetChildCases().at(0)->RemoveParentCase(m);	//once the case has located itself from its child's parent list, remove it
+									this->cases.at(k)->GetChildCases().at(0)->RemoveParentCase(m);										//once the case has located itself from its child's parent list, remove it
 									break;
 								}
 							}
+							
+							///////////////////////////////////////////////////////////////////////
+							//Some bullshit that I'm trying to do
+							for (parent = 0; parent < this->cases.size(); parent++) {
+								this->cases.at(parent)->SetCaseNumber((int)parent);
+							}
+
+							for (parent = 0; parent < this->cases.at(k)->GetParentCases().size(); parent++) {
+								for (child = 0; child < this->cases.at(k)->GetParentCases().at(parent)->GetChildCases().size(); child++) {
+									tempCases = this->cases.at(k)->GetParentCases().at(parent)->GetChildCases();
+									if (this->cases.at(k)->GetParentCases().at(parent)->GetChildCases().at(child) == this->cases.at(k)) {
+										//delete tempCases.at(child);
+										tempCases.erase(tempCases.begin() + child);
+									}
+								}
+							}
+							////////////////////////////////////////////////////////////////////////////////////////////
+							
 							delete this->cases.at(k);																	//free this case statement memory
 							this->cases.erase(this->cases.begin() + k);													//remove this case statement from the list
 							return false;
