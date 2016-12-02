@@ -45,8 +45,8 @@ public:
 	bool CalculateCaseStates();												//compute the case state orders and links
 //	bool CheckLatencyLevelComplete(int latencyLevel);						//check if everything in a latency level has been accounted for //this got deleted in the merge
 //	int CheckLatencyLevelDepth(int latencyLevel);							//check if latency level has an if/else/for depth anywhere		//this got deleted in the merge
-	void RemoveAllDuplicateCases();											//iterates back to front through all cases and checks for duplicates, removing any if found
-	void RemoveAllEmptyCases();											//iterates back to front through all cases and checks for duplicates, removing any if found
+	bool RemoveAllDuplicateCases();											//iterates back to front through all cases and checks for duplicates, removing any if found
+	bool RemoveAllEmptyCases();											//iterates back to front through all cases and checks for duplicates, removing any if found
 
 
 	//Getters

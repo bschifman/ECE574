@@ -914,13 +914,21 @@ bool Netlist::outputHLSMModule(string outputFilename) {									//write all curr
 		
 		outFS << "\t" << "reg State, NextState;" << endl;												//might need a bit width for State...probably use
 		outFS << endl;
+		for (i = 0; i < this->edges.size(); i++) {
+			if (this->edges.at(i)->GetType() == "variable") {
+				outFS << "\t" << this->edges.at(i)->GetName() << " <= 0;" << endl;
+			}
+		}
+
+		outFS << endl;
 		outFS << "\t" << "always @(State) begin" << endl;
 		outFS << "\t" << "\t" << "case (State)" << endl;
 		outFS << "\t" << "\t" << "\t" << "0: begin" << endl;
-		outFS << "\t" << "\t" << "\t" << "\t" << "if (Start == 1)" << endl;
-		outFS << "\t" << "\t" << "\t" << "\t" << "\t" << "NextState <= 1" << endl;
+		outFS << "\t" << "\t" << "\t" << "\t" << "Done <= 0" << endl;
+		outFS << "\t" << "\t" << "\t" << "\t" << "if (Start != 0)" << endl;
+		outFS << "\t" << "\t" << "\t" << "\t" << "\t" << "NextState <= 1;" << endl;
 		outFS << "\t" << "\t" << "\t" << "\t" << "else" << endl;
-		outFS << "\t" << "\t" << "\t" << "\t" << "\t" << "NextState <= 0" << endl;
+		outFS << "\t" << "\t" << "\t" << "\t" << "\t" << "NextState <= 0;" << endl;
 		outFS << "\t" << "\t" << "\t" << "end" << endl;
 
 		for (i = 1; i < this->cases.size()-1; i++) {
@@ -928,25 +936,35 @@ bool Netlist::outputHLSMModule(string outputFilename) {									//write all curr
 			for (j = 0; j < this->cases.at(i)->GetCaseNodes().size(); j++) {
 				outFS << this->outputCaseLine(this->cases.at(i)->GetCaseNodes().at(j)) << endl;
 				if (this->cases.at(i)->GetCaseNodes().at(j)->GetTypeString() == "if") {
-					outFS << "\t" << "\t" << "\t" << "\t" << "\t" << "NextState <= " << this->cases.at(i)->GetChildCases().at(0)->GetCaseNumber() << endl;
+					outFS << "\t" << "\t" << "\t" << "\t" << "\t" << "NextState <= " << this->cases.at(i)->GetChildCases().at(0)->GetCaseNumber() << ";" << endl;
 						outFS << "\t" << "\t" << "\t" << "\t" << "else" << endl;
-					outFS << "\t" << "\t" << "\t" << "\t" << "\t" << "NextState <= " << this->cases.at(i)->GetChildCases().at(1)->GetCaseNumber() << endl;
+						outFS << "\t" << "\t" << "\t" << "\t" << "\t" << "NextState <= " << this->cases.at(i)->GetChildCases().at(1)->GetCaseNumber() << ";" << endl;
 				}
 			}
 			if (this->cases.at(i)->GetChildCases().size() == 1) {
-				outFS << "\t" << "\t" << "\t" << "\t" << "NextState <= " << this->cases.at(i)->GetChildCases().at(0)->GetCaseNumber() << endl;
+				outFS << "\t" << "\t" << "\t" << "\t" << "NextState <= " << this->cases.at(i)->GetChildCases().at(0)->GetCaseNumber() << ";" << endl;
 			}
 			outFS << "\t" << "\t" << "\t" << "end" << endl;
 		}
+		outFS << "\t" << "\t" << "\t" << this->cases.size() << ": begin" << endl;
+		outFS << "\t" << "\t" << "\t" << "\t" << "Done <= 1;" << endl;
+		outFS << "\t" << "\t" << "\t" << "\t" << "NextState <= 0;" << endl;
+		outFS << "\t" << "\t" << "\t" << "end" << endl;
 
 		outFS << "\t" << "\t" << "endcase" << endl << endl;
 		outFS << "\t" << "end" << endl << endl;
 
 		outFS << "\t" << "always @(posedge Clk) begin" << endl;
 		outFS << "\t" << "\t" << "if (Rst == 1 )" << endl;
-		outFS << "\t" << "\t" << "\t" << "State <= 0" << endl;											//state 0 is wait state
+		for (i = 0; i < this->edges.size(); i++) {
+			if (this->edges.at(i)->GetType() == "variable") {
+				outFS << "\t" << "\t" << "\t" << this->edges.at(i)->GetName() << " <= 0;" << endl;
+			}
+		}
+
+		outFS << "\t" << "\t" << "\t" << "State <= 0;" << endl;											//state 0 is wait state
 		outFS << "\t" << "\t" << "else" << endl;
-		outFS << "\t" << "\t" << "\t" << "State <= NextState" << endl;
+		outFS << "\t" << "\t" << "\t" << "State <= NextState;" << endl;
 		outFS << "\t" << "end" << endl;
 		outFS << "endmodule" << endl;
 	}
@@ -1274,14 +1292,15 @@ bool Netlist::CalculateCaseStates() {
 	for (i = 0; i < this->cases.size() - 1; i++) {
 		if (this->cases.at(i)->GetChildCases().size() == 0) {								//if the are any cases floating without downstream cases, connect them to the 'end' case
 			this->cases.at(i)->AddChildrenCase(tempCase);
+			tempCase->AddParentCase(this->cases.at(i));
 		}
 	}
 
 	//REMOVE EMPTY CASES
-	this->RemoveAllEmptyCases();
+	while (!(this->RemoveAllEmptyCases()));
 
 	//REMOVE DUPLICATE CASE STATES
-	this->RemoveAllDuplicateCases();
+	while (!(this->RemoveAllDuplicateCases()));
 
 
 	//RENUMBER ALL CASE STATES
@@ -1293,7 +1312,7 @@ bool Netlist::CalculateCaseStates() {
 	return check;		//might need checks
 }
 
-void Netlist::RemoveAllDuplicateCases() {
+bool Netlist::RemoveAllDuplicateCases() {
 	unsigned int i = 0;
 	unsigned int j = 0;
 	unsigned int k = 0;
@@ -1312,12 +1331,13 @@ void Netlist::RemoveAllDuplicateCases() {
 							this->cases.at(j)->GetParentCases().at(this->cases.at(j)->GetParentCases().size() - 1)->AddChildrenCase(this->cases.at(j));	//add the case to keep to the other cases parent child vector
 							for (m = 0; m < this->cases.at(k)->GetChildCases().at(0)->GetParentCases().size(); m++) {							//loop through the case to discards child parents until it locates itself
 								if (this->cases.at(k)->GetChildCases().at(0)->GetParentCases().at(m) == this->cases.at(k)) {
-									this->cases.at(k)->GetChildCases().at(0)->RemoveParentCase( m);	//once the case has located itself from its child's parent list, remove it
+									this->cases.at(k)->GetChildCases().at(0)->RemoveParentCase(m);	//once the case has located itself from its child's parent list, remove it
 									break;
 								}
 							}
 							delete this->cases.at(k);																	//free this case statement memory
 							this->cases.erase(this->cases.begin() + k);													//remove this case statement from the list
+							return false;
 						}
 
 					}
@@ -1325,15 +1345,17 @@ void Netlist::RemoveAllDuplicateCases() {
 			}
 		}
 	}
+	return true;
 }
 
-void Netlist::RemoveAllEmptyCases() {
+bool Netlist::RemoveAllEmptyCases() {
 	unsigned int i = 0;
 	unsigned int j = 0;
 	unsigned int k = 0;
 	unsigned int m= 0;
 	int n = 0;
 	StateCase* tempCase;
+	bool check = true;
 
 	for (i = 1; i < this->cases.size() - 1 ; i++) {	// was //for (i = 1; i < this->cases.size() - 1; i++) {
 		if (this->cases.at(i)->GetCaseNodes().size() == 0) {								//if the are any cases without any nodes, connect the parent case and child case of this case and remove it
@@ -1355,9 +1377,10 @@ void Netlist::RemoveAllEmptyCases() {
 			}
 			delete this->cases.at(i);
 			this->cases.erase(this->cases.begin() + i);
+			return false;
 		}
 	}
-
+	return check;
 }
 
 void Netlist::SetLatency(string stringLatency) {
