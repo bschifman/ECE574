@@ -1056,7 +1056,7 @@ bool Netlist::RecalculateASAP(Logic* inputNode, int minTime) {
 	for (i = 0; i < inputNode->GetConnector()->GetChildVector().size(); i++) {				//loop through all of the children nodes of the node that has been locked
 		tempNode = inputNode->GetConnector()->GetChildVector().at(i);						//for ease of typing
 		if (tempNode->GetNodeASAP() <= (minTime + inputNode->GetTypeScheduleDelay() - 1)) {	//If the ASAP time of one of the child nodes is <= end of node duration
-			tempNode->SetNodeASAP(minTime + tempNode->GetTypeScheduleDelay());				//Reassign ASAP time of the parent node
+			tempNode->SetNodeASAP(minTime + inputNode->GetTypeScheduleDelay());				//Reassign ASAP time of the parent node
 			this->RecalculateASAP(tempNode, tempNode->GetNodeASAP());						//Recursively call function to act on all children nodes
 		}
 	}
