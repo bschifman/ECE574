@@ -169,7 +169,8 @@ bool Netlist::parseNode(string inputLine) {
 	}
 	else if (!outputEdge.compare("else")) {											//increases depth 
 		this->SetIfElseDepth(this->GetIfElseDepth() + int(1));
-		this->SetIfForLevelOneOrZero(this->GetIfElseDepth(), false);
+		this->ifForLevelOneOrZero.resize(this->GetIfElseDepth());
+		this->SetIfForLevelOneOrZero((this->GetIfElseDepth()-1), false);
 	}
 	else if (!outputEdge.compare("for")) {
 		inSS >> garbage;														//records begining "("
@@ -1426,31 +1427,54 @@ bool Netlist::RemoveAllEmptyCases() {
 	unsigned int j = 0;
 	unsigned int k = 0;
 	unsigned int m= 0;
-	int n = 0;
+	unsigned int n = 0;
 	StateCase* tempCase;
+	Logic* tempLogic;
 	bool check = true;
+	bool passedUpperLatTimes = true;
 
 	for (i = 1; i < this->cases.size() - 1 ; i++) {	// was //for (i = 1; i < this->cases.size() - 1; i++) {
+		passedUpperLatTimes = true;
 		if (this->cases.at(i)->GetCaseNodes().size() == 0) {								//if the are any cases without any nodes, connect the parent case and child case of this case and remove it
-			tempCase = this->cases.at(i)->GetChildCases().at(0);
-			tempCase->AddParentCase(this->cases.at(i)->GetParentCases().at(0));
-			for (j = 0; j < tempCase->GetParentCases().size(); j++) {
-				if (tempCase->GetParentCases().at(j) == this->cases.at(i)) {
-					tempCase->RemoveParentCase( j);
-					break;
+			for (j = 0; j < this->cases.at(i)->GetParentCases().size(); j++) {
+				for (k = 0; k < this->cases.at(i)->GetParentCases().at(j)->GetCaseNodes().size();k++) {
+					tempLogic = this->cases.at(i)->GetParentCases().at(j)->GetCaseNodes().at(k);
+					if ((tempLogic->GetTypeString() == "MUL") || (tempLogic->GetTypeString() == "DIV") || (tempLogic->GetTypeString() == "MOD")) {
+						passedUpperLatTimes = false;
+						break;
+					}
+				}
+				for (k = 0; k < this->cases.at(i)->GetParentCases().at(j)->GetParentCases().size(); k++) {
+					for (m = 0; m < this->cases.at(i)->GetParentCases().at(j)->GetParentCases().at(k)->GetCaseNodes().size(); m++) {
+						tempLogic = this->cases.at(i)->GetParentCases().at(j)->GetParentCases().at(k)->GetCaseNodes().at(m);
+						if ((tempLogic->GetTypeString() == "DIV") || (tempLogic->GetTypeString() == "MOD")) {
+							passedUpperLatTimes = false;
+							break;
+						}
+					}
 				}
 			}
-			tempCase = this->cases.at(i)->GetParentCases().at(0);
-			tempCase->AddChildrenCase(this->cases.at(i)->GetChildCases().at(0));
-			for (j = 0; j < tempCase->GetChildCases().size(); j++) {
-				if (tempCase->GetChildCases().at(j) == this->cases.at(i)) {
-					tempCase->RemoveChildCase(j);
-					break;
+			if (passedUpperLatTimes == true) {
+				tempCase = this->cases.at(i)->GetChildCases().at(0);
+				tempCase->AddParentCase(this->cases.at(i)->GetParentCases().at(0));
+				for (j = 0; j < tempCase->GetParentCases().size(); j++) {
+					if (tempCase->GetParentCases().at(j) == this->cases.at(i)) {
+						tempCase->RemoveParentCase(j);
+						break;
+					}
 				}
+				tempCase = this->cases.at(i)->GetParentCases().at(0);
+				tempCase->AddChildrenCase(this->cases.at(i)->GetChildCases().at(0));
+				for (j = 0; j < tempCase->GetChildCases().size(); j++) {
+					if (tempCase->GetChildCases().at(j) == this->cases.at(i)) {
+						tempCase->RemoveChildCase(j);
+						break;
+					}
+				}
+				delete this->cases.at(i);
+				this->cases.erase(this->cases.begin() + i);
+				return false;
 			}
-			delete this->cases.at(i);
-			this->cases.erase(this->cases.begin() + i);
-			return false;
 		}
 	}
 	return check;
