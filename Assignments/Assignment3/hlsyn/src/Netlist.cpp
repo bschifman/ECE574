@@ -819,7 +819,7 @@ bool Netlist::CalculateForcesFDS() {
 		//CALCULATE TOTAL FORCES
 		for (j = this->nodes.at(i)->GetNodeASAP(); (int)j <= this->nodes.at(i)->GetNodeALAP(); j++) {			//Loop through all possible time frames
 			totalForces[i][j] = selfForces[i][j] + successorForces[i][j] + predecessorForces[i][j];			//Calculate the total force for each node at each time
-			if ((totalForces[i][j] <= minVal) && (this->nodes.at(i)->GetNodeFDS() == 0)) {					//Look for the lowest value in the total forces matrix that doesn't already have a force
+			if ((totalForces[i][j] < minVal) && (this->nodes.at(i)->GetNodeFDS() == 0)) {					//Look for the lowest value in the total forces matrix that doesn't already have a force
 				minVal = totalForces[i][j];				//Keeps track of the minVal of the total forces matrix
 				minNodeNumber = i;						//Keeps track of the node to lock in to place
 				minTimeSlot = j;						//Keeps track of the time of the node to schedule
