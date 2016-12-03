@@ -1500,7 +1500,7 @@ void Netlist::UpdateCaseNodesAtLatency(StateCase* caseToUpdate, int currentLaten
 				this->nodes.at(i)->SetScheduled(true);
 			}
 			else if ((this->nodes.at(i)->UpperIfExists() == true) && (this->nodes.at(i)->GetTypeString() !="if")) {		//scan and find nodes that are dependent on an if above this if
-				if (this->nodes.at(i)->FindUpperIfDepth() <= caseToUpdate->GetIfElseDepthMax()) {
+				if ((this->nodes.at(i)->FindUpperIfDepth() <= caseToUpdate->GetIfElseDepthMax()) && (caseToUpdate->GetTrueFalseCase() == this->nodes.at(i)->GetIfLevelOneOrZero())) {
 					caseToUpdate->AddNodeToCase(this->nodes.at(i));
 					this->nodes.at(i)->SetScheduled(true);
 
