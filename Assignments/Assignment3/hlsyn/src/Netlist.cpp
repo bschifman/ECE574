@@ -1235,7 +1235,7 @@ bool Netlist::CalculateCaseStates() {
 				}
 				generatedExtraCase = false;
 				for (k = 0; k < this->cases.at(j)->GetCaseNodes().size(); k++) {				//loop through all of this case states nodes
-					if ((this->cases.at(j)->GetCaseNodes().at(k)->GetTypeString() != "if") && (this->cases.at(j)->GetCaseNodes().at(k)->GetIfElseDepth() >0) && !(this->cases.at(j)->GetCaseNodes().size() > 1)) {		//check if something is teired down if node from above
+					if ((this->cases.at(j)->GetCaseNodes().at(k)->GetTypeString() != "if") && (this->cases.at(j)->GetCaseNodes().at(k)->GetIfElseDepth() >0) && !(this->cases.at(j)->GetCaseNodes().size() > 1)  && (this->cases.at(j)->GetChildCases().size() == 0)) {		//check if something is teired down if node from above
 						if (generatedExtraCase == false) {											//if this is the first item found
 							firstCaseAtLatency = false;
 							tempCase = new StateCase(caseCounter, (int)i + 1);							//create new case statement
@@ -1468,7 +1468,6 @@ void Netlist::SetLatency(string stringLatency) {
 void Netlist::UpdateCaseNodesAtLatency(StateCase* caseToUpdate, int currentLatency) {											//check if case is a duclicate of another case statement
 	unsigned int i = 0;
 
-	//NEED TO MAKE SURE IT DOESNT INCLUDE IF STATEMENTS FROM THE WRONG BRANCH
 
 	for (i = 0; i < this->nodes.size(); i++) {		//loop through all nodes and add any that are depth 0, add them to the 'if(1)' and 'if(0)'
 		if ((this->nodes.at(i)->GetNodeFDS() == (currentLatency + 1))) {
