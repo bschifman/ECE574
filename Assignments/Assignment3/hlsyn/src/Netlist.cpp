@@ -19,7 +19,8 @@ File: Netlist.cpp
 using namespace std;
 
 bool Netlist::parseFile(string filename, string latency) {
-
+	unsigned int i = 0;
+	unsigned int j = 0;
 	string line;
 	fstream inFile;					    // Input file stream
 	istringstream inSS("");
@@ -63,6 +64,19 @@ bool Netlist::parseFile(string filename, string latency) {
 	}
 	inFile.close();//close the input file
 	//this->outputToReg();			//I dont think we need output to register for assignment 3
+
+	//CALCULATE ANY NESTED DEPENDENCIES FROM IF STATEMENTS
+	for (i = 0; i < this->nodes.size(); i++) {
+		for (j = i + 1; j < this->nodes.size(); j++) {
+			//based on edges this will make an infinite loop...fack
+			if (this->nodes.at(i)->GetConnector() == this->nodes.at(j)->GetConnector()) {
+				if (this->nodes.at(i)->GetIfElseDepth() > this->nodes.at(j)->GetIfElseDepth()) {
+					//this->nodes.at(i)->GetConnector()->AddChild(this->nodes.at(j));
+				}
+			}
+		}
+	}
+
 	this->SetLatency(latency);
 	if (this->CalculateFDS()) {
 		this->CalculateCaseStates();
@@ -1454,6 +1468,8 @@ bool Netlist::RemoveAllEmptyCases() {
 					}
 				}
 			}
+
+			//NEED ANOTHER FOR LOOP HERE TO CHECK DOWN THE CODE IF THERE ARE COLFLICTING RESOURCES BELOW THIS CASE, ELSE IT CAN STILL BE DELETED
 			if (passedUpperLatTimes == true) {
 				tempCase = this->cases.at(i)->GetChildCases().at(0);
 				tempCase->AddParentCase(this->cases.at(i)->GetParentCases().at(0));
