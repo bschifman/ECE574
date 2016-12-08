@@ -660,7 +660,7 @@ bool Netlist::CalculateALAP() {
 		for (i = 0; i < this->edges.size(); i++) {															//look at all the edges for this time frame
 			if (this->edges.at(i)->GetEdgeALAP() == currentLatency) {										//only evaluate edges active during this time frame
 				for (k = 0; k < this->edges.at(i)->GetParent().size(); k++ ) {								//check if this edge has a parent node		//holding//&& !(this->edges.at(i)->GetParent().at(k)->CheckParentForChild(this->edges.at(i)))
-					if ((this->edges.at(i)->GetParent().at(k)->GetNodeALAP() > currentLatency) && (!(this->edges.at(i)->GetParent().at(k)->CheckParentForChild(this->edges.at(i))) || ((this->edges.at(i)->GetParent().at(k)->GetNodeALAP() == (this->GetLatency()) + 1)))) {				//if the node value is higher value than this time frame update it
+					if (((this->edges.at(i)->GetParent().at(k)->GetNodeALAP() + this->edges.at(i)->GetParent().at(k)->GetTypeScheduleDelay() - 1) >= currentLatency) && (!(this->edges.at(i)->GetParent().at(k)->CheckParentForChild(this->edges.at(i))) || ((this->edges.at(i)->GetParent().at(k)->GetNodeALAP() == (this->GetLatency()) + 1)))) {				//if the node value is higher value than this time frame update it
 						tempNodeDelay = this->edges.at(i)->GetParent().at(k)->GetTypeScheduleDelay();		//save this node type scheduleing inherihent delay(ie MUL is 2, DIV/MOD is 3, all other types is 1)
 						if ((currentLatency - tempNodeDelay) < 0) {
 							cout << "ERROR:  User input Schedule bounds too small for input file." << endl;
@@ -845,7 +845,7 @@ bool Netlist::CalculateForcesFDS() {
 				
 			}
 		}
-
+		j = 1;
 		//CALCULATE TOTAL FORCES
 		for (j = this->nodes.at(i)->GetNodeASAP(); (int)j <= this->nodes.at(i)->GetNodeALAP(); j++) {			//Loop through all possible time frames
 			totalForces[i][j] = selfForces[i][j] + successorForces[i][j] + predecessorForces[i][j];			//Calculate the total force for each node at each time
@@ -1027,7 +1027,7 @@ bool Netlist::outputHLSMModule(string outputFilename) {									//write all curr
 		outFS << "endmodule" << endl;
 	}
 
-	cout << "done? this cout is at the end of the output module btw if you're looking for it, if not, well fuck off then" << endl;
+	//cout << "done? this cout is at the end of the output module btw if you're looking for it, if not, well fuck off then" << endl;
 	outFS.close();		//close the output file
 	return true;
 }
@@ -1097,8 +1097,14 @@ bool Netlist::RecalculateASAP(Logic* inputNode, int minTime) {
 		if (inputNode != inputNode->GetConnector()->GetChildVector().at(i)) {
 			tempNode = inputNode->GetConnector()->GetChildVector().at(i);						//for ease of typing
 			if (tempNode->GetNodeASAP() <= (minTime + inputNode->GetTypeScheduleDelay() - 1)) {	//If the ASAP time of one of the child nodes is <= end of node duration
+				if (minTime + inputNode->GetTypeScheduleDelay() > this->GetLatency()) {
+					cerr << "ERROR: exceeds timeframe of force directed graph";
+					return false;
+				}
 				tempNode->SetNodeASAP(minTime + inputNode->GetTypeScheduleDelay());				//Reassign ASAP time of the parent node
-				this->RecalculateASAP(tempNode, tempNode->GetNodeASAP());						//Recursively call function to act on all children nodes
+				if (!this->RecalculateASAP(tempNode, tempNode->GetNodeASAP())) {						//Recursively call function to act on all children nodes
+					return false;
+				}
 			}
 		}
 	}
@@ -1116,8 +1122,14 @@ bool Netlist::RecalculateALAP(Logic* inputNode, int minTime) {
 		if (inputNode != inputNode->GetParentNodes().at(i)) {
 			tempNode = inputNode->GetParentNodes().at(i);									//for ease of typing
 			if (tempNode->GetNodeALAP() >= minTime) {										//If the ALAP time of one of the parent nodes is >= minTime
+				if (minTime - tempNode->GetTypeScheduleDelay() < 1) {
+					cerr << "ERROR: exceeds timeframe of force directed graph";
+					return false;
+				}
 				tempNode->SetNodeALAP(minTime - tempNode->GetTypeScheduleDelay());			//Reassign ALAP time of the parent node
-				this->RecalculateALAP(tempNode, tempNode->GetNodeALAP());					//Recursively call function to act on all parent nodes
+				if (!this->RecalculateALAP(tempNode, tempNode->GetNodeALAP())) {					//Recursively call function to act on all parent nodes
+					return false;
+				}
 			}
 		}
 	}
@@ -1366,6 +1378,7 @@ bool Netlist::CalculateCaseStates() {
 			this->cases.at(i)->AddChildrenCase(tempCase);
 			tempCase->AddParentCase(this->cases.at(i));
 		}
+		this->cases.at(i)->RemoveDuplicateNodes();					//incase of any overlap of nodes, remove duplicates
 	}
 
 	//REMOVE EMPTY CASES
@@ -1485,8 +1498,12 @@ bool Netlist::RemoveAllEmptyCases() {
 				for (k = 0; k < this->cases.at(i)->GetParentCases().at(j)->GetCaseNodes().size();k++) {
 					tempLogic = this->cases.at(i)->GetParentCases().at(j)->GetCaseNodes().at(k);
 					if ((tempLogic->GetTypeString() == "MUL") || (tempLogic->GetTypeString() == "DIV") || (tempLogic->GetTypeString() == "MOD")) {
-
+						
 						for (m = 0; m < this->cases.at(i)->GetChildCases().size(); m++) {
+							if (this->cases.at(i)->GetChildCases().at(m) == this->cases.at(this->cases.size() - 1)) {
+								passedUpperLatTimes = false;
+								break;
+							}
 							for (n = 0; n < this->cases.at(i)->GetChildCases().at(m)->GetCaseNodes().size(); n++) {
 								tempLogic = this->cases.at(i)->GetChildCases().at(m)->GetCaseNodes().at(n);
 								if ((tempLogic->GetTypeString() == "MUL") || (tempLogic->GetTypeString() == "DIV") || (tempLogic->GetTypeString() == "MOD")) {
@@ -1504,7 +1521,11 @@ bool Netlist::RemoveAllEmptyCases() {
 						tempLogic = this->cases.at(i)->GetParentCases().at(j)->GetParentCases().at(k)->GetCaseNodes().at(m);
 						if ((tempLogic->GetTypeString() == "DIV") || (tempLogic->GetTypeString() == "MOD")) {
 
-							for (p = 0; m < this->cases.at(i)->GetChildCases().size(); p++) {
+							for (p = 0; p < this->cases.at(i)->GetChildCases().size(); p++) {
+								if (this->cases.at(i)->GetChildCases().at(p) == this->cases.at(this->cases.size() - 1)) {
+									passedUpperLatTimes = false;
+									break;
+								}
 								for (n = 0; n < this->cases.at(i)->GetChildCases().at(p)->GetCaseNodes().size(); n++) {
 									tempLogic = this->cases.at(i)->GetChildCases().at(p)->GetCaseNodes().at(n);
 									if ((tempLogic->GetTypeString() == "DIV") || (tempLogic->GetTypeString() == "MOD")) {
