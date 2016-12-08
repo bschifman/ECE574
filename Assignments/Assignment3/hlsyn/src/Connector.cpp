@@ -25,3 +25,15 @@ Connector::Connector(string name, string type, int dataWidth, bool sign) {		//ov
 Connector::~Connector(void) {
 
 }
+
+bool Connector::CheckChildForParent(int childNumber) {		//check if this child is also a parent
+	int i = 0;
+
+	for (i = 0; i < this->parent.size(); i++) {
+		if (this->children.at(childNumber) == this->parent.at(i)) {
+			return true;
+		}
+	}
+
+	return false;
+}

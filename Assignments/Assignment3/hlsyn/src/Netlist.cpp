@@ -71,7 +71,8 @@ bool Netlist::parseFile(string filename, string latency) {
 			//based on edges this will make an infinite loop...fack
 			if (this->nodes.at(i)->GetConnector() == this->nodes.at(j)->GetConnector()) {
 				if (this->nodes.at(i)->GetIfElseDepth() > this->nodes.at(j)->GetIfElseDepth()) {
-					//this->nodes.at(i)->GetConnector()->AddChild(this->nodes.at(j));
+//					this->nodes.at(i)->GetConnector()->AddChild(this->nodes.at(j));
+//					this->nodes.at(j)->AddParent(this->nodes.at(i)->GetConnector());
 				}
 			}
 		}
@@ -576,7 +577,7 @@ bool Netlist::CalculateASAP() {
 		for (i = 0; i < this->edges.size(); i++) {															//look at all the edges for this time frame
 			if (this->edges.at(i)->GetEdgeASAP() == currentLatency) {										//only evaluate edges active during this time frame
 				for (j = 0; j < this->edges.at(i)->GetChildVector().size(); j++) {							//loop through all the nodes this edge is a parent of
-					if (this->edges.at(i)->GetChildVector().at(j)->GetNodeASAP() <= currentLatency) {		//if the node value is lower value than this time frame update it
+					if ((this->edges.at(i)->GetChildVector().at(j)->GetNodeASAP() <= currentLatency)&& (this->edges.at(i)->GetChildVector().at(j)->GetConnector() != this->edges.at(i))) {		//if the node value is lower value than this time frame update it
 						tempNodeDelay = this->edges.at(i)->GetChildVector().at(j)->GetTypeScheduleDelay();	//save this node type scheduleing inherihent delay(ie MUL is 2, DIV/MOD is 3, all other types is 1)
 						if ((tempNodeDelay + currentLatency) > this->GetLatency()) {
 							cout << "ERROR:  Input Schedule bounds too small for input file." << endl;
@@ -629,6 +630,7 @@ bool Netlist::CalculateALAP() {
 	unsigned int k = 0;
 	unsigned int currentLatency = 0;
 	unsigned int tempNodeDelay = 0;
+	bool checkLooseEdge = false;
 
 	for (i = 0; i < this->edges.size(); i++) {
 		this->edges.at(i)->SetEdgeALAP((this->GetLatency()) + 1);			// setting all unscheduled edges to larger than the largest possible latency
@@ -638,15 +640,27 @@ bool Netlist::CalculateALAP() {
 	}
 
 	for (i = 0; i < this->edges.size(); i++) {								//set the base point for checking the ASAP
-		if (!this->edges.at(i)->GetChildVector().size()) {
+		k = 0;
+		if ((!this->edges.at(i)->GetChildVector().size())) {
 			this->edges.at(i)->SetEdgeALAP(this->GetLatency());
 		}
+		else {
+			for (j = 0; j < this->edges.at(i)->GetChildVector().size(); j++) {
+				if (this->edges.at(i)->GetChildVector().at(j)->CheckChildtForParent(this->edges.at(i))) {
+					k++;
+				}
+			}
+			if (k == this->edges.at(i)->GetChildVector().size()) {
+				this->edges.at(i)->SetEdgeALAP(this->GetLatency());
+			}
+		}
+
 	}
 	for (currentLatency = this->GetLatency(); currentLatency > 0; currentLatency--) {						//cycle through each latency timeframe
 		for (i = 0; i < this->edges.size(); i++) {															//look at all the edges for this time frame
 			if (this->edges.at(i)->GetEdgeALAP() == currentLatency) {										//only evaluate edges active during this time frame
-				for (k = 0; k < this->edges.at(i)->GetParent().size(); k++ ) {								//check if this edge has a parent node
-					if (this->edges.at(i)->GetParent().at(k)->GetNodeALAP() > currentLatency) {				//if the node value is higher value than this time frame update it
+				for (k = 0; k < this->edges.at(i)->GetParent().size(); k++ ) {								//check if this edge has a parent node		//holding//&& !(this->edges.at(i)->GetParent().at(k)->CheckParentForChild(this->edges.at(i)))
+					if ((this->edges.at(i)->GetParent().at(k)->GetNodeALAP() > currentLatency) && (!(this->edges.at(i)->GetParent().at(k)->CheckParentForChild(this->edges.at(i))) || ((this->edges.at(i)->GetParent().at(k)->GetNodeALAP() == (this->GetLatency()) + 1)))) {				//if the node value is higher value than this time frame update it
 						tempNodeDelay = this->edges.at(i)->GetParent().at(k)->GetTypeScheduleDelay();		//save this node type scheduleing inherihent delay(ie MUL is 2, DIV/MOD is 3, all other types is 1)
 						if ((currentLatency - tempNodeDelay) < 0) {
 							cout << "ERROR:  User input Schedule bounds too small for input file." << endl;
@@ -654,7 +668,9 @@ bool Netlist::CalculateALAP() {
 						}
 						this->edges.at(i)->GetParent().at(k)->SetNodeALAP(currentLatency - tempNodeDelay + 1);											//update parent node ALAP value
 						for (j = 0; j < this->edges.at(i)->GetParent().at(k)->GetParents().size(); j++ ) {							//make sure the current upstream nodes have a parent edges
-							this->edges.at(i)->GetParent().at(k)->GetParents().at(j)->SetEdgeALAP(currentLatency - tempNodeDelay);	//update the parent edge of the current node to a new ALAP value
+							//if (this->edges.at(i) != this->edges.at(i)->GetParent().at(k)->GetParents().at(j)) {
+								this->edges.at(i)->GetParent().at(k)->GetParents().at(j)->SetEdgeALAP(currentLatency - tempNodeDelay);	//update the parent edge of the current node to a new ALAP value
+							//}
 						}
 					}
 				}
@@ -942,7 +958,13 @@ bool Netlist::outputHLSMModule(string outputFilename) {									//write all curr
 		for (i = 0; i < 7; i++) { outFS << this->outputEdgeLine("register", (1 << i)); }				//output all register variables as wire variables
 		for (i = 0; i < 7; i++) { outFS << this->outputEdgeLine("variable", (1 << i)); }				//output all variable variables as variables
 		
-		outFS << "\t" << "reg State, NextState;" << endl;												//might need a bit width for State...probably use
+		outFS << "\t" << "reg [";
+		i = 1;
+		while( i < this->cases.size()) {
+			i = i * 2;
+		}
+		outFS << (i - 1);
+		outFS << ":0] State;" << endl;												//might need a bit width for State...probably use
 		outFS << endl;
 		outFS << "\t" << "initial begin" << endl;
 		for (i = 0; i < this->edges.size(); i++) {
@@ -950,17 +972,19 @@ bool Netlist::outputHLSMModule(string outputFilename) {									//write all curr
 				outFS << "\t\t" << this->edges.at(i)->GetName() << " <= 0;" << endl;
 			}
 		}
+		outFS << "\t\tState <= 0;" << endl;
+		//outFS << "\t\tNextState <= 0;" << endl;
 		outFS << "\t" << "end" << endl;
 
 		outFS << endl;
-		outFS << "\t" << "always @(State) begin" << endl;
+		outFS << "\t" << "always @(posedge Clk) begin" << endl;
 		outFS << "\t" << "\t" << "case (State)" << endl;
 		outFS << "\t" << "\t" << "\t" << "0: begin" << endl;
 		outFS << "\t" << "\t" << "\t" << "\t" << "Done <= 0;" << endl;
 		outFS << "\t" << "\t" << "\t" << "\t" << "if (Start != 0)" << endl;
-		outFS << "\t" << "\t" << "\t" << "\t" << "\t" << "NextState <= 1;" << endl;
+		outFS << "\t" << "\t" << "\t" << "\t" << "\t" << "State <= 1;" << endl;
 		outFS << "\t" << "\t" << "\t" << "\t" << "else" << endl;
-		outFS << "\t" << "\t" << "\t" << "\t" << "\t" << "NextState <= 0;" << endl;
+		outFS << "\t" << "\t" << "\t" << "\t" << "\t" << "State <= 0;" << endl;
 		outFS << "\t" << "\t" << "\t" << "end" << endl;
 
 		for (i = 1; i < this->cases.size()-1; i++) {
@@ -968,36 +992,37 @@ bool Netlist::outputHLSMModule(string outputFilename) {									//write all curr
 			for (j = 0; j < this->cases.at(i)->GetCaseNodes().size(); j++) {
 				outFS << this->outputCaseLine(this->cases.at(i)->GetCaseNodes().at(j)) << endl;
 				if (this->cases.at(i)->GetCaseNodes().at(j)->GetTypeString() == "if") {
-					outFS << "\t" << "\t" << "\t" << "\t" << "\t" << "NextState <= " << this->cases.at(i)->GetChildCases().at(0)->GetCaseNumber() << ";" << endl;
+					outFS << "\t" << "\t" << "\t" << "\t" << "\t" << "State <= " << this->cases.at(i)->GetChildCases().at(0)->GetCaseNumber() << ";" << endl;
 						outFS << "\t" << "\t" << "\t" << "\t" << "else" << endl;
-						outFS << "\t" << "\t" << "\t" << "\t" << "\t" << "NextState <= " << this->cases.at(i)->GetChildCases().at(1)->GetCaseNumber() << ";" << endl;
+						outFS << "\t" << "\t" << "\t" << "\t" << "\t" << "State <= " << this->cases.at(i)->GetChildCases().at(1)->GetCaseNumber() << ";" << endl;
 				}
 			}
 			if (this->cases.at(i)->GetChildCases().size() == 1) {
-				outFS << "\t" << "\t" << "\t" << "\t" << "NextState <= " << this->cases.at(i)->GetChildCases().at(0)->GetCaseNumber() << ";" << endl;
+				outFS << "\t" << "\t" << "\t" << "\t" << "State <= " << this->cases.at(i)->GetChildCases().at(0)->GetCaseNumber() << ";" << endl;
 			}
 			outFS << "\t" << "\t" << "\t" << "end" << endl;
 		}
 		outFS << "\t" << "\t" << "\t" << (this->cases.size() - (int)1) << ": begin" << endl;
 		outFS << "\t" << "\t" << "\t" << "\t" << "Done <= 1;" << endl;
-		outFS << "\t" << "\t" << "\t" << "\t" << "NextState <= 0;" << endl;
+		outFS << "\t" << "\t" << "\t" << "\t" << "State <= 0;" << endl;
 		outFS << "\t" << "\t" << "\t" << "end" << endl;
 
 		outFS << "\t" << "\t" << "endcase" << endl << endl;
 		outFS << "\t" << "end" << endl << endl;
 
-		outFS << "\t" << "always @(posedge Clk) begin" << endl;
-		outFS << "\t" << "\t" << "if (Rst == 1) begin" << endl;
+		outFS << "\t" << "always @(posedge Rst) begin" << endl;
+		//outFS << "\t" << "\t" << "if (Rst == 1) begin" << endl;
 		for (i = 0; i < this->edges.size(); i++) {
 			if (this->edges.at(i)->GetType() == "variable") {
-				outFS << "\t" << "\t" << "\t" << this->edges.at(i)->GetName() << " <= 0;" << endl;
+				outFS << "\t" << "\t" << this->edges.at(i)->GetName() << " <= 0;" << endl;
 			}
 		}
 
-		outFS << "\t" << "\t" << "\t" << "State <= 0;" << endl;											//state 0 is wait state
-		outFS << "\t" << "\t" << "\t" << "end" << endl << endl;
-		outFS << "\t" << "\t" << "else" << endl;
-		outFS << "\t" << "\t" << "\t" << "State <= NextState;" << endl;
+		outFS << "\t" << "\t" << "State <= 0;" << endl;											//state 0 is wait state
+		//outFS << "\t" << "\t" << "\t" << "State <= 0;" << endl;											//state 0 is wait state
+		//outFS << "\t" << "\t" << "\t" << "end" << endl << endl;
+		//outFS << "\t" << "\t" << "else" << endl;
+	//	outFS << "\t" << "\t" << "\t" << "State <= NextState;" << endl;
 		outFS << "\t" << "end" << endl;
 		outFS << "endmodule" << endl;
 	}
@@ -1069,10 +1094,12 @@ bool Netlist::RecalculateASAP(Logic* inputNode, int minTime) {
 	Logic* tempNode;
 
 	for (i = 0; i < inputNode->GetConnector()->GetChildVector().size(); i++) {				//loop through all of the children nodes of the node that has been locked
-		tempNode = inputNode->GetConnector()->GetChildVector().at(i);						//for ease of typing
-		if (tempNode->GetNodeASAP() <= (minTime + inputNode->GetTypeScheduleDelay() - 1)) {	//If the ASAP time of one of the child nodes is <= end of node duration
-			tempNode->SetNodeASAP(minTime + inputNode->GetTypeScheduleDelay());				//Reassign ASAP time of the parent node
-			this->RecalculateASAP(tempNode, tempNode->GetNodeASAP());						//Recursively call function to act on all children nodes
+		if (inputNode != inputNode->GetConnector()->GetChildVector().at(i)) {
+			tempNode = inputNode->GetConnector()->GetChildVector().at(i);						//for ease of typing
+			if (tempNode->GetNodeASAP() <= (minTime + inputNode->GetTypeScheduleDelay() - 1)) {	//If the ASAP time of one of the child nodes is <= end of node duration
+				tempNode->SetNodeASAP(minTime + inputNode->GetTypeScheduleDelay());				//Reassign ASAP time of the parent node
+				this->RecalculateASAP(tempNode, tempNode->GetNodeASAP());						//Recursively call function to act on all children nodes
+			}
 		}
 	}
 
@@ -1086,10 +1113,12 @@ bool Netlist::RecalculateALAP(Logic* inputNode, int minTime) {
 	Logic* tempNode;
 
 	for (i = 0; i < inputNode->GetParentNodes().size(); i++) {							//loop through all of the parents of the node that has been locked
-		tempNode = inputNode->GetParentNodes().at(i);									//for ease of typing
-		if (tempNode->GetNodeALAP() >= minTime) {										//If the ALAP time of one of the parent nodes is >= minTime
-			tempNode->SetNodeALAP(minTime - tempNode->GetTypeScheduleDelay());			//Reassign ALAP time of the parent node
-			this->RecalculateALAP(tempNode, tempNode->GetNodeALAP());					//Recursively call function to act on all parent nodes
+		if (inputNode != inputNode->GetParentNodes().at(i)) {
+			tempNode = inputNode->GetParentNodes().at(i);									//for ease of typing
+			if (tempNode->GetNodeALAP() >= minTime) {										//If the ALAP time of one of the parent nodes is >= minTime
+				tempNode->SetNodeALAP(minTime - tempNode->GetTypeScheduleDelay());			//Reassign ALAP time of the parent node
+				this->RecalculateALAP(tempNode, tempNode->GetNodeALAP());					//Recursively call function to act on all parent nodes
+			}
 		}
 	}
 
@@ -1442,6 +1471,8 @@ bool Netlist::RemoveAllEmptyCases() {
 	unsigned int k = 0;
 	unsigned int m= 0;
 	unsigned int n = 0;
+	unsigned int p = 0;
+
 	StateCase* tempCase;
 	Logic* tempLogic;
 	bool check = true;
@@ -1454,16 +1485,36 @@ bool Netlist::RemoveAllEmptyCases() {
 				for (k = 0; k < this->cases.at(i)->GetParentCases().at(j)->GetCaseNodes().size();k++) {
 					tempLogic = this->cases.at(i)->GetParentCases().at(j)->GetCaseNodes().at(k);
 					if ((tempLogic->GetTypeString() == "MUL") || (tempLogic->GetTypeString() == "DIV") || (tempLogic->GetTypeString() == "MOD")) {
-						passedUpperLatTimes = false;
-						break;
+
+						for (m = 0; m < this->cases.at(i)->GetChildCases().size(); m++) {
+							for (n = 0; n < this->cases.at(i)->GetChildCases().at(m)->GetCaseNodes().size(); n++) {
+								tempLogic = this->cases.at(i)->GetChildCases().at(m)->GetCaseNodes().at(n);
+								if ((tempLogic->GetTypeString() == "MUL") || (tempLogic->GetTypeString() == "DIV") || (tempLogic->GetTypeString() == "MOD")) {
+
+									passedUpperLatTimes = false;
+									break;
+								}
+							}
+							
+						}
 					}
 				}
 				for (k = 0; k < this->cases.at(i)->GetParentCases().at(j)->GetParentCases().size(); k++) {
 					for (m = 0; m < this->cases.at(i)->GetParentCases().at(j)->GetParentCases().at(k)->GetCaseNodes().size(); m++) {
 						tempLogic = this->cases.at(i)->GetParentCases().at(j)->GetParentCases().at(k)->GetCaseNodes().at(m);
 						if ((tempLogic->GetTypeString() == "DIV") || (tempLogic->GetTypeString() == "MOD")) {
-							passedUpperLatTimes = false;
-							break;
+
+							for (p = 0; m < this->cases.at(i)->GetChildCases().size(); p++) {
+								for (n = 0; n < this->cases.at(i)->GetChildCases().at(p)->GetCaseNodes().size(); n++) {
+									tempLogic = this->cases.at(i)->GetChildCases().at(p)->GetCaseNodes().at(n);
+									if ((tempLogic->GetTypeString() == "DIV") || (tempLogic->GetTypeString() == "MOD")) {
+
+										passedUpperLatTimes = false;
+										break;
+									}
+								}
+
+							}
 						}
 					}
 				}

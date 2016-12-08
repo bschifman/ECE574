@@ -23,6 +23,9 @@ public:
 	Connector(string name, string type, int dataWidth, bool sign);	//overload constructor
 	~Connector(void);												//destructor
 
+
+	bool CheckChildForParent(int childNumber);											//check if this child is also a parent
+
 	//Setters
 	void SetType(string type) { this->type = type; }					//set this edges type (input, output, wire, register)
 	void SetName(string name) { this->name = name; }					//set the variable name of this edge (ie a,b,c, xwire, etc)

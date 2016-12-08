@@ -232,3 +232,25 @@ bool Logic::UpperIfExists() {
 
 	return check;
 }
+
+bool Logic::CheckParentForChild(Connector* comparingEdge) {		//check if this child is also a parent
+	int i = 0;
+	for (i = 0; i < this->logicInputs.size(); i++) {
+		if (this->logicInputs.at(i) == comparingEdge) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool Logic::CheckChildtForParent(Connector* comparingEdge) {		//check if this child is also a parent
+	int i = 0;
+	for (i = 0; i < this->logicInputs.size(); i++) {
+		if (this->logicInputs.at(i) == comparingEdge) {
+			return true;
+		}
+	}
+
+	return false;
+}

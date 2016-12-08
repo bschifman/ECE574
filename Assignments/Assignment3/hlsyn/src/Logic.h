@@ -65,6 +65,8 @@ public:
 	bool GetScheduled() { return this->scheduled; }								//get acknowledgement if this node has been scheduled in a case statement or not
 	int FindUpperIfDepth();													//goes through a Nodes parents recursively until it finds an 'if' node and returns it's depth
 	bool UpperIfExists();													//goes through a Nodes parents recursively until it finds an 'if' node
+	bool CheckParentForChild(Connector* comparingEdge);											//check if this parent is also a child
+	bool CheckChildtForParent(Connector* comparingEdge);											//check if this child is also a parent
 		
 private:
 
